@@ -1771,20 +1771,26 @@
       align-items: center;
       z-index: 80;
       pointer-events: none;
-      background: rgba(4, 7, 15, 0.4);
-      backdrop-filter: blur(4px);
+      background: rgba(4, 7, 15, 0.45);
+      backdrop-filter: blur(5px);
     }
     .countdown-card {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
-      animation: countPulse 0.9s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+      gap: 6px;
+      transform-origin: center center;
+      user-select: none;
     }
-    @keyframes countPulse {
-      0% { transform: scale(0.7); opacity: 0; }
-      50% { transform: scale(1.1); opacity: 1; }
-      100% { transform: scale(1); opacity: 1; }
+    .countdown-card.count-pulse {
+      animation: countPopSingle 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes countPopSingle {
+      0% { transform: scale(0.65); opacity: 0; filter: blur(4px); }
+      30% { transform: scale(1.18); opacity: 1; filter: blur(0px); }
+      60% { transform: scale(1.0); opacity: 1; }
+      85% { transform: scale(0.97); opacity: 0.95; }
+      100% { transform: scale(0.95); opacity: 0.9; }
     }
     .countdown-eyebrow {
       font-size: 16px;
@@ -1800,6 +1806,57 @@
       line-height: 1;
       color: var(--accent);
       text-shadow: 0 0 35px rgba(0, 229, 255, 0.85), 0 0 70px rgba(0, 229, 255, 0.5);
+    }
+
+    /* --- B-2. MATCH CLICK-TO-ENGAGE PROMPT --- */
+    #match-click-prompt {
+      position: absolute;
+      inset: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 85;
+      background: rgba(4, 7, 15, 0.55);
+      backdrop-filter: blur(4px);
+      cursor: pointer;
+      user-select: none;
+    }
+    .prompt-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 30px 48px;
+      background: rgba(10, 16, 30, 0.88);
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 40px rgba(0, 229, 255, 0.3), inset 0 0 20px rgba(0, 229, 255, 0.1);
+      border-radius: 8px;
+      animation: promptPulse 1.6s ease-in-out infinite;
+    }
+    @keyframes promptPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(0, 229, 255, 0.25); }
+      50% { transform: scale(1.03); box-shadow: 0 0 55px rgba(0, 229, 255, 0.55); }
+    }
+    .prompt-icon {
+      font-size: 40px;
+      animation: bouncePrompt 1.2s infinite alternate ease-in-out;
+    }
+    @keyframes bouncePrompt {
+      0% { transform: translateY(-3px); }
+      100% { transform: translateY(3px); }
+    }
+    .prompt-title {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: #fff;
+      text-shadow: 0 0 16px rgba(0, 229, 255, 0.8);
+    }
+    .prompt-sub {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 2px;
     }
 
     /* --- C. TDM REAL-TIME HUD BAR --- */
@@ -2716,6 +2773,15 @@
     <div class="countdown-card">
       <div class="countdown-eyebrow">MATCH STARTING IN</div>
       <div id="countdown-val" class="countdown-number">3</div>
+    </div>
+  </div>
+
+  <!-- Match Click-to-Engage Prompt (Locks cursor & enters match smoothly) -->
+  <div id="match-click-prompt">
+    <div class="prompt-inner">
+      <div class="prompt-icon">🎯</div>
+      <div class="prompt-title">CLICK TO ENGAGE</div>
+      <div class="prompt-sub">クリックして戦闘開始</div>
     </div>
   </div>
 
@@ -4060,22 +4126,28 @@
     });
 
     document.getElementById('opt-map-id').addEventListener('change', (e) => {
-      config.mapId = e.target.value;
-      if (isHost && config.gameMode === 'arena') {
-        buildArenaMap(config.mapId, config.mapTheme);
-        respawnLocalPlayer();
+      const newMap = e.target.value;
+      config.mapId = newMap;
+      matchConfig.mapId = newMap;
+      if (isHost) {
+        buildArenaMap(matchConfig.mapId, matchConfig.mapTheme);
+        if (config.gameMode === 'arena' && roomState === 'IN_MATCH') respawnLocalPlayer();
+        broadcastRoomSync();
       } else {
-        render2DMapPreview(config.mapId, config.mapTheme);
+        render2DMapPreview(newMap, matchConfig.mapTheme);
       }
       applySettings();
     });
 
     document.getElementById('opt-map-theme').addEventListener('change', (e) => {
-      config.mapTheme = e.target.value;
-      if (isHost && config.gameMode === 'arena') {
-        buildArenaMap(config.mapId, config.mapTheme);
+      const newTheme = e.target.value;
+      config.mapTheme = newTheme;
+      matchConfig.mapTheme = newTheme;
+      if (isHost) {
+        buildArenaMap(matchConfig.mapId, matchConfig.mapTheme);
+        broadcastRoomSync();
       } else {
-        render2DMapPreview(config.mapId, config.mapTheme);
+        render2DMapPreview(matchConfig.mapId, newTheme);
       }
       applySettings();
     });
@@ -4897,12 +4969,14 @@
       shieldUntil: performance.now() + 1500,
       onGround: true,
       wallJumpCount: 0,
+      wallJumpCooldownUntil: 0,
       bhopMult: 1.0
     };
     window.localPlayer = localPlayer;
 
     const pressedCodes = {};
     let wheelJumpBufferUntil = 0;
+    let lastWantJump = false;
 
     const touchState = {
       moveX: 0,
@@ -5177,6 +5251,24 @@
       if (modal) modal.classList.add('hidden');
     }
 
+    let lastMatchStartTime = 0;
+
+    // カウントダウン専用 1回ポップ発火関数（数字が2回点滅するバグを100%根絶）
+    function triggerCountdownPulse(numText, eyebrowText = 'MATCH STARTING IN') {
+      const countOverlay = document.getElementById('countdown-overlay');
+      const countCard = document.querySelector('.countdown-card');
+      const countVal = document.getElementById('countdown-val');
+      const eyebrowEl = document.querySelector('.countdown-eyebrow');
+      if (eyebrowEl && eyebrowText) eyebrowEl.textContent = eyebrowText;
+      if (countVal) countVal.textContent = numText;
+      if (countOverlay) countOverlay.style.display = 'flex';
+      if (countCard) {
+        countCard.classList.remove('count-pulse');
+        void countCard.offsetWidth; // 強制リフローで1回だけのポップアニメーションを確実に再起動
+        countCard.classList.add('count-pulse');
+      }
+    }
+
     // ホスト主導のカウントダウン開始
     function hostStartMatchCountdown() {
       if (!isHost) {
@@ -5186,7 +5278,17 @@
       }
       if (roomState === 'COUNTDOWN' || roomState === 'IN_MATCH') return;
 
+      // ユーザーの直接クリック操作コンテキストでPointerLockを先行要求（カウントダウン後即プレイ可能！）
+      if (!isMobile) {
+        try {
+          if (renderer.domElement && renderer.domElement.requestPointerLock) {
+            renderer.domElement.requestPointerLock();
+          }
+        } catch (e) {}
+      }
+
       roomState = 'COUNTDOWN';
+      overlay.classList.add('hidden'); // ロビーUIを隠して3Dアリーナへ即座にカメラを合わせる
       broadcastFromHost({
         type: 'match_start_countdown',
         matchConfig: matchConfig,
@@ -5198,27 +5300,25 @@
     let countdownTimer = null;
     function runMatchStartCountdown(sec = 3) {
       roomState = 'COUNTDOWN';
+      overlay.classList.add('hidden');
       let current = sec;
-      const countOverlay = document.getElementById('countdown-overlay');
-      const countVal = document.getElementById('countdown-val');
-      if (countOverlay && countVal) {
-        countOverlay.style.display = 'flex';
-        countVal.textContent = current;
-      }
+
+      triggerCountdownPulse(current, 'MATCH STARTING IN');
       playSound('hit_head');
 
       if (countdownTimer) clearInterval(countdownTimer);
       countdownTimer = setInterval(() => {
         current--;
         if (current > 0) {
-          if (countVal) countVal.textContent = current;
+          triggerCountdownPulse(current, 'MATCH STARTING IN');
           playSound('hit_head');
         } else if (current === 0) {
-          if (countVal) countVal.textContent = 'START!';
+          triggerCountdownPulse('START!', 'GET READY');
           playSound('respawn');
         } else {
           clearInterval(countdownTimer);
           countdownTimer = null;
+          const countOverlay = document.getElementById('countdown-overlay');
           if (countOverlay) countOverlay.style.display = 'none';
           executeMatchStart();
         }
@@ -5229,6 +5329,7 @@
       roomState = 'IN_MATCH';
       overlay.classList.add('hidden');
       isGameActive = true;
+      lastMatchStartTime = performance.now();
 
       // スコア初期化
       localPlayer.kills = 0;
@@ -5256,11 +5357,18 @@
       if (isMobile) {
         mobileControlsEl.classList.add('active');
       } else {
-        try {
-          if (renderer.domElement && renderer.domElement.requestPointerLock) {
-            renderer.domElement.requestPointerLock();
-          }
-        } catch (e) {}
+        const clickPrompt = document.getElementById('match-click-prompt');
+        if (!isPointerLocked) {
+          // ブラウザの非同期制限等でPointerLockが外れていた場合は、ワンクリック戦闘開始プロンプトを表示
+          if (clickPrompt) clickPrompt.style.display = 'flex';
+          try {
+            if (renderer.domElement && renderer.domElement.requestPointerLock) {
+              renderer.domElement.requestPointerLock();
+            }
+          } catch (e) {}
+        } else {
+          if (clickPrompt) clickPrompt.style.display = 'none';
+        }
       }
     }
 
@@ -5596,27 +5704,6 @@
       });
     });
 
-    // Map Select
-    const optMap = document.getElementById('opt-map-id');
-    if (optMap) {
-      optMap.addEventListener('change', () => {
-        if (!isHost) return;
-        matchConfig.mapId = optMap.value;
-        buildArenaMap(matchConfig.mapId, matchConfig.mapTheme);
-        broadcastRoomSync();
-      });
-    }
-
-    // Theme Select
-    const optTheme = document.getElementById('opt-map-theme');
-    if (optTheme) {
-      optTheme.addEventListener('change', () => {
-        if (!isHost) return;
-        matchConfig.mapTheme = optTheme.value;
-        buildArenaMap(matchConfig.mapId, matchConfig.mapTheme);
-        broadcastRoomSync();
-      });
-    }
 
     // Switch Team (TDM)
     const btnSwitchTeam = document.getElementById('btn-switch-team');
@@ -5680,17 +5767,39 @@
       }
     });
 
+    const matchClickPrompt = document.getElementById('match-click-prompt');
+    if (matchClickPrompt) {
+      matchClickPrompt.addEventListener('click', () => {
+        try {
+          if (renderer.domElement && renderer.domElement.requestPointerLock) {
+            renderer.domElement.requestPointerLock();
+          }
+        } catch (e) {}
+        matchClickPrompt.style.display = 'none';
+      });
+    }
+
     window.addEventListener('contextmenu', (e) => e.preventDefault());
 
     document.addEventListener('pointerlockchange', () => {
       isPointerLocked = (document.pointerLockElement === renderer.domElement);
+      const promptEl = document.getElementById('match-click-prompt');
       if (isPointerLocked) {
-        overlay.classList.add('hidden');
-        isGameActive = true;
-        updateCameraFovAndScope();
+        if (promptEl) promptEl.style.display = 'none';
+        if (roomState === 'IN_MATCH' || config.gameMode === 'gridshot') {
+          overlay.classList.add('hidden');
+          isGameActive = true;
+          updateCameraFovAndScope();
+        }
       } else if (!isMobile) {
         if (roomState === 'IN_MATCH') {
-          openPauseMenu();
+          const now = performance.now();
+          // マッチ開始直後（1.5秒以内）またはカウントダウン中は勝手にポーズを開かず、ワンクリックプロンプトを表示
+          if (now - lastMatchStartTime < 1500) {
+            if (promptEl) promptEl.style.display = 'flex';
+          } else {
+            openPauseMenu();
+          }
         }
       }
     });
@@ -6224,6 +6333,8 @@
       const customJump = config.binds.jump ? pressedCodes[config.binds.jump] : false;
       const wheelActive = (now < wheelJumpBufferUntil);
       const wantJump = Boolean(pressedCodes['Space'] || customJump || wheelActive || touchState.jumping);
+      const justPressedJump = wantJump && !lastWantJump;
+      lastWantJump = wantJump;
 
       if (localPlayer.onGround) {
         if (wantJump && !localPlayer.crouch) {
@@ -6236,7 +6347,8 @@
         } else {
           localPlayer.bhopMult = Math.max(1.0, localPlayer.bhopMult - dt * 3.5);
           if (wishLen < 0.05) localPlayer.bhopMult = 1.0;
-      localPlayer.wallJumpCount = 0;
+          localPlayer.wallJumpCount = 0;
+          localPlayer.wallJumpCooldownUntil = 0;
         }
 
         const postureMult = localPlayer.crouch ? CROUCH_SPEED_MULT : 1.0;
@@ -6257,7 +6369,7 @@
       const halfD = PLAYER_DEPTH / 2;
       const eps = 0.0001;
 
-      // X軸の移動と壁衝突判定（壁接触法線を記録）
+      // X軸の移動と壁衝突判定（壁接触法線を確実に記録）
       localPlayer.x += localPlayer.vx * dt;
       let wallHitX = 0;
       for (let i = 0; i < mapColliders.length; i++) {
@@ -6269,10 +6381,11 @@
           localPlayer.z - halfD + eps, localPlayer.z + halfD - eps,
           b
         )) {
-          if (localPlayer.vx > 0) {
+          const centerDiffX = localPlayer.x - ((b.minX + b.maxX) / 2);
+          if (localPlayer.vx > 0 || centerDiffX < 0) {
             localPlayer.x = b.minX - halfW;
             wallHitX = -1; // 壁から左方向(-X)への反発法線
-          } else if (localPlayer.vx < 0) {
+          } else {
             localPlayer.x = b.maxX + halfW;
             wallHitX = 1;  // 壁から右方向(+X)への反発法線
           }
@@ -6280,7 +6393,7 @@
         }
       }
 
-      // Z軸の移動と壁衝突判定（壁接触法線を記録）
+      // Z軸の移動と壁衝突判定（壁接触法線を確実に記録）
       localPlayer.z += localPlayer.vz * dt;
       let wallHitZ = 0;
       for (let i = 0; i < mapColliders.length; i++) {
@@ -6292,10 +6405,11 @@
           localPlayer.z - halfD, localPlayer.z + halfD,
           b
         )) {
-          if (localPlayer.vz > 0) {
+          const centerDiffZ = localPlayer.z - ((b.minZ + b.maxZ) / 2);
+          if (localPlayer.vz > 0 || centerDiffZ < 0) {
             localPlayer.z = b.minZ - halfD;
             wallHitZ = -1; // 壁から手前方向(-Z)への反発法線
-          } else if (localPlayer.vz < 0) {
+          } else {
             localPlayer.z = b.maxZ + halfD;
             wallHitZ = 1;  // 壁から奥方向(+Z)への反発法線
           }
@@ -6306,27 +6420,31 @@
       // 【ウォールジャンプ（壁蹴り）物理ロジック】
       // 空中で壁に接触している状態でジャンプが入力された場合、鋭い反発と上方向初速を付与
       const isTouchingWall = (!localPlayer.onGround && (wallHitX !== 0 || wallHitZ !== 0));
-      if (isTouchingWall && wantJump && !localPlayer.crouch && (localPlayer.wallJumpCount < 2)) {
-        localPlayer.vy = 12.0; // 上方向への力強い初速
+      const canWallJump = isTouchingWall && !localPlayer.crouch && (localPlayer.wallJumpCount < 2) && (now >= (localPlayer.wallJumpCooldownUntil || 0));
+      const triggersWallJump = canWallJump && (justPressedJump || (wantJump && localPlayer.wallJumpCount === 0));
+
+      if (triggersWallJump) {
+        localPlayer.vy = 12.8; // 上方向への力強い初速
         localPlayer.onGround = false;
         localPlayer.wallJumpCount++;
+        localPlayer.wallJumpCooldownUntil = now + 240; // 240msクールダウンで一瞬の2回消費を完全に防止！
 
         // 壁法線方向とプレイヤーの進行・視線方向をブレンドした水平ダッシュ速度
         const aimDirX = (wishLen > 0.1) ? wishX : forwardX;
         const aimDirZ = (wishLen > 0.1) ? wishZ : forwardZ;
-        let pushX = wallHitX * 0.70 + aimDirX * 0.45;
-        let pushZ = wallHitZ * 0.70 + aimDirZ * 0.45;
+        let pushX = wallHitX * 0.75 + aimDirX * 0.45;
+        let pushZ = wallHitZ * 0.75 + aimDirZ * 0.45;
         const pushMag = Math.hypot(pushX, pushZ);
         if (pushMag > 0.001) {
           pushX /= pushMag;
           pushZ /= pushMag;
         }
-        const WALL_JUMP_SPEED = 12.5;
+        const WALL_JUMP_SPEED = 13.5;
         localPlayer.vx = pushX * WALL_JUMP_SPEED;
         localPlayer.vz = pushZ * WALL_JUMP_SPEED;
 
         // バニーホップ加速ボーナス
-        localPlayer.bhopMult = Math.min(MAX_BHOP_MULT, localPlayer.bhopMult + 0.12);
+        localPlayer.bhopMult = Math.min(MAX_BHOP_MULT, localPlayer.bhopMult + 0.15);
         wheelJumpBufferUntil = 0;
         playSound('wall_jump');
       }
@@ -6340,6 +6458,7 @@
         localPlayer.vy = 0;
         localPlayer.onGround = true;
         localPlayer.wallJumpCount = 0; // 地面接地で壁蹴り回数リセット
+        localPlayer.wallJumpCooldownUntil = 0;
       }
 
       for (let i = 0; i < mapColliders.length; i++) {
@@ -6356,6 +6475,7 @@
               localPlayer.y = b.maxY;
               localPlayer.vy = 25.0; // 上方向へ初速 25.0 付与！
               localPlayer.onGround = false;
+              localPlayer.wallJumpCount = 0;
               localPlayer.bhopMult = Math.min(MAX_BHOP_MULT, localPlayer.bhopMult + 0.15); // Bhop加速付与
               playSound('jump_pad');
               break;
@@ -6366,6 +6486,7 @@
               localPlayer.vy = 0;
               localPlayer.onGround = true;
               localPlayer.wallJumpCount = 0; // ブロック上面接地で壁蹴り回数リセット
+              localPlayer.wallJumpCooldownUntil = 0;
             } else if (localPlayer.vy > 0) {
               localPlayer.y = b.minY - playerHeight;
               localPlayer.vy = 0;
@@ -6378,14 +6499,21 @@
       if (!localPlayer.isDead) {
         const isOOB = (config.gameMode === 'gridshot')
           ? (Math.abs(localPlayer.x) > 13.0 || Math.abs(localPlayer.z) > 13.0 || localPlayer.y < -2.0)
-          : (Math.abs(localPlayer.x) > 21.0 || Math.abs(localPlayer.z) > 21.0 || localPlayer.y < -2.0);
+          : (Math.abs(localPlayer.x) > 25.0 || Math.abs(localPlayer.z) > 25.0 || localPlayer.y < -4.0);
 
         if (isOOB) {
           localPlayer.hp = 0;
           localPlayer.vx = 0;
           localPlayer.vy = 0;
           localPlayer.vz = 0;
-          addKillFeedMessage('SYSTEM', localPlayer.name, 'BOUNDARY BREACH (エリア外離脱)');
+          if (typeof handleKillFeedEvent === 'function') {
+            handleKillFeedEvent({
+              attackerName: 'SYSTEM',
+              victimName: localPlayer.name,
+              weapon: 'ar',
+              isHead: false
+            });
+          }
           triggerDamageFeedback();
           startDeathRespawnSequence();
           return;
@@ -7772,13 +7900,15 @@
             updateLeaderboardUI();
           }
 
-          if (data.mapId) {
+          if (data.mapId && roomState !== 'COUNTDOWN') {
             const hostMap = MAP_DEFINITIONS[data.mapId] ? data.mapId : 'standard';
             const hostTheme = MAP_THEMES[data.mapTheme] ? data.mapTheme : 'cyber';
             if (hostMap !== currentArenaMapId || hostTheme !== currentArenaThemeId) {
+              matchConfig.mapId = hostMap;
+              matchConfig.mapTheme = hostTheme;
               const mapChanged = (hostMap !== currentArenaMapId);
               buildArenaMap(hostMap, hostTheme);
-              if (mapChanged) respawnLocalPlayer();
+              if (mapChanged && roomState === 'IN_MATCH') respawnLocalPlayer();
             }
           }
 
