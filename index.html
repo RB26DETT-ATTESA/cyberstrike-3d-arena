@@ -2932,6 +2932,7 @@
           <div id="guest-waiting-box" class="guest-status-banner">
             <span class="spinner-dot"></span>
             <span class="guest-msg">⏳ ホストが試合を開始するのを待っています...</span>
+            <button id="btn-guest-force-host" class="btn" style="margin-left:12px; background:var(--accent); color:#040814; font-weight:800;" type="button">👑 自分で部屋を作る (ホストになる)</button>
           </div>
           <button id="btn-join-in-progress" class="btn-fps-join-in-progress" style="display:none;" type="button">
             <span class="icon">⚔️</span>
@@ -3640,8 +3641,10 @@
         if (hostBox) hostBox.style.display = isHost ? 'flex' : 'none';
         if (guestBox) guestBox.style.display = isHost ? 'none' : 'flex';
       }
-      document.getElementById('arena-map-section').style.display = isGrid ? 'none' : 'block';
-      document.getElementById('gridshot-notice-section').style.display = isGrid ? 'block' : 'none';
+      const arenaMapSec = document.getElementById('arena-map-section');
+      if (arenaMapSec) arenaMapSec.style.display = isGrid ? 'none' : 'block';
+      const gridNoticeSec = document.getElementById('gridshot-notice-section');
+      if (gridNoticeSec) gridNoticeSec.style.display = isGrid ? 'block' : 'none';
 
       const resumeBtnEl = document.getElementById('resume-btn');
       resumeBtnEl.innerHTML = isGrid ? '<span class="play-icon">🎯</span><span class="play-text">START TRAINING</span>' : '<span class="play-icon">▶</span><span class="play-text">PLAY MATCH</span>';
@@ -4595,16 +4598,23 @@
     };
 
     function updateRoomConfigUI() {
+      // ロールバッジ
+      const roleBadge = document.getElementById('lobby-role-badge');
+      if (roleBadge) {
+        roleBadge.className = 'badge-role ' + (isHost ? 'host' : 'guest');
+        roleBadge.textContent = isHost ? '👑 HOST (主催者)' : '🎮 GUEST (参加者)';
+      }
+
       // モードボタン
       document.querySelectorAll('.mode-choice-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.mode === matchConfig.mode);
-        b.disabled = !isHost;
+        b.style.cursor = isHost ? 'pointer' : 'default';
       });
 
       // スコアボタン
       document.querySelectorAll('.score-btn').forEach(b => {
         b.classList.toggle('active', Number(b.dataset.score) === Number(matchConfig.scoreLimit));
-        b.disabled = !isHost;
+        b.style.cursor = isHost ? 'pointer' : 'default';
       });
 
       // マップとテーマセレクト
@@ -4733,7 +4743,8 @@
       updateCameraFovAndScope();
       tabBoard.classList.remove('show');
       mobileControlsEl.classList.remove('active');
-      document.getElementById('tdm-hud-bar').style.display = 'none';
+      const tdmBar = document.getElementById('tdm-hud-bar');
+      if (tdmBar) tdmBar.style.display = 'none';
 
       switchView('lobby');
       overlay.classList.remove('hidden');
@@ -4766,7 +4777,10 @@
 
     function openSettingsModal() {
       const modal = document.getElementById('modal-settings');
-      if (modal) modal.classList.remove('hidden');
+      if (modal) {
+        modal.classList.remove('hidden');
+        if (typeof updateCrosshairPreview === 'function') updateCrosshairPreview();
+      }
     }
 
     function closeSettingsModal() {
@@ -4776,7 +4790,11 @@
 
     // ホスト主導のカウントダウン開始
     function hostStartMatchCountdown() {
-      if (!isHost) return;
+      if (!isHost) {
+        appendNetLog('⚠️ あなたはゲストです。試合開始はホストのみが行えます。', 'warn');
+        alert('⚠️ 現在はゲストモードです。試合を開始するには「👑 自分で部屋を作る」を押してホストになってください！');
+        return;
+      }
       if (roomState === 'COUNTDOWN' || roomState === 'IN_MATCH') return;
 
       roomState = 'COUNTDOWN';
@@ -4910,7 +4928,8 @@
     function triggerMatchFinish(winnerText, winnerTeam) {
       roomState = 'RESULT';
       isGameActive = false;
-      document.getElementById('tdm-hud-bar').style.display = 'none';
+      const tdmBar = document.getElementById('tdm-hud-bar');
+      if (tdmBar) tdmBar.style.display = 'none';
 
       // 全員の統計データを作成
       const all = [localPlayer, ...Object.values(remotePlayers)].map(p => {
@@ -5047,6 +5066,8 @@
     if (btnStartMatch) btnStartMatch.addEventListener('click', hostStartMatchCountdown);
 
     // Join In Progress (Guest)
+    const btnGuestForceHost = document.getElementById('btn-guest-force-host');
+    if (btnGuestForceHost) btnGuestForceHost.addEventListener('click', createFreshHostRoom);
     const btnJoinProg = document.getElementById('btn-join-in-progress');
     if (btnJoinProg) btnJoinProg.addEventListener('click', () => {
       executeMatchStart();
@@ -5054,10 +5075,19 @@
 
     // 1人用練習 (Gridshot)
     const btnSoloGrid = document.getElementById('btn-solo-gridshot');
-    if (btnSoloGrid) btnSoloGrid.addEventListener('click', () => {
-      setGameMode('gridshot');
-      executeMatchStart();
-    });
+    if (btnSoloGrid) {
+      btnSoloGrid.addEventListener('click', () => {
+        setGameMode('gridshot');
+        roomState = 'IN_MATCH';
+        overlay.classList.add('hidden');
+        isGameActive = true;
+        try {
+          if (renderer.domElement && renderer.domElement.requestPointerLock) {
+            renderer.domElement.requestPointerLock();
+          }
+        } catch (e) {}
+      });
+    }
 
     // Result return to lobby button
     const btnResultLobby = document.getElementById('btn-result-return-lobby');
@@ -5093,10 +5123,20 @@
     const btnCloseSet = document.getElementById('btn-close-settings');
     if (btnCloseSet) btnCloseSet.addEventListener('click', closeSettingsModal);
 
+    const modalSettingsEl = document.getElementById('modal-settings');
+    if (modalSettingsEl) {
+      modalSettingsEl.addEventListener('click', (e) => {
+        if (e.target === modalSettingsEl) closeSettingsModal();
+      });
+    }
+
     // Game Mode Choice (FFA / TDM)
     document.querySelectorAll('.mode-choice-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        if (!isHost) return;
+        if (!isHost) {
+          appendNetLog('💡 ルール設定の変更はホストのみが行えます。', 'info');
+          return;
+        }
         matchConfig.mode = btn.dataset.mode;
         broadcastRoomSync();
       });
@@ -5105,7 +5145,10 @@
     // Score Limit choice
     document.querySelectorAll('.score-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        if (!isHost) return;
+        if (!isHost) {
+          appendNetLog('💡 勝利キル数の変更はホストのみが行えます。', 'info');
+          return;
+        }
         matchConfig.scoreLimit = Number(btn.dataset.score);
         broadcastRoomSync();
       });
@@ -5234,7 +5277,6 @@
         hostStartMatchCountdown();
       }
     }
-
     // キーボード入力＆Ctrlキー暴発防止
     document.addEventListener('keydown', (e) => {
       if (listeningAction) {
@@ -5248,16 +5290,23 @@
       }
 
       if (e.code === 'Escape') {
-        if (currentView === 'settings') {
-          closeSettingsMenu();
+        const modal = document.getElementById('modal-settings');
+        if (modal && !modal.classList.contains('hidden')) {
+          closeSettingsModal();
           return;
         }
-        if (isGameActive) {
+        if (roomState === 'IN_MATCH' && isGameActive) {
           openPauseMenu();
           return;
         }
-        if (currentView === 'pause') {
-          enterArenaGameplay();
+        if (roomState === 'IN_MATCH' && !isGameActive) {
+          overlay.classList.add('hidden');
+          isGameActive = true;
+          try {
+            if (renderer.domElement && renderer.domElement.requestPointerLock) {
+              renderer.domElement.requestPointerLock();
+            }
+          } catch (err) {}
           return;
         }
         return;
@@ -7065,15 +7114,15 @@
         const textToCopy = (urlInput && urlInput.value) ? urlInput.value : window.location.href;
 
         const showCopied = () => {
-          const origText = '📋 招待URLをコピー';
-          copyUrlBtn.textContent = '✅ コピーしました！友達に送ってください';
-          copyUrlBtn.style.background = 'var(--success)';
-          copyUrlBtn.style.color = '#000';
+          const origHtml = copyUrlBtn.innerHTML;
+          copyUrlBtn.innerHTML = '<span class="icon">✅</span><span>コピー完了！</span>';
+          copyUrlBtn.style.borderColor = '#00e676';
+          copyUrlBtn.style.color = '#00e676';
           setTimeout(() => {
-            copyUrlBtn.textContent = origText;
-            copyUrlBtn.style.background = '';
+            copyUrlBtn.innerHTML = origHtml;
+            copyUrlBtn.style.borderColor = '';
             copyUrlBtn.style.color = '';
-          }, 2200);
+          }, 2000);
         };
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -7091,9 +7140,22 @@
       localPlayer.kills = 0;
       localPlayer.deaths = 0;
       localPlayer.hsKills = 0;
-      respawnLocalPlayer();
-      appendNetLog(`🏠 新しいホスト部屋を作成: ${freshRoom}`, 'info');
+      isHost = true;
+
+      // ブラウザURLを新しいホストURLに更新
+      const cleanUrl = window.location.origin + window.location.pathname + '?room=' + freshRoom;
+      try {
+        window.history.replaceState(null, '', cleanUrl);
+      } catch (e) {}
+
+      const inviteInput = document.getElementById('invite-url-input');
+      if (inviteInput) inviteInput.value = cleanUrl;
+
+      hideConnectionAlert();
+      appendNetLog(`👑 新しい部屋を開設しました (Host ID: ${freshRoom})`, 'ok');
       startHostRoom(freshRoom);
+      updateRoleBanner('host', freshRoom);
+      updateRoomConfigUI();
     }
 
     const newRoomBtn = document.getElementById('new-room-btn');
@@ -7623,10 +7685,12 @@
     const urlParams = new URLSearchParams(window.location.search);
     const targetRoom = urlParams.get('room');
     if (targetRoom && targetRoom.trim() !== '') {
-      // 招待URLを踏んだ人 -> 最初からゲストとしてホストへ直接接続！
+      // 招待URLを踏んだ人 -> 最初から同期的にゲストとして初期化！
+      isHost = false;
       startGuestRoom(targetRoom.trim());
     } else {
-      // 部屋指定なし -> ホストとして新しい部屋を開設！
+      // 部屋指定なし -> 最初から同期的にホストとして初期化！
+      isHost = true;
       const freshRoom = generateRoomId();
       startHostRoom(freshRoom);
     }
