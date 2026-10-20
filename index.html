@@ -4243,6 +4243,15 @@
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
           osc.start(now);
           osc.stop(now + 0.09);
+        } else if (type === 'wall_jump') {
+          // 壁蹴り専用音: 鋭いアタックの打撃ノック音＋低音キック（ドッ/カッ）
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(340, now);
+          osc.frequency.exponentialRampToValueAtTime(65, now + 0.08);
+          gain.gain.setValueAtTime(0.48 * volScale, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
+          osc.start(now);
+          osc.stop(now + 0.09);
         } else if (type === 'grid_hit') {
           // エイム練習場ターゲット命中音（小気味よい高音サイン波）
           osc.type = 'sine';
@@ -4442,6 +4451,9 @@
     function startGridshotTraining() {
       closeGridshotModal();
 
+      // ゲームモードを gridshot に確実に同期
+      setGameMode('gridshot');
+
       if (gridPracticeConfig.weapon && typeof switchWeapon === 'function') {
         switchWeapon(gridPracticeConfig.weapon);
       }
@@ -4457,7 +4469,7 @@
       camera.rotation.set(0, 0, 0);
       camera.rotation.order = 'YXZ';
 
-      respawnLocalPlayer();
+      respawnLocalPlayer({ x: 0, y: 0, z: 6.5 });
       camera.position.set(localPlayer.x, localPlayer.y + localPlayer.currentEyeH, localPlayer.z);
 
       if (gridTimerInterval) {
@@ -4884,6 +4896,7 @@
       ping: 0,
       shieldUntil: performance.now() + 1500,
       onGround: true,
+      wallJumpCount: 0,
       bhopMult: 1.0
     };
     window.localPlayer = localPlayer;
@@ -5828,8 +5841,15 @@
     document.addEventListener('mousemove', (e) => {
       if (!isGameActive || (!isPointerLocked && !isMobile) || localPlayer.isDead) return;
       if (isPointerLocked) {
-        pendingMouseMoveX += e.movementX;
-        pendingMouseMoveY += e.movementY;
+        // PointerLock 特有のOSポインタワープ異常スパイク（±280px以上の瞬間跳躍）を除外
+        let mx = e.movementX || 0;
+        let my = e.movementY || 0;
+        if (Math.abs(mx) > 280 || Math.abs(my) > 280) {
+          mx = Math.max(-120, Math.min(120, mx));
+          my = Math.max(-120, Math.min(120, my));
+        }
+        pendingMouseMoveX += mx;
+        pendingMouseMoveY += my;
       }
     });
 
@@ -6216,6 +6236,7 @@
         } else {
           localPlayer.bhopMult = Math.max(1.0, localPlayer.bhopMult - dt * 3.5);
           if (wishLen < 0.05) localPlayer.bhopMult = 1.0;
+      localPlayer.wallJumpCount = 0;
         }
 
         const postureMult = localPlayer.crouch ? CROUCH_SPEED_MULT : 1.0;
@@ -6236,7 +6257,9 @@
       const halfD = PLAYER_DEPTH / 2;
       const eps = 0.0001;
 
+      // X軸の移動と壁衝突判定（壁接触法線を記録）
       localPlayer.x += localPlayer.vx * dt;
+      let wallHitX = 0;
       for (let i = 0; i < mapColliders.length; i++) {
         const b = mapColliders[i];
         if (b.isJumpPad) continue; // ジャンプパッドは床プレートのため側面で引っかからない
@@ -6246,13 +6269,20 @@
           localPlayer.z - halfD + eps, localPlayer.z + halfD - eps,
           b
         )) {
-          if (localPlayer.vx > 0) localPlayer.x = b.minX - halfW;
-          else if (localPlayer.vx < 0) localPlayer.x = b.maxX + halfW;
+          if (localPlayer.vx > 0) {
+            localPlayer.x = b.minX - halfW;
+            wallHitX = -1; // 壁から左方向(-X)への反発法線
+          } else if (localPlayer.vx < 0) {
+            localPlayer.x = b.maxX + halfW;
+            wallHitX = 1;  // 壁から右方向(+X)への反発法線
+          }
           localPlayer.vx = 0;
         }
       }
 
+      // Z軸の移動と壁衝突判定（壁接触法線を記録）
       localPlayer.z += localPlayer.vz * dt;
+      let wallHitZ = 0;
       for (let i = 0; i < mapColliders.length; i++) {
         const b = mapColliders[i];
         if (b.isJumpPad) continue; // ジャンプパッドは床プレートのため側面で引っかからない
@@ -6262,10 +6292,43 @@
           localPlayer.z - halfD, localPlayer.z + halfD,
           b
         )) {
-          if (localPlayer.vz > 0) localPlayer.z = b.minZ - halfD;
-          else if (localPlayer.vz < 0) localPlayer.z = b.maxZ + halfD;
+          if (localPlayer.vz > 0) {
+            localPlayer.z = b.minZ - halfD;
+            wallHitZ = -1; // 壁から手前方向(-Z)への反発法線
+          } else if (localPlayer.vz < 0) {
+            localPlayer.z = b.maxZ + halfD;
+            wallHitZ = 1;  // 壁から奥方向(+Z)への反発法線
+          }
           localPlayer.vz = 0;
         }
+      }
+
+      // 【ウォールジャンプ（壁蹴り）物理ロジック】
+      // 空中で壁に接触している状態でジャンプが入力された場合、鋭い反発と上方向初速を付与
+      const isTouchingWall = (!localPlayer.onGround && (wallHitX !== 0 || wallHitZ !== 0));
+      if (isTouchingWall && wantJump && !localPlayer.crouch && (localPlayer.wallJumpCount < 2)) {
+        localPlayer.vy = 12.0; // 上方向への力強い初速
+        localPlayer.onGround = false;
+        localPlayer.wallJumpCount++;
+
+        // 壁法線方向とプレイヤーの進行・視線方向をブレンドした水平ダッシュ速度
+        const aimDirX = (wishLen > 0.1) ? wishX : forwardX;
+        const aimDirZ = (wishLen > 0.1) ? wishZ : forwardZ;
+        let pushX = wallHitX * 0.70 + aimDirX * 0.45;
+        let pushZ = wallHitZ * 0.70 + aimDirZ * 0.45;
+        const pushMag = Math.hypot(pushX, pushZ);
+        if (pushMag > 0.001) {
+          pushX /= pushMag;
+          pushZ /= pushMag;
+        }
+        const WALL_JUMP_SPEED = 12.5;
+        localPlayer.vx = pushX * WALL_JUMP_SPEED;
+        localPlayer.vz = pushZ * WALL_JUMP_SPEED;
+
+        // バニーホップ加速ボーナス
+        localPlayer.bhopMult = Math.min(MAX_BHOP_MULT, localPlayer.bhopMult + 0.12);
+        wheelJumpBufferUntil = 0;
+        playSound('wall_jump');
       }
 
       localPlayer.vy -= GRAVITY * dt;
@@ -6276,6 +6339,7 @@
         localPlayer.y = 0;
         localPlayer.vy = 0;
         localPlayer.onGround = true;
+        localPlayer.wallJumpCount = 0; // 地面接地で壁蹴り回数リセット
       }
 
       for (let i = 0; i < mapColliders.length; i++) {
@@ -6301,6 +6365,7 @@
               localPlayer.y = b.maxY;
               localPlayer.vy = 0;
               localPlayer.onGround = true;
+              localPlayer.wallJumpCount = 0; // ブロック上面接地で壁蹴り回数リセット
             } else if (localPlayer.vy > 0) {
               localPlayer.y = b.minY - playerHeight;
               localPlayer.vy = 0;
@@ -8079,13 +8144,15 @@
 
       // 1000Hzゲーミングマウスの視点移動をrAF描画フレームに同期適用（FPS急落の完全根絶）
       if (pendingMouseMoveX !== 0 || pendingMouseMoveY !== 0) {
+        const clampedX = Math.max(-300, Math.min(300, pendingMouseMoveX));
+        const clampedY = Math.max(-300, Math.min(300, pendingMouseMoveY));
         const baseSens = 0.0022 * config.sens;
         const scopeMult = localPlayer.isScoped ? (0.35 * config.scopeSens) : 1.0;
         const effectiveSens = baseSens * scopeMult;
         const ySign = config.invertY ? -1 : 1;
 
-        localPlayer.yaw -= pendingMouseMoveX * effectiveSens;
-        localPlayer.pitch -= pendingMouseMoveY * effectiveSens * ySign;
+        localPlayer.yaw -= clampedX * effectiveSens;
+        localPlayer.pitch -= clampedY * effectiveSens * ySign;
         const maxPitch = Math.PI / 2.1;
         localPlayer.pitch = Math.max(-maxPitch, Math.min(maxPitch, localPlayer.pitch));
 
