@@ -5140,7 +5140,7 @@
         if (ffaList) {
           ffaList.innerHTML = allPlayers.map(p => {
             const isSelf = (p.id === localPlayer.id);
-            const isPlayerHost = isSelf ? isHost : (p.isHost || p.id === hostPeerId);
+            const isPlayerHost = isSelf ? isHost : Boolean(p.isHost || (typeof currentRoomId === 'string' && currentRoomId && p.id === currentRoomId));
             return `
               <div class="roster-player-row ${isSelf ? 'self' : ''}">
                 <div class="player-row-left">
@@ -5169,7 +5169,7 @@
 
         const renderTeamRows = (arr) => arr.map(p => {
           const isSelf = (p.id === localPlayer.id);
-          const isPlayerHost = isSelf ? isHost : (p.isHost || p.id === hostPeerId);
+          const isPlayerHost = isSelf ? isHost : Boolean(p.isHost || (typeof currentRoomId === 'string' && currentRoomId && p.id === currentRoomId));
           return `
             <div class="roster-player-row ${isSelf ? 'self' : ''}">
               <div class="player-row-left">
@@ -6602,10 +6602,11 @@
     const remotePlayers = {};
     const enemyHitboxes = [];
 
-    const bodyGeo = new THREE.BoxGeometry(0.8, 1.4, 0.8);
-    const bodyEdges = new THREE.EdgesGeometry(bodyGeo);
-    const headGeo = new THREE.BoxGeometry(0.45, 0.4, 0.45);
-    const headEdges = new THREE.EdgesGeometry(headGeo);
+    // 競技FPS標準の当たり判定バッファ（体感遅延・すり抜けを防止する最適化サイズ）
+    const bodyGeo = new THREE.BoxGeometry(0.92, 1.45, 0.92);
+    const bodyEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(0.8, 1.4, 0.8));
+    const headGeo = new THREE.BoxGeometry(0.52, 0.46, 0.52);
+    const headEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(0.45, 0.4, 0.45));
 
     function getActivePalette() {
       return ENEMY_PALETTES[config.enemyColor] || ENEMY_PALETTES.cyan_magenta;
@@ -6723,6 +6724,8 @@
         };
         remotePlayers[pData.id] = rp;
         refreshConnectionStatusBanner();
+        renderRosterList();
+        if (isHost) broadcastRoomSync();
       } else {
         const now = performance.now();
         const dtPacket = Math.max(0.015, Math.min(0.25, (now - (rp.lastPacketTime || now)) / 1000));
@@ -6756,11 +6759,15 @@
           rp.tx = safeX;
           rp.ty = safeY;
           rp.tz = safeZ;
-          rp.extrapolateUntil = now + 130; // パケットが途絶えても130msまで直進補完
+          rp.extrapolateUntil = now + 120; // パケット間隔の直進補完
         }
 
         rp.lastPacketTime = now;
-        if (pData.name) rp.name = pData.name;
+        if (pData.name && rp.name !== pData.name) {
+          rp.name = pData.name;
+          renderRosterList();
+          if (isHost) broadcastRoomSync();
+        }
         rp.yaw = safeYaw;
         rp.pitch = safePitch;
         rp.crouch = Boolean(pData.crouch);
@@ -6768,7 +6775,12 @@
         if (typeof pData.kills === 'number') rp.kills = pData.kills;
         if (typeof pData.deaths === 'number') rp.deaths = pData.deaths;
         if (typeof pData.hsKills === 'number') rp.hsKills = pData.hsKills;
-        if (typeof pData.ping === 'number') rp.ping = pData.ping;
+        if (typeof pData.ping === 'number') {
+          if (Math.abs((rp.ping || 0) - pData.ping) > 5) {
+            rp.ping = pData.ping;
+            if (roomState === 'LOBBY') renderRosterList();
+          }
+        }
         if (typeof pData.shielded === 'boolean') rp.shielded = pData.shielded;
         rp.lastSeen = now;
       }
@@ -6787,6 +6799,8 @@
       if (hIdx !== -1) enemyHitboxes.splice(hIdx, 1);
       delete remotePlayers[id];
       refreshConnectionStatusBanner();
+      renderRosterList();
+      if (isHost) broadcastRoomSync();
     }
 
     setInterval(() => {
@@ -6829,7 +6843,8 @@
       const now = performance.now();
       const halfW = window.innerWidth / 2;
       const halfH = window.innerHeight / 2;
-      const LERP_FACTOR = Math.min(1.0, dt * 14.0); // 良好回線での吸い付き追従
+      // 良好回線・学校回線ともに敵メッシュの遅延引きずりを根絶する超高速追従LERP (14.0 -> 26.0)
+      const LERP_FACTOR = Math.min(1.0, dt * 26.0);
 
       for (const id in remotePlayers) {
         const rp = remotePlayers[id];
@@ -6843,8 +6858,8 @@
 
         // ハイブリッド・デッドレコニング（パケット遅延時のみ慣性直進補完し、ワープ感を完全消去）
         const timeSincePacket = now - (rp.lastPacketTime || now);
-        if (timeSincePacket > 35 && now < (rp.extrapolateUntil || 0)) {
-          const extraDt = Math.min(dt, 0.033);
+        if (timeSincePacket > 22 && now < (rp.extrapolateUntil || 0)) {
+          const extraDt = Math.min(dt, 0.025);
           rp.tx += rp.vx * extraDt;
           rp.ty += rp.vy * extraDt;
           rp.tz += rp.vz * extraDt;
@@ -7113,6 +7128,18 @@
             playSound(isHead ? 'hit_head' : 'hit_body');
             triggerHitMarker();
             spawnDamagePopup(validHit.point, damage, isHead);
+
+            // ★即時クライアントサイドHP予測反映 (ラグゼロ・ヒット即時手応え)
+            // サーバー(ホスト)からの返信パケットを待たずに、撃った瞬間に相手の頭上HPゲージをリアルタイム更新！
+            rp.hp = Math.max(0, rp.hp - damage);
+            const predHpPct = Math.max(0, Math.min(100, Math.round((rp.hp / MAX_HP) * 100)));
+            if (rp.tagHpEl) {
+              rp.tagHpEl.style.width = predHpPct + '%';
+              rp.tagHpEl.style.transition = 'width 0.04s ease-out';
+            }
+            if (rp.hp <= 0) {
+              playSound('elim');
+            }
 
             sendNetworkEvent({
               type: 'hit',
@@ -7462,7 +7489,20 @@
             isSetup = true;
             clientConns[conn.peer] = conn;
             appendNetLog(`✅ ゲスト (${conn.peer}) とP2P接続確立！ 対戦可能`, 'ok');
+
+            // ゲストをロスターに即時仮登録（パケット到着前でも画面に即座に出す）
+            if (!remotePlayers[conn.peer]) {
+              createOrUpdateRemotePlayer({
+                id: conn.peer,
+                name: 'Player_' + conn.peer.slice(-4),
+                team: 'red',
+                ping: 0
+              });
+            }
             refreshConnectionStatusBanner();
+            renderRosterList();
+            broadcastRoomSync();
+
             // 新規参加者へ即時welcome ACKおよび現在のマップ設定を送信
             try {
               const validMapId = MAP_DEFINITIONS[currentArenaMapId] ? currentArenaMapId : 'standard';
@@ -7951,7 +7991,11 @@
           if (data.team) {
             localPlayer.team = data.team;
           }
+          if (data.hostId && !remotePlayers[data.hostId]) {
+            createOrUpdateRemotePlayer({ id: data.hostId, name: 'Host_' + data.hostId.slice(-4), isHost: true });
+          }
           updateRoomConfigUI();
+          renderRosterList();
         }
       } else if (data.type === 'pong') {
         if (typeof data.ts === 'number') {
@@ -7992,10 +8036,14 @@
                 if (p.name) remotePlayers[p.id].name = p.name;
                 if (p.team) remotePlayers[p.id].team = p.team;
                 if (typeof p.ping === 'number') remotePlayers[p.id].ping = p.ping;
+              } else {
+                // ゲスト側にまだ remotePlayers[p.id] がない場合（ホストや他プレイヤー）を即時作成
+                createOrUpdateRemotePlayer(p);
               }
             });
           }
           updateRoomConfigUI();
+          renderRosterList();
         }
       } else if (data.type === 'match_start_countdown') {
         if (!isHost) {
@@ -8107,12 +8155,12 @@
       updateLeaderboardUI();
     }
 
-    // 30Hz 状態同期ループ（タイマースロットリング＆座標NaN保護）
+    // 45Hz 超低遅延状態同期ループ（タイマースロットリング＆座標NaN保護）
     let lastNetworkTickTime = 0;
     setInterval(() => {
       if (config.gameMode === 'gridshot') return;
       const now = performance.now();
-      if (now - lastNetworkTickTime < 28) return; // Safari/ProMotionタイマーバースト防止
+      if (now - lastNetworkTickTime < 18) return; // タイマーバースト保護
       lastNetworkTickTime = now;
 
       if (isHost) {
@@ -8199,7 +8247,7 @@
           }
         });
       }
-    }, 1000 / 30);
+    }, 1000 / 45);
 
     function escapeHtml(str) {
       return String(str || '').replace(/[&<>"']/g, s => ({
@@ -8260,7 +8308,12 @@
       }).join('');
     }
 
-    setInterval(updateLeaderboardUI, 500);
+    setInterval(() => {
+      updateLeaderboardUI();
+      if (roomState === 'LOBBY') {
+        renderRosterList();
+      }
+    }, 500);
 
     /*************************************************************************
      * 16. メイン描画ループ ＆ 左上FPS / Pingリアルタイムカウンター
