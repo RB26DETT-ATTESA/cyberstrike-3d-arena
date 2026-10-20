@@ -6920,7 +6920,8 @@
             rp.tagShieldEl.style.display = activeShield ? 'block' : 'none';
             rp.lastShield = activeShield;
           }
-          const hpPct = Math.max(0, Math.min(100, Math.round((rp.hp / MAX_HP) * 100)));
+          const currentVisualHp = (rp.predVisualHp !== undefined) ? Math.min(rp.hp, rp.predVisualHp) : rp.hp;
+          const hpPct = Math.max(0, Math.min(100, Math.round((currentVisualHp / MAX_HP) * 100)));
           if (rp.lastHpPct !== hpPct) {
             rp.tagHpEl.style.width = hpPct + '%';
             rp.lastHpPct = hpPct;
@@ -7129,16 +7130,13 @@
             triggerHitMarker();
             spawnDamagePopup(validHit.point, damage, isHead);
 
-            // ★即時クライアントサイドHP予測反映 (ラグゼロ・ヒット即時手応え)
-            // サーバー(ホスト)からの返信パケットを待たずに、撃った瞬間に相手の頭上HPゲージをリアルタイム更新！
-            rp.hp = Math.max(0, rp.hp - damage);
-            const predHpPct = Math.max(0, Math.min(100, Math.round((rp.hp / MAX_HP) * 100)));
+            // ★クライアント側HPバーの即時アニメーション演出（実HPは権威あるサーバー処理で確実に計算）
+            const currentDisp = (rp.predVisualHp !== undefined) ? rp.predVisualHp : rp.hp;
+            rp.predVisualHp = Math.max(0, currentDisp - damage);
+            const predHpPct = Math.max(0, Math.min(100, Math.round((rp.predVisualHp / MAX_HP) * 100)));
             if (rp.tagHpEl) {
               rp.tagHpEl.style.width = predHpPct + '%';
               rp.tagHpEl.style.transition = 'width 0.04s ease-out';
-            }
-            if (rp.hp <= 0) {
-              playSound('elim');
             }
 
             sendNetworkEvent({
@@ -8011,11 +8009,25 @@
           localPlayer.hp = data.hp;
           updateHpHud();
           triggerDamageFeedback();
+        } else if (remotePlayers[data.targetId]) {
+          remotePlayers[data.targetId].hp = data.hp;
+          remotePlayers[data.targetId].predVisualHp = data.hp;
         }
       } else if (data.type === 'respawn') {
         if (data.targetId === localPlayer.id) {
           triggerDamageFeedback();
           startDeathRespawnSequence();
+        } else if (remotePlayers[data.targetId]) {
+          const rp = remotePlayers[data.targetId];
+          rp.hp = MAX_HP;
+          rp.predVisualHp = MAX_HP;
+          rp.isDead = false;
+          rp.isRespawning = false;
+          rp.shieldUntil = performance.now() + 1500;
+          rp.shielded = true;
+          if (rp.tagHpEl) {
+            rp.tagHpEl.style.width = '100%';
+          }
         }
       } else if (data.type === 'killfeed') {
         handleKillFeedEvent(data);
@@ -8084,12 +8096,16 @@
         attackerObj.shielded = false;
       }
 
-      if (isShielded(targetObj) || targetObj.hp <= 0) return;
+      // 無敵シールド中、または死亡中・リスポーン待機中の場合はダメージ無効
+      if (isShielded(targetObj) || targetObj.isDead || targetObj.isRespawning) return;
 
-      targetObj.hp -= damage;
+      targetObj.hp = Math.max(0, targetObj.hp - damage);
+      targetObj.predVisualHp = targetObj.hp;
 
       if (targetObj.hp <= 0) {
         targetObj.hp = 0;
+        targetObj.isDead = true;
+        targetObj.isRespawning = true;
         targetObj.regenPool = 0;
         targetObj.deaths = (targetObj.deaths || 0) + 1;
 
@@ -8130,6 +8146,9 @@
           setTimeout(() => {
             const sp = getRandomSpawn();
             targetObj.hp = MAX_HP;
+            targetObj.predVisualHp = MAX_HP;
+            targetObj.isDead = false;
+            targetObj.isRespawning = false;
             targetObj.x = sp.x;
             targetObj.y = sp.y;
             targetObj.z = sp.z;
@@ -8138,6 +8157,9 @@
             targetObj.tz = sp.z;
             targetObj.shieldUntil = performance.now() + 1500;
             targetObj.shielded = true;
+            if (targetObj.tagHpEl) {
+              targetObj.tagHpEl.style.width = '100%';
+            }
           }, RESPAWN_DELAY_MS);
         }
       } else {
