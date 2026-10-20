@@ -1113,7 +1113,7 @@
       font-weight: 700;
     }
 
-    /* Modern Modular FPS UI (#overlay & Views) */
+    /* Custom Room & Modular Modern FPS UI System */
     #overlay {
       position: absolute;
       top: 0;
@@ -1160,528 +1160,84 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    /* --- 1. MAIN MENU VIEW --- */
-    #view-main-menu {
+    /* --- A. CUSTOM ROOM LOBBY VIEW --- */
+    #view-lobby {
       justify-content: space-between;
       align-items: center;
-      padding: 20px 24px 16px;
+      padding: 14px 20px 14px;
       overflow-y: auto;
     }
 
-    .mm-topbar {
+    .lobby-topbar {
       width: 100%;
-      max-width: 1100px;
+      max-width: 1240px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 2;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.18);
     }
 
-    .mm-top-left {
+    .lobby-top-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+    }
+
+    .badge-role {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+    .badge-role.host {
+      background: linear-gradient(135deg, rgba(255, 202, 40, 0.2), rgba(255, 171, 0, 0.1));
+      color: #ffd54f;
+      border: 1px solid rgba(255, 202, 40, 0.5);
+    }
+    .badge-role.guest {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.4);
     }
 
     .badge-version {
-      font-size: 11px;
-      color: #38bdf8;
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      padding: 4px 10px;
-      border-radius: 20px;
+      font-size: 10.5px;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 4px 8px;
+      border-radius: 12px;
       font-weight: 700;
-      letter-spacing: 0.5px;
     }
 
     .badge-device {
-      font-size: 11.5px;
+      font-size: 11px;
       color: var(--accent);
       font-weight: 800;
       background: rgba(0, 229, 255, 0.1);
-      padding: 4px 12px;
-      border-radius: 20px;
+      padding: 4px 10px;
+      border-radius: 16px;
       border: 1px solid var(--border-col);
     }
 
-    .mm-center-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      max-width: 620px;
-      gap: 16px;
-      margin: auto 0;
-      z-index: 2;
-    }
-
-    .mm-branding {
-      text-align: center;
-    }
-
-    .mm-title {
-      font-size: 44px;
-      font-weight: 900;
-      letter-spacing: 5px;
-      margin: 0;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, #ffffff 40%, var(--accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.55));
-      line-height: 1.1;
-    }
-
-    .mm-subtitle {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2.5px;
-      color: rgba(203, 213, 225, 0.85);
-      margin-top: 6px;
-      text-transform: uppercase;
-    }
-
-    .mode-tabs {
-      display: flex;
-      gap: 8px;
-      width: 100%;
-    }
-
-    .mode-tab-btn {
-      flex: 1;
-      background: rgba(13, 20, 36, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #94a3b8;
-      padding: 9px 12px;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-    }
-
-    .mode-tab-btn:hover {
-      border-color: rgba(0, 229, 255, 0.5);
-      color: #fff;
-    }
-
-    .mode-tab-btn.active {
-      background: rgba(0, 229, 255, 0.15);
-      border-color: var(--accent);
-      color: var(--accent);
-      box-shadow: 0 0 16px rgba(0, 229, 255, 0.35);
-    }
-
-    .mm-card {
-      width: 100%;
-      background: rgba(10, 17, 32, 0.82);
-      border: 1px solid rgba(0, 229, 255, 0.25);
-      border-radius: 12px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      padding: 16px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-sizing: border-box;
-    }
-
-    .mm-name-input {
-      font-size: 14px !important;
-      padding: 9px 12px !important;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .play-action-wrap {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-top: 4px;
-    }
-
-    .btn-fps-play {
-      width: 100%;
-      height: 52px;
-      background: linear-gradient(135deg, #00e5ff 0%, #00b4d8 100%);
-      color: #040814;
-      border: none;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      cursor: pointer;
+    .lobby-top-center {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 0 25px rgba(0, 229, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-      transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
-      touch-action: manipulation;
-    }
-
-    .btn-fps-play:hover {
-      transform: translateY(-2px) scale(1.015);
-      background: linear-gradient(135deg, #38bdf8 0%, #00e5ff 100%);
-      box-shadow: 0 0 40px rgba(0, 229, 255, 0.85);
-    }
-
-    .btn-fps-play:active {
-      transform: translateY(1px) scale(0.99);
-      box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
-    }
-
-    .btn-fps-play .play-icon {
-      font-size: 16px;
-    }
-
-    .mm-bottom-bar {
-      width: 100%;
-      max-width: 620px;
-      margin-top: 8px;
-      z-index: 2;
-    }
-
-    /* Ghost Settings Button */
-    .btn-fps-ghost {
-      background: rgba(13, 20, 36, 0.7);
-      border: 1px solid rgba(0, 229, 255, 0.3);
-      color: #e2e8f0;
-      padding: 7px 16px;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      touch-action: manipulation;
-    }
-
-    .btn-fps-ghost:hover {
-      background: rgba(0, 229, 255, 0.18);
-      border-color: var(--accent);
-      color: var(--accent);
-      box-shadow: 0 0 16px rgba(0, 229, 255, 0.4);
-      transform: translateY(-1px);
-    }
-
-    /* --- 2. PAUSE MENU VIEW --- */
-    #view-pause-menu {
-      justify-content: center;
-      align-items: center;
-    }
-
-    .pause-card {
-      width: 360px;
-      max-width: 90vw;
-      background: rgba(8, 14, 28, 0.92);
-      border: 1.5px solid rgba(0, 229, 255, 0.35);
-      border-radius: 12px;
-      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 229, 255, 0.2);
-      padding: 30px 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 22px;
-      box-sizing: border-box;
-      animation: pauseCardPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes pauseCardPop {
-      from { opacity: 0; transform: scale(0.92); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .pause-header {
-      text-align: center;
-    }
-
-    .pause-eyebrow {
-      font-size: 10px;
-      letter-spacing: 2px;
-      color: var(--accent);
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    .pause-title {
-      font-size: 26px;
-      font-weight: 900;
-      letter-spacing: 3px;
-      margin: 4px 0 0;
-      color: #fff;
-      text-transform: uppercase;
-    }
-
-    .pause-actions {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .btn-fps-pause {
-      width: 100%;
-      height: 46px;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 13.5px;
-      font-weight: 900;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: all 0.16s ease;
-      touch-action: manipulation;
-    }
-
-    .btn-pause-primary {
-      background: var(--accent);
-      color: #040814;
-      border: 1px solid var(--accent);
-      box-shadow: 0 0 18px rgba(0, 229, 255, 0.45);
-    }
-
-    .btn-pause-primary:hover {
-      background: #38bdf8;
-      box-shadow: 0 0 30px rgba(0, 229, 255, 0.8);
-      transform: translateY(-1px);
-    }
-
-    .btn-pause-secondary {
-      background: rgba(13, 20, 36, 0.8);
-      border: 1px solid rgba(0, 229, 255, 0.3);
-      color: #e2e8f0;
-    }
-
-    .btn-pause-secondary:hover {
-      background: rgba(0, 229, 255, 0.15);
-      border-color: var(--accent);
-      color: var(--accent);
-      box-shadow: 0 0 16px rgba(0, 229, 255, 0.35);
-      transform: translateY(-1px);
-    }
-
-    .btn-pause-danger {
-      background: rgba(30, 10, 20, 0.6);
-      border: 1px solid rgba(255, 23, 68, 0.4);
-      color: #ff8a80;
-    }
-
-    .btn-pause-danger:hover {
-      background: rgba(255, 23, 68, 0.2);
-      border-color: #ff1744;
-      color: #fff;
-      box-shadow: 0 0 16px rgba(255, 23, 68, 0.45);
-      transform: translateY(-1px);
-    }
-
-    /* --- 3. SETTINGS MENU VIEW --- */
-    #view-settings-menu {
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-    }
-
-    .settings-modal {
-      width: 1000px;
-      max-width: 96vw;
-      height: 88vh;
-      max-height: 720px;
-      background: rgba(10, 16, 30, 0.94);
-      border: 1px solid rgba(0, 229, 255, 0.3);
-      border-radius: 12px;
-      box-shadow: 0 25px 75px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 229, 255, 0.15);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      animation: pauseCardPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .settings-header {
-      padding: 14px 20px;
-      border-bottom: 1px solid rgba(0, 229, 255, 0.2);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(5, 10, 20, 0.6);
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .settings-title-wrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .settings-icon {
-      font-size: 20px;
-    }
-
-    .settings-title {
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: var(--accent);
-      margin: 0;
-      text-transform: uppercase;
-    }
-
-    .settings-nav-tabs {
-      display: flex;
-      gap: 6px;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 4px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .settings-tab-btn {
-      background: transparent;
-      border: none;
-      color: #94a3b8;
-      padding: 7px 14px;
-      border-radius: 6px;
-      font-family: inherit;
-      font-size: 11.5px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      cursor: pointer;
-      transition: all 0.18s ease;
-      touch-action: manipulation;
-    }
-
-    .settings-tab-btn:hover {
-      color: #fff;
-    }
-
-    .settings-tab-btn.active {
-      background: rgba(0, 229, 255, 0.2);
-      color: var(--accent);
-      box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
-    }
-
-    .settings-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 24px;
-      -webkit-overflow-scrolling: touch;
-      touch-action: pan-y;
-    }
-
-    .settings-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      animation: viewFadeIn 0.15s ease-out;
-    }
-
-    .settings-panel.hidden {
-      display: none !important;
-    }
-
-    .settings-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    @media (max-width: 860px) {
-      .settings-grid {
-        grid-template-columns: 1fr;
-      }
-      .settings-header {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .settings-nav-tabs {
-        overflow-x: auto;
-        white-space: nowrap;
-      }
-      .mm-title {
-        font-size: 32px;
-      }
-      #bottom-hud {
-        bottom: 10px;
-        width: 280px;
-        padding: 8px 12px;
-      }
-      #weapon-hud {
-        bottom: 66px;
-      }
-    }
-
-    /* Common Card / Role Banner / Controls / Crosshair CSS (Retained & Polished) */
-    .role-banner {
-      border-radius: 8px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border: 1.5px solid transparent;
-      transition: all 0.25s ease;
-    }
-    .role-banner.host {
-      background: linear-gradient(135deg, rgba(255, 202, 40, 0.12), rgba(0, 229, 255, 0.08));
-      border-color: rgba(255, 202, 40, 0.45);
-    }
-    .role-banner.guest {
-      background: linear-gradient(135deg, rgba(0, 229, 255, 0.12), rgba(124, 77, 255, 0.12));
-      border-color: rgba(0, 229, 255, 0.45);
-    }
-
-    .role-badge-icon {
-      font-size: 24px;
-    }
-
-    .role-badge-text {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .role-badge-title {
-      font-size: 13.5px;
-      font-weight: 800;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .role-badge-sub {
-      font-size: 11px;
-      color: var(--text-dim);
-      line-height: 1.4;
-    }
-    .role-badge-notice {
-      font-size: 10.5px;
-      color: #ffd54f;
-      font-weight: 700;
-      margin-top: 2px;
     }
 
     #lobby-status-banner {
       background: rgba(0, 229, 255, 0.08);
       border: 1px solid var(--border-col);
       border-radius: 8px;
-      padding: 8px 12px;
+      padding: 6px 14px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
     }
 
     .status-left {
@@ -1721,6 +1277,949 @@
       border: 1px solid rgba(0, 229, 255, 0.3);
     }
 
+    .lobby-top-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-lobby-action {
+      background: rgba(13, 20, 36, 0.7);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: #e2e8f0;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.16s ease;
+      touch-action: manipulation;
+    }
+    .btn-lobby-action:hover {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+    }
+
+    /* Main Split Grid (Match Settings vs Player Roster) */
+    .lobby-main-grid {
+      width: 100%;
+      max-width: 1240px;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 16px;
+      margin: 10px 0;
+      overflow-y: auto;
+      z-index: 2;
+    }
+
+    @media (max-width: 900px) {
+      .lobby-main-grid {
+        grid-template-columns: 1fr;
+      }
+      .lobby-topbar {
+        justify-content: center;
+      }
+    }
+
+    .panel-match-settings, .panel-roster {
+      background: rgba(10, 17, 32, 0.84);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      border-radius: 10px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+      padding-bottom: 8px;
+    }
+
+    .panel-header-title {
+      font-size: 13.5px;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+    }
+
+    .badge-host-only {
+      font-size: 10px;
+      color: #ffd54f;
+      background: rgba(255, 202, 40, 0.12);
+      border: 1px solid rgba(255, 202, 40, 0.35);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+
+    .settings-form-scroll {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .setting-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .setting-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #cbd5e1;
+      letter-spacing: 0.5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .setting-sub {
+      font-size: 10px;
+      color: var(--text-dim);
+      font-weight: normal;
+    }
+
+    /* Mode Selection Choice Buttons */
+    .mode-select-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .mode-choice-btn {
+      background: rgba(13, 20, 36, 0.7);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 10px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.18s ease;
+      touch-action: manipulation;
+    }
+    .mode-choice-btn:hover:not(:disabled) {
+      border-color: rgba(0, 229, 255, 0.5);
+      background: rgba(0, 229, 255, 0.08);
+    }
+    .mode-choice-btn.active {
+      background: rgba(0, 229, 255, 0.16);
+      border-color: var(--accent);
+      box-shadow: 0 0 16px rgba(0, 229, 255, 0.35);
+    }
+    .mode-choice-btn:disabled {
+      opacity: 0.85;
+      cursor: not-allowed;
+    }
+
+    .choice-icon {
+      font-size: 20px;
+    }
+    .choice-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .choice-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .choice-desc {
+      font-size: 10px;
+      color: #94a3b8;
+    }
+
+    /* Score Limit Grid Buttons */
+    .score-limit-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+    .score-btn {
+      background: rgba(13, 20, 36, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #94a3b8;
+      padding: 7px 4px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .score-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .score-btn.active {
+      background: var(--accent);
+      color: #040814;
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.45);
+    }
+    .score-btn:disabled {
+      cursor: not-allowed;
+    }
+
+    .host-url-box {
+      margin-top: 4px;
+    }
+
+    /* Player Roster Panel Styles */
+    .roster-self-name-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .name-label {
+      font-size: 10.5px;
+      color: #94a3b8;
+      font-weight: 700;
+    }
+    .roster-name-input {
+      width: 140px !important;
+      font-size: 11.5px !important;
+      padding: 4px 8px !important;
+      font-weight: 700;
+    }
+
+    .roster-content-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      min-height: 160px;
+    }
+
+    .roster-mode-view {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      height: 100%;
+    }
+
+    .roster-ffa-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+    .count-pill {
+      background: rgba(0, 229, 255, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 10.5px;
+      font-weight: 800;
+    }
+
+    .player-cards-scroll {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+      max-height: 200px;
+      padding-right: 4px;
+    }
+
+    .roster-player-row {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      transition: background 0.15s ease;
+    }
+    .roster-player-row.self {
+      border-color: rgba(0, 229, 255, 0.45);
+      background: rgba(0, 229, 255, 0.08);
+    }
+    .player-row-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .player-row-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #94a3b8;
+      font-family: Consolas, monospace;
+    }
+
+    /* TDM Split Roster (RED vs BLUE) */
+    .tdm-roster-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .team-roster-col {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border: 1px solid transparent;
+      min-height: 140px;
+    }
+    .team-roster-col.red-col {
+      border-color: rgba(239, 68, 68, 0.35);
+      background: linear-gradient(180deg, rgba(239, 68, 68, 0.08), rgba(0, 0, 0, 0.25));
+    }
+    .team-roster-col.blue-col {
+      border-color: rgba(59, 130, 246, 0.35);
+      background: linear-gradient(180deg, rgba(59, 130, 246, 0.08), rgba(0, 0, 0, 0.25));
+    }
+
+    .team-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .team-header-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 900;
+      font-size: 11.5px;
+      letter-spacing: 0.5px;
+    }
+    .team-header.red .team-title { color: #f87171; }
+    .team-header.blue .team-title { color: #60a5fa; }
+    .team-count {
+      font-size: 10.5px;
+      color: #cbd5e1;
+      font-weight: 800;
+    }
+
+    .team-players-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+      max-height: 140px;
+    }
+
+    .tdm-actions-bar {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .btn-team-act {
+      flex: 1;
+      background: rgba(13, 20, 36, 0.7);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: #e2e8f0;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-team-act:hover {
+      background: rgba(0, 229, 255, 0.18);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Lobby Bottom Bar Action */
+    .lobby-bottom-bar {
+      width: 100%;
+      max-width: 1240px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 4px;
+      z-index: 2;
+    }
+
+    .bottom-action-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-fps-start-match {
+      width: 100%;
+      max-width: 520px;
+      height: 52px;
+      background: linear-gradient(135deg, #00e5ff 0%, #00b4d8 100%);
+      color: #040814;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+      touch-action: manipulation;
+    }
+    .btn-fps-start-match:hover {
+      transform: translateY(-2px) scale(1.015);
+      background: linear-gradient(135deg, #38bdf8 0%, #00e5ff 100%);
+      box-shadow: 0 0 40px rgba(0, 229, 255, 0.85);
+    }
+    .btn-fps-start-match:active {
+      transform: translateY(1px);
+    }
+
+    .guest-status-banner {
+      background: rgba(13, 20, 36, 0.8);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      padding: 12px 24px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .spinner-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 8px #38bdf8;
+      animation: pulseDot 1s infinite;
+    }
+    .guest-msg {
+      font-size: 14px;
+      font-weight: 800;
+      color: #e2e8f0;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-fps-join-in-progress {
+      height: 48px;
+      padding: 0 24px;
+      background: linear-gradient(135deg, #00e676 0%, #00b0ff 100%);
+      color: #040814;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 20px rgba(0, 230, 118, 0.45);
+      transition: all 0.16s ease;
+    }
+    .btn-fps-join-in-progress:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 230, 118, 0.8);
+    }
+
+    /* --- B. COUNTDOWN OVERLAY --- */
+    #countdown-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 80;
+      pointer-events: none;
+      background: rgba(4, 7, 15, 0.4);
+      backdrop-filter: blur(4px);
+    }
+    .countdown-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      animation: countPulse 0.9s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+    @keyframes countPulse {
+      0% { transform: scale(0.7); opacity: 0; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .countdown-eyebrow {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    }
+    .countdown-number {
+      font-size: 110px;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--accent);
+      text-shadow: 0 0 35px rgba(0, 229, 255, 0.85), 0 0 70px rgba(0, 229, 255, 0.5);
+    }
+
+    /* --- C. TDM REAL-TIME HUD BAR --- */
+    .tdm-hud-container {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(8, 14, 26, 0.85);
+      border: 1.5px solid rgba(0, 229, 255, 0.3);
+      padding: 6px 18px;
+      border-radius: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      pointer-events: none;
+    }
+    .tdm-score-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 900;
+    }
+    .tdm-score-box.red .tdm-score-val {
+      font-size: 20px;
+      color: #f87171;
+      text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+      font-family: Consolas, monospace;
+    }
+    .tdm-score-box.blue .tdm-score-val {
+      font-size: 20px;
+      color: #60a5fa;
+      text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+      font-family: Consolas, monospace;
+    }
+    .tdm-team-label {
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+    .tdm-score-box.red .tdm-team-label { color: #fca5a5; }
+    .tdm-score-box.blue .tdm-team-label { color: #93c5fd; }
+    .tdm-goal-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 8px;
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .tdm-goal-label {
+      font-size: 8.5px;
+      color: #94a3b8;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .tdm-goal-val {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent);
+      font-family: Consolas, monospace;
+    }
+
+    /* --- D. MATCH RESULT VIEW --- */
+    #view-result {
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .result-modal {
+      width: 760px;
+      max-width: 95vw;
+      background: rgba(10, 16, 32, 0.94);
+      border: 1.5px solid rgba(0, 229, 255, 0.4);
+      border-radius: 12px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 229, 255, 0.25);
+      padding: 26px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      box-sizing: border-box;
+      animation: pauseCardPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .result-header {
+      text-align: center;
+    }
+    .result-eyebrow {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .result-winner-title {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      margin: 4px 0 2px;
+      color: #fff;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
+    }
+    .result-winner-sub {
+      font-size: 12px;
+      color: #cbd5e1;
+      margin: 0;
+    }
+
+    .result-table-wrap {
+      overflow-y: auto;
+      max-height: 300px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+    }
+
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 12px;
+    }
+    .result-table th {
+      background: rgba(0, 229, 255, 0.12);
+      color: var(--accent);
+      padding: 8px 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+    }
+    .result-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+    .result-table tr:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .result-table tr.winner-row {
+      background: rgba(255, 215, 0, 0.1);
+      color: #ffd700;
+    }
+
+    .result-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+    .result-auto-timer {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11.5px;
+      color: #94a3b8;
+    }
+    .result-timer-bar {
+      width: 100%;
+      max-width: 320px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .result-timer-fill {
+      width: 100%;
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.1s linear;
+    }
+
+    /* --- E. SETTINGS MODAL (最前面フロストガラス) --- */
+    .settings-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(2, 5, 12, 0.78);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 95;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: viewFadeIn 0.16s ease;
+    }
+    .settings-modal-overlay.hidden {
+      display: none !important;
+    }
+
+    .settings-modal-window {
+      width: 980px;
+      max-width: 96vw;
+      height: 86vh;
+      max-height: 700px;
+      background: rgba(10, 16, 30, 0.94);
+      border: 1px solid rgba(0, 229, 255, 0.35);
+      border-radius: 12px;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.95), 0 0 35px rgba(0, 229, 255, 0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: pauseCardPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* --- F. IN-GAME PAUSE CARD --- */
+    .pause-card {
+      width: 360px;
+      max-width: 90vw;
+      background: rgba(8, 14, 28, 0.92);
+      border: 1.5px solid rgba(0, 229, 255, 0.35);
+      border-radius: 12px;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 229, 255, 0.2);
+      padding: 30px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      box-sizing: border-box;
+      margin: auto;
+      animation: pauseCardPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes pauseCardPop {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .pause-header {
+      text-align: center;
+    }
+    .pause-eyebrow {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--accent);
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .pause-title {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      margin: 4px 0 0;
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+    .pause-actions {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-fps-pause {
+      width: 100%;
+      height: 46px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.16s ease;
+      touch-action: manipulation;
+    }
+    .btn-pause-primary {
+      background: var(--accent);
+      color: #040814;
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 18px rgba(0, 229, 255, 0.45);
+    }
+    .btn-pause-primary:hover {
+      background: #38bdf8;
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.8);
+      transform: translateY(-1px);
+    }
+    .btn-pause-secondary {
+      background: rgba(13, 20, 36, 0.8);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: #e2e8f0;
+    }
+    .btn-pause-secondary:hover {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 16px rgba(0, 229, 255, 0.35);
+      transform: translateY(-1px);
+    }
+    .btn-pause-danger {
+      background: rgba(30, 10, 20, 0.6);
+      border: 1px solid rgba(255, 23, 68, 0.4);
+      color: #ff8a80;
+    }
+    .btn-pause-danger:hover {
+      background: rgba(255, 23, 68, 0.2);
+      border-color: #ff1744;
+      color: #fff;
+      box-shadow: 0 0 16px rgba(255, 23, 68, 0.45);
+      transform: translateY(-1px);
+    }
+
+    /* Common Ghost, Tabs, Panels, Form inputs */
+    .btn-fps-ghost {
+      background: rgba(13, 20, 36, 0.7);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      touch-action: manipulation;
+    }
+    .btn-fps-ghost:hover {
+      background: rgba(0, 229, 255, 0.18);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 16px rgba(0, 229, 255, 0.4);
+    }
+
+    .settings-header {
+      padding: 12px 18px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(5, 10, 20, 0.6);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .settings-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .settings-icon { font-size: 18px; }
+    .settings-title {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .settings-nav-tabs {
+      display: flex;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .settings-tab-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .settings-tab-btn:hover { color: #fff; }
+    .settings-tab-btn.active {
+      background: rgba(0, 229, 255, 0.2);
+      color: var(--accent);
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+    }
+
+    .settings-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 22px;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+    }
+
+    .settings-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      animation: viewFadeIn 0.15s ease-out;
+    }
+    .settings-panel.hidden { display: none !important; }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .settings-grid { grid-template-columns: 1fr; }
+      .settings-header { flex-direction: column; align-items: stretch; }
+      .settings-nav-tabs { overflow-x: auto; white-space: nowrap; }
+    }
+
     #conn-alert-box {
       background: rgba(255, 23, 68, 0.14);
       border: 2px solid var(--danger);
@@ -1730,28 +2229,10 @@
       flex-direction: column;
       gap: 8px;
     }
-
-    #conn-alert-box.show {
-      display: flex;
-    }
-
-    .alert-title {
-      font-size: 13.5px;
-      font-weight: 800;
-      color: #ff8a80;
-    }
-
-    .alert-desc {
-      font-size: 11.5px;
-      color: var(--text-main);
-      line-height: 1.5;
-    }
-
-    .alert-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    #conn-alert-box.show { display: flex; }
+    .alert-title { font-size: 13.5px; font-weight: 800; color: #ff8a80; }
+    .alert-desc { font-size: 11.5px; color: var(--text-main); line-height: 1.5; }
+    .alert-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
     .guest-info-box {
       background: rgba(0, 0, 0, 0.35);
@@ -1763,31 +2244,28 @@
       gap: 8px;
     }
 
-    /* Live Mini Terminal for P2P Diagnostic Logs */
     .net-log-container {
       background: rgba(5, 10, 20, 0.85);
       border: 1px solid rgba(0, 229, 255, 0.2);
       border-radius: 8px;
       padding: 8px 10px;
       font-family: 'Consolas', 'Courier New', monospace;
-      font-size: 11px;
+      font-size: 10.5px;
       display: flex;
       flex-direction: column;
       gap: 4px;
-      max-height: 100px;
+      max-height: 95px;
     }
-
     .net-log-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: var(--accent);
       font-weight: 700;
-      font-size: 10.5px;
+      font-size: 10px;
       border-bottom: 1px solid rgba(0, 229, 255, 0.15);
-      padding-bottom: 4px;
+      padding-bottom: 3px;
     }
-
     .net-log-btn {
       background: transparent;
       border: none;
@@ -1796,24 +2274,16 @@
       cursor: pointer;
       text-decoration: underline;
     }
-    .net-log-btn:hover {
-      color: #fff;
-    }
-
+    .net-log-btn:hover { color: #fff; }
     .net-log-content {
       overflow-y: auto;
-      max-height: 70px;
+      max-height: 65px;
       display: flex;
       flex-direction: column;
       gap: 2px;
       padding-right: 4px;
     }
-
-    .net-log-line {
-      line-height: 1.35;
-      color: #cbd5e1;
-      word-break: break-all;
-    }
+    .net-log-line { line-height: 1.35; color: #cbd5e1; word-break: break-all; }
     .net-log-line.info { color: #94a3b8; }
     .net-log-line.ok { color: #00e676; font-weight: 700; }
     .net-log-line.warn { color: #ffca28; }
@@ -1841,12 +2311,7 @@
       align-items: center;
     }
 
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
+    .field-group { display: flex; flex-direction: column; gap: 4px; }
     .field-label {
       font-size: 11px;
       color: #cbd5e1;
@@ -1856,59 +2321,35 @@
       align-items: center;
       letter-spacing: 0.5px;
     }
-
-    .field-hint {
-      font-size: 10px;
-      color: var(--text-dim);
-      font-weight: normal;
-    }
-
-    .field-val {
-      color: var(--accent);
-      font-weight: 800;
-      font-family: Consolas, monospace;
-    }
+    .field-hint { font-size: 10px; color: var(--text-dim); font-weight: normal; }
+    .field-val { color: var(--accent); font-weight: 800; font-family: Consolas, monospace; }
 
     .text-input, .select-input {
       width: 100%;
       background: rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(0, 229, 255, 0.4);
       color: var(--text-main);
-      padding: 7px 10px;
+      padding: 6px 10px;
       border-radius: 6px;
       font-family: inherit;
-      font-size: 12.5px;
+      font-size: 12px;
       outline: none;
       user-select: text;
       -webkit-user-select: text;
       touch-action: manipulation;
       box-sizing: border-box;
     }
-
     .text-input:focus, .select-input:focus {
       border-color: var(--accent);
       box-shadow: 0 0 10px rgba(0, 229, 255, 0.35);
     }
+    .select-input:disabled { opacity: 0.55; cursor: not-allowed; }
+    .select-input option { background: #0e1626; color: var(--text-main); }
 
-    .select-input:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
-
-    .select-input option {
-      background: #0e1626;
-      color: var(--text-main);
-    }
-
-    .url-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
+    .url-row { display: flex; gap: 8px; flex-wrap: wrap; }
     .url-row .text-input {
       flex: 1;
-      min-width: 160px;
+      min-width: 150px;
       font-size: 11px;
       color: #93c5fd;
       font-family: Consolas, monospace;
@@ -1920,28 +2361,25 @@
       background: rgba(0, 229, 255, 0.16);
       border: 1px solid var(--accent);
       color: var(--text-main);
-      padding: 7px 12px;
+      padding: 6px 12px;
       border-radius: 6px;
       font-family: inherit;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.15s ease;
       white-space: nowrap;
       touch-action: manipulation;
     }
-
     .btn:hover:not(:disabled) {
       background: var(--accent);
       color: #050811;
       box-shadow: 0 0 14px rgba(0, 229, 255, 0.5);
     }
-
     .btn-secondary {
       border-color: rgba(255, 255, 255, 0.3);
       background: rgba(255, 255, 255, 0.07);
     }
-
     .btn-secondary:hover:not(:disabled) {
       border-color: #fff;
       background: #fff;
@@ -1949,13 +2387,7 @@
       box-shadow: none;
     }
 
-    /* Keybindings Grid */
-    .keybind-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 7px;
-    }
-
+    .keybind-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
     .kb-item {
       background: rgba(0, 0, 0, 0.35);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1966,7 +2398,6 @@
       align-items: center;
       font-size: 11px;
     }
-
     .kb-btn {
       background: rgba(0, 229, 255, 0.12);
       border: 1px solid rgba(0, 229, 255, 0.45);
@@ -1980,7 +2411,6 @@
       min-width: 78px;
       text-align: center;
     }
-
     .kb-btn.listening {
       background: var(--warn);
       border-color: #fff;
@@ -1988,21 +2418,8 @@
       animation: pulseKey 0.7s infinite alternate;
     }
 
-    @keyframes pulseKey {
-      from { opacity: 0.75; }
-      to { opacity: 1.0; }
-    }
-
-    .dual-control {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .dual-control input[type="range"] {
-      flex: 1;
-    }
-
+    .dual-control { display: flex; align-items: center; gap: 10px; }
+    .dual-control input[type="range"] { flex: 1; }
     .num-input {
       width: 62px;
       background: rgba(0,0,0,0.5);
@@ -2017,13 +2434,7 @@
       user-select: text;
       -webkit-user-select: text;
     }
-
-    input[type="range"] {
-      width: 100%;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
-
+    input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
     input[type="color"] {
       width: 100%;
       height: 26px;
@@ -2032,7 +2443,6 @@
       cursor: pointer;
       border-radius: 4px;
     }
-
     .toggle-row {
       display: flex;
       justify-content: space-between;
@@ -2042,13 +2452,7 @@
       padding: 2px 0;
       cursor: pointer;
     }
-
-    .toggle-row input[type="checkbox"] {
-      width: 15px;
-      height: 15px;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
+    .toggle-row input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
 
     .how-to-guide {
       background: rgba(0, 0, 0, 0.38);
@@ -2059,7 +2463,6 @@
       color: #cbd5e1;
       line-height: 1.6;
     }
-
     .how-to-guide b {
       color: var(--accent);
       background: rgba(0, 229, 255, 0.12);
@@ -2114,6 +2517,32 @@
       <span id="gs-val-tps" class="gs-val">0.0</span>
     </div>
     <button id="gs-reset-btn" class="gs-btn">RESET</button>
+  </div>
+
+  <!-- 3-Second Match Start Countdown Overlay -->
+  <div id="countdown-overlay">
+    <div class="countdown-card">
+      <div class="countdown-eyebrow">MATCH STARTING IN</div>
+      <div id="countdown-val" class="countdown-number">3</div>
+    </div>
+  </div>
+
+  <!-- TDM Real-time Score Bar -->
+  <div id="tdm-hud-bar" class="tdm-hud-container" style="display:none;">
+    <div class="tdm-score-box red">
+      <span class="tdm-team-icon">🔴</span>
+      <span class="tdm-team-label">RED</span>
+      <span id="tdm-score-red" class="tdm-score-val">0</span>
+    </div>
+    <div class="tdm-goal-box">
+      <span class="tdm-goal-label">GOAL</span>
+      <span id="tdm-score-goal" class="tdm-goal-val">20</span>
+    </div>
+    <div class="tdm-score-box blue">
+      <span id="tdm-score-blue" class="tdm-score-val">0</span>
+      <span class="tdm-team-label">BLUE</span>
+      <span class="tdm-team-icon">🔵</span>
+    </div>
   </div>
 
   <!-- In-Game HUD -->
@@ -2242,138 +2671,324 @@
     </table>
   </div>
 
-  <!-- Friendly Lobby & Modern Modular FPS Overlay (#overlay) -->
+  <!-- Custom Room & Modular Modern FPS Overlay System (#overlay) -->
   <div id="overlay">
 
-    <!-- 1. MAIN MENU (タイトル画面) -->
-    <div id="view-main-menu" class="ui-view">
-      <!-- Main Menu Header -->
-      <header class="mm-topbar">
-        <div class="mm-top-left">
-          <span class="badge-version">v2.4.0 (Adaptive Netcode)</span>
+    <!-- A. CUSTOM ROOM LOBBY (メイン待機ロビー画面) -->
+    <div id="view-lobby" class="ui-view">
+      <!-- Top Bar -->
+      <header class="lobby-topbar">
+        <div class="lobby-top-left">
+          <div id="lobby-role-badge" class="badge-role host">👑 HOST</div>
+          <span class="badge-version">v2.4.0 (Custom Room)</span>
           <div id="device-mode-badge" class="badge-device">💻 PCモード</div>
         </div>
-        <div class="mm-top-right">
-          <button id="btn-open-settings" class="btn-fps-ghost" type="button">
+
+        <div class="lobby-top-center">
+          <div id="lobby-status-banner">
+            <div class="status-left">
+              <div id="lobby-status-dot"></div>
+              <div id="lobby-status-text">🟡 ルーム待機中</div>
+            </div>
+            <div id="lobby-peer-count">参加者: 1人</div>
+          </div>
+        </div>
+
+        <div class="lobby-top-right">
+          <button id="copy-url-btn" class="btn-lobby-action" type="button" title="招待URLをクリップボードにコピー">
+            <span class="icon">📋</span>
+            <span>招待URLコピー</span>
+          </button>
+          <button id="btn-solo-gridshot" class="btn-lobby-action" type="button" title="1人用エイム練習場へ">
+            <span class="icon">🎯</span>
+            <span>1人用練習</span>
+          </button>
+          <button id="btn-open-settings" class="btn-fps-ghost" type="button" title="個人設定を開く">
             <span class="icon">⚙️</span>
             <span>SETTINGS</span>
           </button>
         </div>
       </header>
 
-      <!-- Main Menu Center (Logo + Mode + Card + Play Button) -->
-      <main class="mm-center-content">
-        <div class="mm-branding">
-          <h1 class="mm-title">CYBERSTRIKE 3D</h1>
-          <p class="mm-subtitle">FAST-PACED COMPETITIVE MULTIPLAYER FPS & VECTOR ARENA</p>
-        </div>
+      <!-- Main Split Content (Left: Match Settings / Right: Player Roster) -->
+      <main class="lobby-main-grid">
 
-        <!-- Mode Selector Tabs: Arena vs Gridshot -->
-        <div class="mode-tabs">
-          <button id="tab-mode-arena" class="mode-tab-btn active" type="button">⚔️ マルチ対戦モード (ARENA)</button>
-          <button id="tab-mode-gridshot" class="mode-tab-btn" type="button">🎯 練習場モード (GRIDSHOT)</button>
-        </div>
-
-        <!-- Player & Lobby Card -->
-        <div class="mm-card">
-          <!-- Player Name Input Field -->
-          <div class="field-group">
-            <div class="field-label">
-              <span>PLAYER NAME</span>
-              <span class="field-hint">自動保存されます</span>
+        <!-- Left Column: Match Settings (ホストのみ変更可能、ゲストにはリアルタイム同期表示) -->
+        <section class="panel-match-settings">
+          <div class="panel-header">
+            <div class="panel-header-title">
+              <span class="icon">⚙️</span>
+              <span>MATCH SETTINGS (ルーム設定)</span>
             </div>
-            <input type="text" id="opt-name" class="text-input mm-name-input" maxlength="18" placeholder="名前を入力 (例: Player_1)">
+            <span id="host-config-badge" class="badge-host-only">👑 ホスト編集可</span>
           </div>
 
-          <!-- Role Banner (Host vs Guest) -->
-          <div id="lobby-role-banner" class="role-banner host">
-            <div id="role-badge-icon" class="role-badge-icon">👑</div>
-            <div class="role-badge-text">
-              <div id="role-badge-title" class="role-badge-title">👑 あなたは【ホスト（部屋の主催者）】です</div>
-              <div id="role-badge-sub" class="role-badge-sub">招待URLを友達に共有して待機してください。相手が開くと自動で合流します。</div>
-              <div id="role-badge-notice" class="role-badge-notice">⚠️【重要】友達が参加するまで、この画面（タブ）を開いたままにしてください。</div>
+          <div class="settings-form-scroll">
+            <!-- 1. Game Mode -->
+            <div class="setting-row">
+              <label class="setting-label">
+                <span>GAME MODE (対戦ルール)</span>
+                <span class="setting-sub">個人戦またはチーム戦</span>
+              </label>
+              <div class="mode-select-group">
+                <button type="button" id="btn-mode-ffa" class="mode-choice-btn active" data-mode="ffa">
+                  <span class="choice-icon">⚔️</span>
+                  <div class="choice-info">
+                    <span class="choice-title">Free For All (個人戦)</span>
+                    <span class="choice-desc">自分以外の全員が敵</span>
+                  </div>
+                </button>
+                <button type="button" id="btn-mode-tdm" class="mode-choice-btn" data-mode="tdm">
+                  <span class="choice-icon">🛡️</span>
+                  <div class="choice-info">
+                    <span class="choice-title">Team Deathmatch (TDM)</span>
+                    <span class="choice-desc">🔴 RED vs 🔵 BLUE チーム対抗戦</span>
+                  </div>
+                </button>
+              </div>
             </div>
-          </div>
 
-          <!-- Host Share Area (Visible only when Host) -->
-          <div id="arena-host-box" class="field-group">
-            <div class="field-label">
-              <span>📋 招待URL（友達に送るだけで即合流）</span>
+            <!-- 2. Score Limit -->
+            <div class="setting-row">
+              <label class="setting-label">
+                <span>SCORE LIMIT (勝利目標キル数)</span>
+                <span class="setting-sub">このキル数に到達すると決着</span>
+              </label>
+              <div class="score-limit-grid">
+                <button type="button" class="score-btn" data-score="10">10 Kills</button>
+                <button type="button" class="score-btn active" data-score="20">20 Kills</button>
+                <button type="button" class="score-btn" data-score="30">30 Kills</button>
+                <button type="button" class="score-btn" data-score="50">50 Kills</button>
+              </div>
             </div>
-            <div class="url-row">
-              <input type="text" id="invite-url-input" class="text-input" readonly>
-              <button id="copy-url-btn" class="btn" type="button">📋 招待URLをコピー</button>
-            </div>
-            <div style="display:flex; gap:8px; margin-top:4px;">
-              <button id="new-room-btn" class="btn btn-secondary" style="flex:1;" type="button">🏠 新しい部屋を作り直す</button>
-              <button id="manual-reconnect-btn" class="btn btn-secondary" type="button">🔄 再接続</button>
-            </div>
-          </div>
 
-          <!-- Guest Target Info Area (Visible only when Guest) -->
-          <div id="arena-guest-box" class="field-group" style="display:none;">
-            <div class="field-label">
-              <span>🎮 参加中のルーム情報</span>
+            <!-- 3. Arena Map & Theme with 2D Minimap Canvas Preview -->
+            <div id="arena-map-section" class="setting-row">
+              <label class="setting-label">
+                <span>ARENA MAP & THEME (ステージ構造 ＆ 配色)</span>
+              </label>
+              <div class="map-selector-layout">
+                <div class="map-controls-col">
+                  <div class="field-group">
+                    <div class="field-label"><span>マップ構造</span></div>
+                    <select id="opt-map-id" class="select-input">
+                      <option value="standard">Standard Arena (Central Fortress)</option>
+                      <option value="maze">Vertical Maze (立体迷路・高台)</option>
+                      <option value="gallery">Long Range Gallery (遠距離スナイプ回廊)</option>
+                      <option value="apex">Vertical Apex (高低差特化・多層タワー)</option>
+                    </select>
+                  </div>
+
+                  <div class="field-group" style="margin-top:8px;">
+                    <div class="field-label"><span>配色テーマ</span></div>
+                    <select id="opt-map-theme" class="select-input">
+                      <option value="cyber">Cyber Neon (サイバーネオン)</option>
+                      <option value="sunset">Sunset Arena (サンセット・ブライト)</option>
+                      <option value="clinical">Clinical White (クリニカル・ホワイト)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- 140x140 2D Canvas Preview -->
+                <div id="map-preview-wrap">
+                  <canvas id="map-preview-canvas" width="140" height="140"></canvas>
+                  <div class="map-preview-badge">2D MINIMAP</div>
+                </div>
+              </div>
             </div>
-            <div class="guest-info-box">
+
+            <!-- Room Share Input (Hidden helper for copy URL & new room) -->
+            <div id="arena-host-box" class="host-url-box">
+              <div class="url-row">
+                <input type="text" id="invite-url-input" class="text-input" readonly>
+                <button id="new-room-btn" class="btn btn-secondary" type="button">🏠 部屋再作成</button>
+                <button id="manual-reconnect-btn" class="btn btn-secondary" type="button">🔄 再接続</button>
+              </div>
+            </div>
+
+            <!-- Guest Target Info Area (Visible only when Guest) -->
+            <div id="arena-guest-box" class="guest-info-box" style="display:none;">
               <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span style="font-size:12px; color:var(--text-dim);">参加先ホストID:</span>
                 <span id="guest-target-room-label" style="font-size:13.5px; font-weight:800; color:var(--accent);">vsa-xxxxxx</span>
               </div>
               <div style="display:flex; gap:8px;">
-                <button id="guest-retry-btn" class="btn btn-secondary" style="flex:1;" type="button">🔄 ホストへ再接続</button>
+                <button id="guest-retry-btn" class="btn btn-secondary" style="flex:1;" type="button">🔄 再接続</button>
                 <button id="guest-become-host-btn" class="btn" style="flex:1.2;" type="button">👑 自分で部屋を作る</button>
+              </div>
+            </div>
+
+            <!-- Timeout / Connection Failure Recovery Popup -->
+            <div id="conn-alert-box">
+              <div id="conn-alert-title" class="alert-title">⚠️ ホストが見つかりませんでした</div>
+              <div id="conn-alert-desc" class="alert-desc">
+                ホスト（友達）がまだゲーム画面を開いていないか、LINE等の別アプリを開いたまま待機している可能性があります。友達に「ゲーム画面を開いて待ってて！」と伝えて、下の【🔄 もう一度接続を試す】を押してください。
+              </div>
+              <div class="alert-actions">
+                <button id="retry-conn-btn" class="btn" style="flex:1.2;" type="button">🔄 もう一度接続を試す</button>
+                <button id="become-host-btn" class="btn btn-secondary" style="flex:1;" type="button">👑 自分で部屋を作る（ホストになる）</button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Right Column: Player Roster (参加者リスト / FFA or TDMチーム) -->
+        <section class="panel-roster">
+          <div class="panel-header">
+            <div class="panel-header-title">
+              <span class="icon">👥</span>
+              <span>PLAYER ROSTER (参加者一覧)</span>
+            </div>
+            <div class="roster-self-name-wrap">
+              <span class="name-label">YOUR NAME:</span>
+              <input type="text" id="opt-name" class="text-input roster-name-input" maxlength="18" placeholder="Player_1">
+            </div>
+          </div>
+
+          <!-- Roster Views (FFA vs TDM) -->
+          <div class="roster-content-area">
+            <!-- FFA Roster View -->
+            <div id="roster-ffa-view" class="roster-mode-view">
+              <div class="roster-ffa-header">
+                <span>参加プレイヤー</span>
+                <span id="ffa-count-badge" class="count-pill">1人</span>
+              </div>
+              <div id="ffa-player-list" class="player-cards-scroll">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- TDM Roster View (RED vs BLUE) -->
+            <div id="roster-tdm-view" class="roster-mode-view" style="display:none;">
+              <div class="tdm-roster-split">
+                <!-- RED TEAM BOX -->
+                <div class="team-roster-col red-col">
+                  <div class="team-header red">
+                    <div class="team-header-left">
+                      <span class="team-icon">🔴</span>
+                      <span class="team-title">RED TEAM</span>
+                    </div>
+                    <span id="red-count-badge" class="team-count">0人</span>
+                  </div>
+                  <div id="tdm-list-red" class="team-players-list">
+                    <!-- RED players -->
+                  </div>
+                </div>
+
+                <!-- BLUE TEAM BOX -->
+                <div class="team-roster-col blue-col">
+                  <div class="team-header blue">
+                    <div class="team-header-left">
+                      <span class="team-icon">🔵</span>
+                      <span class="team-title">BLUE TEAM</span>
+                    </div>
+                    <span id="blue-count-badge" class="team-count">0人</span>
+                  </div>
+                  <div id="tdm-list-blue" class="team-players-list">
+                    <!-- BLUE players -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- TDM Team Actions Bar -->
+              <div class="tdm-actions-bar">
+                <button id="btn-switch-team" class="btn-team-act" type="button">
+                  <span>⇄ チーム移動 (Switch Team)</span>
+                </button>
+                <button id="btn-auto-balance" class="btn-team-act host-only" type="button">
+                  <span>⚖️ チーム自動振り分け (Auto Balance)</span>
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- Timeout / Connection Failure Recovery Popup -->
-          <div id="conn-alert-box">
-            <div id="conn-alert-title" class="alert-title">⚠️ ホストが見つかりませんでした</div>
-            <div id="conn-alert-desc" class="alert-desc">
-              ホスト（友達）がまだゲーム画面を開いていないか、LINE等の別アプリを開いたまま待機している可能性があります。友達に「ゲーム画面を開いて待ってて！」と伝えて、下の【🔄 もう一度接続を試す】を押してください。
+          <!-- Collapsible Diagnostic Communication Log -->
+          <div id="net-log-box" class="net-log-container">
+            <div class="net-log-header">
+              <span>📡 通信ステータス詳細（LIVE）</span>
+              <button id="net-log-clear-btn" class="net-log-btn" type="button">クリア</button>
             </div>
-            <div class="alert-actions">
-              <button id="retry-conn-btn" class="btn" style="flex:1.2;" type="button">🔄 もう一度接続を試す</button>
-              <button id="become-host-btn" class="btn btn-secondary" style="flex:1;" type="button">👑 自分で部屋を作る（ホストになる）</button>
+            <div id="net-log-content" class="net-log-content">
+              <div class="net-log-line info">システム起動完了。ネットワーク初期化中...</div>
             </div>
           </div>
+        </section>
 
-          <!-- Visual Connection Status Bar -->
-          <div id="lobby-status-banner">
-            <div class="status-left">
-              <div id="lobby-status-dot"></div>
-              <div id="lobby-status-text">🟡 接続中...（相手を探しています）</div>
-            </div>
-            <div id="lobby-peer-count">参加プレイヤー: 1人</div>
-          </div>
-        </div>
-
-        <!-- Gigantic Modern PLAY Button -->
-        <div class="play-action-wrap">
-          <button id="resume-btn" type="button" class="btn-fps-play">
-            <span class="play-icon">▶</span>
-            <span class="play-text">PLAY MATCH</span>
-          </button>
-        </div>
       </main>
 
-      <!-- Main Menu Footer (Collapsible Diagnostic Net-Log) -->
-      <footer class="mm-bottom-bar">
-        <!-- Diagnostic Communication Log -->
-        <div id="net-log-box" class="net-log-container">
-          <div class="net-log-header">
-            <span>📡 通信ステータス詳細（LIVE）</span>
-            <button id="net-log-clear-btn" class="net-log-btn" type="button">クリア</button>
-          </div>
-          <div id="net-log-content" class="net-log-content">
-            <div class="net-log-line info">システム起動完了。ネットワーク初期化中...</div>
-          </div>
+      <!-- Bottom Action Bar (Host: START MATCH / Guest: Waiting...) -->
+      <footer class="lobby-bottom-bar">
+        <!-- Host Start Match Button -->
+        <div id="host-action-box" class="bottom-action-container">
+          <button id="btn-start-match" class="btn-fps-start-match" type="button">
+            <span class="start-icon">▶</span>
+            <span class="start-text">START MATCH (全員で試合開始)</span>
+          </button>
         </div>
+
+        <!-- Guest Waiting / Join In-Progress Banner -->
+        <div id="guest-action-box" class="bottom-action-container" style="display:none;">
+          <div id="guest-waiting-box" class="guest-status-banner">
+            <span class="spinner-dot"></span>
+            <span class="guest-msg">⏳ ホストが試合を開始するのを待っています...</span>
+          </div>
+          <button id="btn-join-in-progress" class="btn-fps-join-in-progress" style="display:none;" type="button">
+            <span class="icon">⚔️</span>
+            <span>途中参戦する (JOIN IN-PROGRESS)</span>
+          </button>
+        </div>
+
+        <!-- Hidden compat dummy buttons for existing code references -->
+        <button id="resume-btn" type="button" style="display:none;"></button>
+        <button id="tab-mode-arena" type="button" style="display:none;"></button>
+        <button id="tab-mode-gridshot" type="button" style="display:none;"></button>
       </footer>
     </div>
 
-    <!-- 2. PAUSE MENU (ESCメニュー) -->
+    <!-- B. MATCH RESULT VIEW (決着リザルト画面) -->
+    <div id="view-result" class="ui-view hidden">
+      <div class="result-modal">
+        <div class="result-header">
+          <div class="result-eyebrow">MATCH COMPLETED</div>
+          <h1 id="result-winner-title" class="result-winner-title">🏆 RED TEAM VICTORY!</h1>
+          <p id="result-winner-sub" class="result-winner-sub">目標キル数に到達しました</p>
+        </div>
+
+        <div class="result-table-wrap">
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>RANK</th>
+                <th>PLAYER</th>
+                <th>TEAM</th>
+                <th>KILLS</th>
+                <th>DEATHS</th>
+                <th>K/D</th>
+                <th>HS%</th>
+              </tr>
+            </thead>
+            <tbody id="result-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="result-footer">
+          <div class="result-auto-timer">
+            <span id="result-timer-text">⏱️ 8秒後に自動でロビーへ帰還します</span>
+            <div class="result-timer-bar"><div id="result-timer-fill" class="result-timer-fill"></div></div>
+          </div>
+          <div class="result-actions">
+            <button id="btn-result-return-lobby" class="btn-fps-start-match" type="button">
+              <span>🏠 RETURN TO LOBBY (ロビーへ戻る)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C. IN-GAME PAUSE MENU (ESCメニュー) -->
     <div id="view-pause-menu" class="ui-view hidden">
       <div class="pause-card">
         <div class="pause-header">
@@ -2383,49 +2998,49 @@
         <div class="pause-actions">
           <button id="pause-resume-btn" class="btn-fps-pause btn-pause-primary" type="button">
             <span class="icon">▶</span>
-            <span class="label">RESUME MATCH</span>
+            <span class="label">RESUME MATCH (試合に戻る)</span>
           </button>
           <button id="pause-settings-btn" class="btn-fps-pause btn-pause-secondary" type="button">
             <span class="icon">⚙️</span>
-            <span class="label">SETTINGS</span>
+            <span class="label">SETTINGS (個人設定)</span>
           </button>
           <button id="pause-leave-btn" class="btn-fps-pause btn-pause-danger" type="button">
             <span class="icon">🚪</span>
-            <span class="label">LEAVE MATCH</span>
+            <span class="label">RETURN TO LOBBY (ロビーへ戻る)</span>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- 3. SETTINGS MENU (設定画面 - タブ切り替え式) -->
-    <div id="view-settings-menu" class="ui-view hidden">
-      <div class="settings-modal">
+    <!-- D. SETTINGS MODAL (個人設定モーダル窓 - 最前面) -->
+    <div id="modal-settings" class="settings-modal-overlay hidden">
+      <div class="settings-modal-window">
         <!-- Settings Header & Tab Bar -->
         <div class="settings-header">
           <div class="settings-title-wrap">
             <span class="settings-icon">⚙️</span>
-            <h2 class="settings-title">SETTINGS</h2>
+            <h2 class="settings-title">SETTINGS (個人設定)</h2>
           </div>
           <!-- Tab Navigation -->
           <div class="settings-nav-tabs">
-            <button id="settings-tab-gameplay" class="settings-tab-btn active" type="button">🎮 GAMEPLAY</button>
-            <button id="settings-tab-controls" class="settings-tab-btn" type="button">🎯 CONTROLS</button>
-            <button id="settings-tab-crosshair" class="settings-tab-btn" type="button">➕ CROSSHAIR</button>
-            <button id="settings-tab-audio" class="settings-tab-btn" type="button">🔊 AUDIO & GUIDE</button>
+            <button id="settings-tab-gameplay" class="settings-tab-btn active" type="button">🎮 視点/感度</button>
+            <button id="settings-tab-crosshair" class="settings-tab-btn" type="button">➕ クロスヘア</button>
+            <button id="settings-tab-controls" class="settings-tab-btn" type="button">⌨️ 操作/キー設定</button>
+            <button id="settings-tab-audio" class="settings-tab-btn" type="button">🔊 音量 & ガイド</button>
           </div>
-          <!-- Back Button -->
-          <button id="settings-back-btn" class="btn-fps-ghost" type="button">
-            <span>◀ BACK</span>
+          <!-- Close Button -->
+          <button id="btn-close-settings" class="btn-fps-ghost" type="button">
+            <span>✖ 閉じる</span>
           </button>
         </div>
 
         <!-- Settings Body Panels -->
         <div class="settings-body">
 
-          <!-- Panel 1: GAMEPLAY -->
+          <!-- Panel 1: GAMEPLAY & SENSITIVITY -->
           <div id="settings-panel-gameplay" class="settings-panel">
             <div class="settings-grid">
-              <!-- Field: FOV -->
+              <!-- Field: FOV & View Options -->
               <div class="panel-section">
                 <div class="section-title"><span>視野角 (FOV) ＆ 視点設定</span></div>
                 <div class="field-group">
@@ -2446,7 +3061,7 @@
                     <input type="checkbox" id="opt-show-weapon" checked>
                   </label>
                   <label class="toggle-row" style="grid-column: span 2;">
-                    <span>スナイパー(武器2)切り替え時に自動でスコープを覗く</span>
+                    <span>スナイパー(武器2)切り替え時に自動スコープ</span>
                     <input type="checkbox" id="opt-auto-scope">
                   </label>
                 </div>
@@ -2461,65 +3076,9 @@
                 </div>
               </div>
 
-              <!-- Arena Map Selection & 2D Minimap Preview -->
-              <div id="arena-map-section" class="panel-section">
-                <div class="section-title">
-                  <span>アリーナマップ選択 ＆ 2Dミニマップ構造</span>
-                  <span id="host-map-lock-hint" style="font-size:10px; color:var(--accent);">👑 ホスト選択可能</span>
-                </div>
-
-                <div class="map-selector-layout">
-                  <div class="map-controls-col">
-                    <div class="field-group">
-                      <div class="field-label"><span>ステージ構造 (Layout)</span></div>
-                      <select id="opt-map-id" class="select-input">
-                        <option value="standard">Standard Arena (Central Fortress)</option>
-                        <option value="maze">Vertical Maze (立体迷路・高台)</option>
-                        <option value="gallery">Long Range Gallery (遠距離スナイプ回廊)</option>
-                        <option value="apex">Vertical Apex (高低差特化・多層タワー)</option>
-                      </select>
-                    </div>
-
-                    <div class="field-group">
-                      <div class="field-label"><span>配色テーマ (Visual Theme)</span></div>
-                      <select id="opt-map-theme" class="select-input">
-                        <option value="cyber">Cyber Neon (サイバーネオン)</option>
-                        <option value="sunset">Sunset Arena (サンセット・ブライト)</option>
-                        <option value="clinical">Clinical White (クリニカル・ホワイト)</option>
-                      </select>
-                    </div>
-
-                    <div style="font-size:11px; color:var(--text-dim); line-height:1.45;">
-                      ※右の2Dプレビューは外周壁・高台・遮蔽物・スポーン地点(緑点)をリアルタイム表示します。
-                    </div>
-                  </div>
-
-                  <!-- 140x140 2D Top-Down Canvas Preview -->
-                  <div id="map-preview-wrap">
-                    <canvas id="map-preview-canvas" width="140" height="140"></canvas>
-                    <div class="map-preview-badge">2D TOP-DOWN</div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Gridshot Notice -->
-              <div id="gridshot-notice-section" class="panel-section" style="display:none; background:rgba(0,229,255,0.04); border-color:var(--accent); grid-column: span 2;">
-                <div class="section-title"><span>🎯 5x5 グリッドショット練習場モード概要</span></div>
-                <div style="font-size:12px; color:#cbd5e1; line-height:1.65;">
-                  正面の壁に整列した25個のターゲットのうち、赤く点灯したターゲットを撃ち抜くエイム強化モードです。<br>
-                  ・<b>感度・FOV・武器</b>は対戦モードと100%同一でシームレスに練習可能！<br>
-                  ・<b>Hits / Misses / 命中率 / 秒間ターゲット数(TPS)</b>をリアルタイム集計。
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Panel 2: CONTROLS -->
-          <div id="settings-panel-controls" class="settings-panel hidden">
-            <div class="settings-grid">
-              <!-- Sensitivity -->
+              <!-- Sensitivity Dual Controls -->
               <div class="panel-section">
-                <div class="section-title"><span>エイム感度 (Sensitivity)</span></div>
+                <div class="section-title"><span>エイム感度設定</span></div>
 
                 <div class="field-group">
                   <div class="field-label">
@@ -2541,8 +3100,66 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
 
-              <!-- Keybindings -->
+          <!-- Panel 2: CROSSHAIR -->
+          <div id="settings-panel-crosshair" class="settings-panel hidden">
+            <div class="settings-grid">
+              <!-- Live Preview Box -->
+              <div class="panel-section" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <div class="section-title" style="width:100%;"><span>リアルタイム照準プレビュー (Real-Time Preview)</span></div>
+                <div id="ch-preview-box" style="margin-top:12px;">
+                  <span id="ch-preview-label">LIVE PREVIEW</span>
+                  <div id="ch-preview-anchor">
+                    <div class="ch-part ch-top"></div>
+                    <div class="ch-part ch-bottom"></div>
+                    <div class="ch-part ch-left"></div>
+                    <div class="ch-part ch-right"></div>
+                    <div id="ch-preview-dot" class="ch-part ch-dot"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Parameters -->
+              <div class="panel-section">
+                <div class="section-title"><span>クロスヘア詳細パラメータ</span></div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                  <div class="field-group">
+                    <div class="field-label"><span>サイズ (長さ)</span><span id="val-ch-size" class="field-val">10px</span></div>
+                    <input type="range" id="opt-ch-size" min="2" max="30" step="1" value="10">
+                  </div>
+                  <div class="field-group">
+                    <div class="field-label"><span>中央の間隔</span><span id="val-ch-gap" class="field-val">4px</span></div>
+                    <input type="range" id="opt-ch-gap" min="0" max="20" step="1" value="4">
+                  </div>
+                  <div class="field-group">
+                    <div class="field-label"><span>線の太さ</span><span id="val-ch-thick" class="field-val">2px</span></div>
+                    <input type="range" id="opt-ch-thick" min="1" max="8" step="1" value="2">
+                  </div>
+                  <div class="field-group">
+                    <div class="field-label"><span>照準カラー</span></div>
+                    <input type="color" id="opt-ch-color" value="#00ff66">
+                  </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px;">
+                  <label class="toggle-row">
+                    <span>中央ドットを表示</span>
+                    <input type="checkbox" id="opt-ch-dot">
+                  </label>
+                  <label class="toggle-row">
+                    <span>黒縁取りを表示</span>
+                    <input type="checkbox" id="opt-ch-outline" checked>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 3: CONTROLS & KEYBINDINGS -->
+          <div id="settings-panel-controls" class="settings-panel hidden">
+            <div class="settings-grid" style="grid-template-columns:1fr;">
               <div class="panel-section">
                 <div class="section-title">
                   <span>キーバインド設定 (Keybindings)</span>
@@ -2573,60 +3190,6 @@
                     <span>スコープ (右クリック常時可)</span>
                     <button id="kb-scope" class="kb-btn" data-action="scope" type="button">MouseRight</button>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Panel 3: CROSSHAIR -->
-          <div id="settings-panel-crosshair" class="settings-panel hidden">
-            <div class="settings-grid">
-              <!-- Live Preview Box -->
-              <div class="panel-section" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                <div class="section-title" style="width:100%;"><span>リアルタイム照準プレビュー (Real-Time Preview)</span></div>
-                <div id="ch-preview-box" style="margin-top:12px;">
-                  <span id="ch-preview-label">LIVE PREVIEW</span>
-                  <div id="ch-preview-anchor">
-                    <div class="ch-part ch-top"></div>
-                    <div class="ch-part ch-bottom"></div>
-                    <div class="ch-part ch-left"></div>
-                    <div class="ch-part ch-right"></div>
-                    <div id="ch-preview-dot" class="ch-part ch-dot"></div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Parameters -->
-              <div class="panel-section">
-                <div class="section-title"><span>クロスヘア詳細設定</span></div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                  <div class="field-group">
-                    <div class="field-label"><span>サイズ (長さ)</span><span id="val-ch-size" class="field-val">10px</span></div>
-                    <input type="range" id="opt-ch-size" min="2" max="30" step="1" value="10">
-                  </div>
-                  <div class="field-group">
-                    <div class="field-label"><span>中央の間隔</span><span id="val-ch-gap" class="field-val">4px</span></div>
-                    <input type="range" id="opt-ch-gap" min="0" max="20" step="1" value="4">
-                  </div>
-                  <div class="field-group">
-                    <div class="field-label"><span>線の太さ</span><span id="val-ch-thick" class="field-val">2px</span></div>
-                    <input type="range" id="opt-ch-thick" min="1" max="8" step="1" value="2">
-                  </div>
-                  <div class="field-group">
-                    <div class="field-label"><span>照準カラー</span></div>
-                    <input type="color" id="opt-ch-color" value="#00ff66">
-                  </div>
-                </div>
-
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px;">
-                  <label class="toggle-row">
-                    <span>中央ドットを表示</span>
-                    <input type="checkbox" id="opt-ch-dot">
-                  </label>
-                  <label class="toggle-row">
-                    <span>黒縁取りを表示</span>
-                    <input type="checkbox" id="opt-ch-outline" checked>
-                  </label>
                 </div>
               </div>
             </div>
@@ -3881,12 +4444,17 @@
       }
     }
 
-    function getRandomSpawn() {
+    function getRandomSpawn(overrideTeam) {
       if (config.gameMode === 'gridshot') {
         return { x: 0, y: 0, z: 6.5 };
       }
       const mDef = MAP_DEFINITIONS[currentArenaMapId] || MAP_DEFINITIONS.standard;
-      const pts = mDef.spawns;
+      let pts = mDef.spawns || [{ x: 0, z: 0 }];
+      const t = overrideTeam || localPlayer.team;
+      if (matchConfig.mode === 'tdm') {
+        const filtered = pts.filter(p => (t === 'red' ? p.z <= 0 : p.z >= 0));
+        if (filtered.length > 0) pts = filtered;
+      }
       const pt = pts[Math.floor(Math.random() * pts.length)];
       return {
         x: pt.x + (Math.random() - 0.5) * 1.6,
@@ -3924,6 +4492,7 @@
       pitch: 0,
       crouch: false,
       currentEyeH: STAND_EYE,
+      team: 'red',
       weapon: 'ar',
       isScoped: false,
       hp: MAX_HP,
@@ -4013,37 +4582,162 @@
     }
 
     /*************************************************************************
-     * Modern UI View State Management (Main Menu / Pause Menu / Settings)
+     * Custom Room State Machine & UI Management (Lobby / Countdown / Match / Result)
      *************************************************************************/
-    let currentView = 'main'; // 'main' | 'pause' | 'settings'
-    let settingsSourceView = 'main';
+    let roomState = 'LOBBY'; // 'LOBBY' | 'COUNTDOWN' | 'IN_MATCH' | 'RESULT'
+    let lobbyCamAngle = 0;
 
-    function switchView(viewName) {
-      currentView = viewName;
-      const vMain = document.getElementById('view-main-menu');
-      const vPause = document.getElementById('view-pause-menu');
-      const vSettings = document.getElementById('view-settings-menu');
+    const matchConfig = {
+      mode: 'ffa', // 'ffa' | 'tdm'
+      scoreLimit: 20, // 10 | 20 | 30 | 50
+      mapId: 'standard',
+      mapTheme: 'cyber'
+    };
 
-      if (vMain) vMain.classList.toggle('hidden', viewName !== 'main');
-      if (vPause) vPause.classList.toggle('hidden', viewName !== 'pause');
-      if (vSettings) vSettings.classList.toggle('hidden', viewName !== 'settings');
+    function updateRoomConfigUI() {
+      // モードボタン
+      document.querySelectorAll('.mode-choice-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.mode === matchConfig.mode);
+        b.disabled = !isHost;
+      });
+
+      // スコアボタン
+      document.querySelectorAll('.score-btn').forEach(b => {
+        b.classList.toggle('active', Number(b.dataset.score) === Number(matchConfig.scoreLimit));
+        b.disabled = !isHost;
+      });
+
+      // マップとテーマセレクト
+      const mapSelect = document.getElementById('opt-map-id');
+      if (mapSelect) {
+        mapSelect.value = matchConfig.mapId;
+        mapSelect.disabled = !isHost;
+      }
+      const themeSelect = document.getElementById('opt-map-theme');
+      if (themeSelect) {
+        themeSelect.value = matchConfig.mapTheme;
+        themeSelect.disabled = !isHost;
+      }
+
+      // ホストバッジ表示切替
+      const hostBadge = document.getElementById('host-config-badge');
+      if (hostBadge) {
+        hostBadge.textContent = isHost ? '👑 ホスト編集可' : '🔒 ホスト設定同期中';
+        hostBadge.style.color = isHost ? '#ffd54f' : '#94a3b8';
+      }
+
+      // Rosterビューの切り替え (FFA vs TDM)
+      const ffaView = document.getElementById('roster-ffa-view');
+      const tdmView = document.getElementById('roster-tdm-view');
+      if (ffaView) ffaView.style.display = (matchConfig.mode === 'ffa') ? 'flex' : 'none';
+      if (tdmView) tdmView.style.display = (matchConfig.mode === 'tdm') ? 'flex' : 'none';
+
+      // アクションバーの表示切替 (ホスト vs ゲスト)
+      const hostBox = document.getElementById('host-action-box');
+      const guestBox = document.getElementById('guest-action-box');
+      if (hostBox) hostBox.style.display = isHost ? 'flex' : 'none';
+      if (guestBox) guestBox.style.display = isHost ? 'none' : 'flex';
+
+      const guestWait = document.getElementById('guest-waiting-box');
+      const guestJoin = document.getElementById('btn-join-in-progress');
+      if (guestWait && guestJoin) {
+        const inProgress = (roomState === 'IN_MATCH');
+        guestWait.style.display = inProgress ? 'none' : 'flex';
+        guestJoin.style.display = inProgress ? 'flex' : 'none';
+      }
+
+      // TDM HUDバーの目標表示更新
+      const tdmGoal = document.getElementById('tdm-score-goal');
+      if (tdmGoal) tdmGoal.textContent = matchConfig.scoreLimit;
+
+      renderRosterList();
+      drawMapPreview();
     }
 
-    function openMainMenu() {
-      stopKeybindListening();
+    function renderRosterList() {
+      const allPlayers = [localPlayer];
+      Object.values(remotePlayers).forEach(p => {
+        if (p && p.id) allPlayers.push(p);
+      });
+
+      if (matchConfig.mode === 'ffa') {
+        const ffaList = document.getElementById('ffa-player-list');
+        const countBadge = document.getElementById('ffa-count-badge');
+        if (countBadge) countBadge.textContent = allPlayers.length + '人';
+        if (ffaList) {
+          ffaList.innerHTML = allPlayers.map(p => {
+            const isSelf = (p.id === localPlayer.id);
+            const isPlayerHost = isSelf ? isHost : (p.isHost || p.id === hostPeerId);
+            return `
+              <div class="roster-player-row ${isSelf ? 'self' : ''}">
+                <div class="player-row-left">
+                  <span>${isPlayerHost ? '👑' : '🎮'}</span>
+                  <span>${escapeHtml(p.name || 'Player')} ${isSelf ? '(YOU)' : ''}</span>
+                </div>
+                <div class="player-row-right">
+                  <span>Ping: ${isSelf ? (isHost ? 0 : localPlayer.ping) : (p.ping || 0)}ms</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      } else {
+        // TDM: RED vs BLUE
+        const redList = document.getElementById('tdm-list-red');
+        const blueList = document.getElementById('tdm-list-blue');
+        const redBadge = document.getElementById('red-count-badge');
+        const blueBadge = document.getElementById('blue-count-badge');
+
+        const redPlayers = allPlayers.filter(p => p.team === 'red');
+        const bluePlayers = allPlayers.filter(p => p.team === 'blue');
+
+        if (redBadge) redBadge.textContent = redPlayers.length + '人';
+        if (blueBadge) blueBadge.textContent = bluePlayers.length + '人';
+
+        const renderTeamRows = (arr) => arr.map(p => {
+          const isSelf = (p.id === localPlayer.id);
+          const isPlayerHost = isSelf ? isHost : (p.isHost || p.id === hostPeerId);
+          return `
+            <div class="roster-player-row ${isSelf ? 'self' : ''}">
+              <div class="player-row-left">
+                <span>${isPlayerHost ? '👑' : '•'}</span>
+                <span>${escapeHtml(p.name || 'Player')} ${isSelf ? '(YOU)' : ''}</span>
+              </div>
+              <div class="player-row-right">
+                <span>${isSelf ? (isHost ? 0 : localPlayer.ping) : (p.ping || 0)}ms</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        if (redList) redList.innerHTML = renderTeamRows(redPlayers);
+        if (blueList) blueList.innerHTML = renderTeamRows(bluePlayers);
+      }
+    }
+
+    function switchView(viewName) {
+      const vLobby = document.getElementById('view-lobby');
+      const vResult = document.getElementById('view-result');
+      const vPause = document.getElementById('view-pause-menu');
+
+      if (vLobby) vLobby.classList.toggle('hidden', viewName !== 'lobby');
+      if (vResult) vResult.classList.toggle('hidden', viewName !== 'result');
+      if (vPause) vPause.classList.toggle('hidden', viewName !== 'pause');
+    }
+
+    function openLobby() {
+      roomState = 'LOBBY';
       isGameActive = false;
       isMouseDown = false;
-      touchState.moveX = 0;
-      touchState.moveY = 0;
-      touchState.jumping = false;
-      touchState.firing = false;
       Object.keys(pressedCodes).forEach(k => pressedCodes[k] = false);
       updateCameraFovAndScope();
       tabBoard.classList.remove('show');
       mobileControlsEl.classList.remove('active');
+      document.getElementById('tdm-hud-bar').style.display = 'none';
 
-      switchView('main');
+      switchView('lobby');
       overlay.classList.remove('hidden');
+      updateRoomConfigUI();
 
       try {
         if (document.pointerLockElement && document.exitPointerLock) {
@@ -4053,13 +4747,8 @@
     }
 
     function openPauseMenu() {
-      stopKeybindListening();
       isGameActive = false;
       isMouseDown = false;
-      touchState.moveX = 0;
-      touchState.moveY = 0;
-      touchState.jumping = false;
-      touchState.firing = false;
       Object.keys(pressedCodes).forEach(k => pressedCodes[k] = false);
       updateCameraFovAndScope();
       tabBoard.classList.remove('show');
@@ -4075,110 +4764,411 @@
       } catch (e) {}
     }
 
-    function openSettingsMenu(fromView) {
-      settingsSourceView = fromView || currentView || 'main';
-      switchView('settings');
-      overlay.classList.remove('hidden');
-      setTimeout(drawMapPreview, 60);
+    function openSettingsModal() {
+      const modal = document.getElementById('modal-settings');
+      if (modal) modal.classList.remove('hidden');
     }
 
-    function closeSettingsMenu() {
-      switchView(settingsSourceView || 'main');
+    function closeSettingsModal() {
+      const modal = document.getElementById('modal-settings');
+      if (modal) modal.classList.add('hidden');
     }
 
-    function leaveMatchToMainMenu() {
-      isGameActive = false;
-      openMainMenu();
+    // ホスト主導のカウントダウン開始
+    function hostStartMatchCountdown() {
+      if (!isHost) return;
+      if (roomState === 'COUNTDOWN' || roomState === 'IN_MATCH') return;
+
+      roomState = 'COUNTDOWN';
+      broadcastFromHost({
+        type: 'match_start_countdown',
+        matchConfig: matchConfig,
+        countdownSec: 3
+      });
+      runMatchStartCountdown(3);
     }
 
-    // 互換性ラッパー
-    function openLobbyMenu() {
-      if (isGameActive) {
-        openPauseMenu();
-      } else {
-        openMainMenu();
+    let countdownTimer = null;
+    function runMatchStartCountdown(sec = 3) {
+      roomState = 'COUNTDOWN';
+      let current = sec;
+      const countOverlay = document.getElementById('countdown-overlay');
+      const countVal = document.getElementById('countdown-val');
+      if (countOverlay && countVal) {
+        countOverlay.style.display = 'flex';
+        countVal.textContent = current;
       }
+      playSound('hit_head');
+
+      if (countdownTimer) clearInterval(countdownTimer);
+      countdownTimer = setInterval(() => {
+        current--;
+        if (current > 0) {
+          if (countVal) countVal.textContent = current;
+          playSound('hit_head');
+        } else if (current === 0) {
+          if (countVal) countVal.textContent = 'START!';
+          playSound('respawn');
+        } else {
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+          if (countOverlay) countOverlay.style.display = 'none';
+          executeMatchStart();
+        }
+      }, 1000);
     }
 
-    function enterArenaGameplay(e) {
-      if (e) e.stopPropagation();
-      stopKeybindListening();
-
-      const nameInputEl = document.getElementById('opt-name');
-      if (nameInputEl) {
-        const enteredName = nameInputEl.value.trim();
-        config.name = enteredName || ('Player_' + randomSuffix);
-        localPlayer.name = config.name;
-        applySettings();
-        updateLeaderboardUI();
-      }
-
-      ensureAudio();
+    function executeMatchStart() {
+      roomState = 'IN_MATCH';
       overlay.classList.add('hidden');
       isGameActive = true;
-      updateCameraFovAndScope();
+
+      // スコア初期化
+      localPlayer.kills = 0;
+      localPlayer.deaths = 0;
+      localPlayer.hsKills = 0;
+      Object.values(remotePlayers).forEach(p => {
+        if (p) {
+          p.kills = 0;
+          p.deaths = 0;
+          p.hsKills = 0;
+        }
+      });
+
+      // マップ同期再構築
+      buildArenaMap(matchConfig.mapId, matchConfig.mapTheme);
+      respawnLocalPlayer();
+
+      // TDM HUDバー表示切替
+      const tdmBar = document.getElementById('tdm-hud-bar');
+      if (tdmBar) {
+        tdmBar.style.display = (matchConfig.mode === 'tdm') ? 'flex' : 'none';
+        updateTdmScoreHud();
+      }
 
       if (isMobile) {
         mobileControlsEl.classList.add('active');
       } else {
         try {
           if (renderer.domElement && renderer.domElement.requestPointerLock) {
-            const lockPromise = renderer.domElement.requestPointerLock();
-            if (lockPromise && typeof lockPromise.catch === 'function') {
-              lockPromise.catch(() => {});
-            }
+            renderer.domElement.requestPointerLock();
           }
-        } catch (err) {}
+        } catch (e) {}
       }
     }
 
-    // --- Modern Button Event Listeners ---
-    // Main Menu: PLAY
-    resumeBtn.addEventListener('click', enterArenaGameplay);
-    resumeBtn.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      enterArenaGameplay(e);
-    }, { passive: false });
-
-    // Main Menu: SETTINGS
-    const btnOpenSettings = document.getElementById('btn-open-settings');
-    if (btnOpenSettings) {
-      btnOpenSettings.addEventListener('click', () => openSettingsMenu('main'));
+    function updateTdmScoreHud() {
+      if (matchConfig.mode !== 'tdm') return;
+      let redKills = (localPlayer.team === 'red' ? localPlayer.kills : 0);
+      let blueKills = (localPlayer.team === 'blue' ? localPlayer.kills : 0);
+      Object.values(remotePlayers).forEach(p => {
+        if (p) {
+          if (p.team === 'red') redKills += (p.kills || 0);
+          else if (p.team === 'blue') blueKills += (p.kills || 0);
+        }
+      });
+      const rEl = document.getElementById('tdm-score-red');
+      const bEl = document.getElementById('tdm-score-blue');
+      const gEl = document.getElementById('tdm-score-goal');
+      if (rEl) rEl.textContent = redKills;
+      if (bEl) bEl.textContent = blueKills;
+      if (gEl) gEl.textContent = matchConfig.scoreLimit;
     }
 
-    // Pause Menu: RESUME
-    const pauseResumeBtn = document.getElementById('pause-resume-btn');
-    if (pauseResumeBtn) {
-      pauseResumeBtn.addEventListener('click', enterArenaGameplay);
-      pauseResumeBtn.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        enterArenaGameplay(e);
-      }, { passive: false });
+    // 決着判定
+    function checkMatchFinishConditions(attackerId, isHead) {
+      if (!isHost || roomState !== 'IN_MATCH') return;
+
+      const limit = Number(matchConfig.scoreLimit) || 20;
+
+      if (matchConfig.mode === 'ffa') {
+        const all = [localPlayer, ...Object.values(remotePlayers)];
+        const winner = all.find(p => p && (p.kills || 0) >= limit);
+        if (winner) {
+          triggerMatchFinish(`WINNER: ${winner.name || 'Player'}`, null);
+        }
+      } else {
+        // TDM
+        let redTotal = (localPlayer.team === 'red' ? localPlayer.kills : 0);
+        let blueTotal = (localPlayer.team === 'blue' ? localPlayer.kills : 0);
+        Object.values(remotePlayers).forEach(p => {
+          if (p) {
+            if (p.team === 'red') redTotal += (p.kills || 0);
+            else if (p.team === 'blue') blueTotal += (p.kills || 0);
+          }
+        });
+
+        if (redTotal >= limit) {
+          triggerMatchFinish('RED TEAM VICTORY!', 'red');
+        } else if (blueTotal >= limit) {
+          triggerMatchFinish('BLUE TEAM VICTORY!', 'blue');
+        }
+      }
     }
 
-    // Pause Menu: SETTINGS
-    const pauseSettingsBtn = document.getElementById('pause-settings-btn');
-    if (pauseSettingsBtn) {
-      pauseSettingsBtn.addEventListener('click', () => openSettingsMenu('pause'));
+    let resultReturnTimer = null;
+    function triggerMatchFinish(winnerText, winnerTeam) {
+      roomState = 'RESULT';
+      isGameActive = false;
+      document.getElementById('tdm-hud-bar').style.display = 'none';
+
+      // 全員の統計データを作成
+      const all = [localPlayer, ...Object.values(remotePlayers)].map(p => {
+        const k = p.kills || 0;
+        const d = p.deaths || 0;
+        const kd = d === 0 ? k.toFixed(1) : (k / d).toFixed(2);
+        const hsPct = k === 0 ? '0%' : Math.round(((p.hsKills || 0) / k) * 100) + '%';
+        return {
+          id: p.id,
+          name: p.name || 'Player',
+          team: p.team || 'red',
+          kills: k,
+          deaths: d,
+          kd: kd,
+          hsPct: hsPct
+        };
+      });
+
+      all.sort((a, b) => b.kills - a.kills);
+
+      const payload = {
+        type: 'match_result',
+        winnerText: winnerText,
+        winnerTeam: winnerTeam,
+        stats: all
+      };
+
+      if (isHost) {
+        broadcastFromHost(payload);
+      }
+      displayMatchResult(payload);
     }
 
-    // Pause Menu: LEAVE MATCH
-    const pauseLeaveBtn = document.getElementById('pause-leave-btn');
-    if (pauseLeaveBtn) {
-      pauseLeaveBtn.addEventListener('click', leaveMatchToMainMenu);
+    function displayMatchResult(payload) {
+      roomState = 'RESULT';
+      isGameActive = false;
+      switchView('result');
+      overlay.classList.remove('hidden');
+
+      try {
+        if (document.pointerLockElement && document.exitPointerLock) {
+          document.exitPointerLock();
+        }
+      } catch (e) {}
+
+      const titleEl = document.getElementById('result-winner-title');
+      const subEl = document.getElementById('result-winner-sub');
+      const tbody = document.getElementById('result-tbody');
+      const returnBtn = document.getElementById('btn-result-return-lobby');
+
+      if (titleEl) titleEl.textContent = '🏆 ' + payload.winnerText;
+      if (subEl) subEl.textContent = `SCORE LIMIT (${matchConfig.scoreLimit} KILLS) REACHED`;
+
+      if (returnBtn) {
+        returnBtn.style.display = isHost ? 'flex' : 'none';
+      }
+
+      if (tbody && Array.isArray(payload.stats)) {
+        tbody.innerHTML = payload.stats.map((s, idx) => {
+          const isWinner = (idx === 0) || (payload.winnerTeam && s.team === payload.winnerTeam);
+          return `
+            <tr class="${isWinner ? 'winner-row' : ''}">
+              <td style="font-weight:900;">#${idx + 1}</td>
+              <td style="font-weight:700;">${escapeHtml(s.name)}</td>
+              <td>${matchConfig.mode === 'tdm' ? (s.team === 'red' ? '🔴 RED' : '🔵 BLUE') : 'FFA'}</td>
+              <td style="color:var(--accent); font-weight:800;">${s.kills}</td>
+              <td style="color:#ff8a80;">${s.deaths}</td>
+              <td>${s.kd}</td>
+              <td>${s.hsPct}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // 8秒カウントダウンで自動ロビー帰還
+      let remainSec = 8;
+      const fillEl = document.getElementById('result-timer-fill');
+      const textEl = document.getElementById('result-timer-text');
+      if (fillEl) fillEl.style.width = '100%';
+
+      if (resultReturnTimer) clearInterval(resultReturnTimer);
+      resultReturnTimer = setInterval(() => {
+        remainSec--;
+        if (textEl) textEl.textContent = `⏱️ ${remainSec}秒後に自動でロビーへ帰還します`;
+        if (fillEl) fillEl.style.width = Math.max(0, (remainSec / 8) * 100) + '%';
+
+        if (remainSec <= 0) {
+          clearInterval(resultReturnTimer);
+          resultReturnTimer = null;
+          if (isHost) hostReturnToLobby();
+        }
+      }, 1000);
     }
 
-    // Settings Menu: BACK
-    const settingsBackBtn = document.getElementById('settings-back-btn');
-    if (settingsBackBtn) {
-      settingsBackBtn.addEventListener('click', closeSettingsMenu);
+    function hostReturnToLobby() {
+      if (!isHost) return;
+      if (resultReturnTimer) {
+        clearInterval(resultReturnTimer);
+        resultReturnTimer = null;
+      }
+      broadcastFromHost({ type: 'return_to_lobby' });
+      openLobby();
     }
 
-    // Settings Menu: Tab Switching
+    function broadcastRoomSync() {
+      if (!isHost) return;
+      const playerList = [
+        { id: localPlayer.id, name: localPlayer.name, team: localPlayer.team, isHost: true, ping: 0 }
+      ];
+      Object.values(remotePlayers).forEach(p => {
+        if (p && p.id) {
+          playerList.push({
+            id: p.id,
+            name: p.name || 'Player',
+            team: p.team || 'red',
+            isHost: false,
+            ping: p.ping || 0
+          });
+        }
+      });
+
+      broadcastFromHost({
+        type: 'room_sync',
+        roomState: roomState,
+        matchConfig: matchConfig,
+        players: playerList
+      });
+      updateRoomConfigUI();
+    }
+
+    // --- Button Event Listeners ---
+    // Start Match (Host)
+    const btnStartMatch = document.getElementById('btn-start-match');
+    if (btnStartMatch) btnStartMatch.addEventListener('click', hostStartMatchCountdown);
+
+    // Join In Progress (Guest)
+    const btnJoinProg = document.getElementById('btn-join-in-progress');
+    if (btnJoinProg) btnJoinProg.addEventListener('click', () => {
+      executeMatchStart();
+    });
+
+    // 1人用練習 (Gridshot)
+    const btnSoloGrid = document.getElementById('btn-solo-gridshot');
+    if (btnSoloGrid) btnSoloGrid.addEventListener('click', () => {
+      setGameMode('gridshot');
+      executeMatchStart();
+    });
+
+    // Result return to lobby button
+    const btnResultLobby = document.getElementById('btn-result-return-lobby');
+    if (btnResultLobby) btnResultLobby.addEventListener('click', hostReturnToLobby);
+
+    // Pause Resume
+    const pauseResume = document.getElementById('pause-resume-btn');
+    if (pauseResume) pauseResume.addEventListener('click', () => {
+      overlay.classList.add('hidden');
+      isGameActive = true;
+      try {
+        if (renderer.domElement && renderer.domElement.requestPointerLock) {
+          renderer.domElement.requestPointerLock();
+        }
+      } catch (e) {}
+    });
+
+    // Pause Settings
+    const pauseSettings = document.getElementById('pause-settings-btn');
+    if (pauseSettings) pauseSettings.addEventListener('click', openSettingsModal);
+
+    // Pause Return to Lobby
+    const pauseLeave = document.getElementById('pause-leave-btn');
+    if (pauseLeave) pauseLeave.addEventListener('click', () => {
+      if (isHost) hostReturnToLobby();
+      else openLobby();
+    });
+
+    // Settings Modal Open / Close
+    const btnOpenSet = document.getElementById('btn-open-settings');
+    if (btnOpenSet) btnOpenSet.addEventListener('click', openSettingsModal);
+
+    const btnCloseSet = document.getElementById('btn-close-settings');
+    if (btnCloseSet) btnCloseSet.addEventListener('click', closeSettingsModal);
+
+    // Game Mode Choice (FFA / TDM)
+    document.querySelectorAll('.mode-choice-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!isHost) return;
+        matchConfig.mode = btn.dataset.mode;
+        broadcastRoomSync();
+      });
+    });
+
+    // Score Limit choice
+    document.querySelectorAll('.score-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!isHost) return;
+        matchConfig.scoreLimit = Number(btn.dataset.score);
+        broadcastRoomSync();
+      });
+    });
+
+    // Map Select
+    const optMap = document.getElementById('opt-map-id');
+    if (optMap) {
+      optMap.addEventListener('change', () => {
+        if (!isHost) return;
+        matchConfig.mapId = optMap.value;
+        buildArenaMap(matchConfig.mapId, matchConfig.mapTheme);
+        broadcastRoomSync();
+      });
+    }
+
+    // Theme Select
+    const optTheme = document.getElementById('opt-map-theme');
+    if (optTheme) {
+      optTheme.addEventListener('change', () => {
+        if (!isHost) return;
+        matchConfig.mapTheme = optTheme.value;
+        buildArenaMap(matchConfig.mapId, matchConfig.mapTheme);
+        broadcastRoomSync();
+      });
+    }
+
+    // Switch Team (TDM)
+    const btnSwitchTeam = document.getElementById('btn-switch-team');
+    if (btnSwitchTeam) {
+      btnSwitchTeam.addEventListener('click', () => {
+        localPlayer.team = (localPlayer.team === 'red') ? 'blue' : 'red';
+        if (isHost) {
+          broadcastRoomSync();
+        } else {
+          sendNetworkEvent({
+            type: 'update_profile',
+            name: localPlayer.name,
+            team: localPlayer.team
+          });
+        }
+        renderRosterList();
+      });
+    }
+
+    // Auto Balance (TDM - Host Only)
+    const btnAutoBal = document.getElementById('btn-auto-balance');
+    if (btnAutoBal) {
+      btnAutoBal.addEventListener('click', () => {
+        if (!isHost) return;
+        const all = [localPlayer, ...Object.values(remotePlayers)];
+        all.forEach((p, idx) => {
+          p.team = (idx % 2 === 0) ? 'red' : 'blue';
+        });
+        broadcastRoomSync();
+      });
+    }
+
+    // Settings Modal Tabs
     const settingsTabs = [
       { id: 'settings-tab-gameplay', panel: 'settings-panel-gameplay' },
-      { id: 'settings-tab-controls', panel: 'settings-panel-controls' },
       { id: 'settings-tab-crosshair', panel: 'settings-panel-crosshair' },
+      { id: 'settings-tab-controls', panel: 'settings-panel-controls' },
       { id: 'settings-tab-audio', panel: 'settings-panel-audio' }
     ];
 
@@ -4189,9 +5179,6 @@
         if (b) b.classList.toggle('active', t.id === tabId);
         if (p) p.classList.toggle('hidden', t.id !== tabId);
       });
-      if (tabId === 'settings-tab-gameplay') {
-        setTimeout(drawMapPreview, 30);
-      }
     }
 
     settingsTabs.forEach(t => {
@@ -4199,9 +5186,12 @@
       if (b) b.addEventListener('click', () => switchSettingsTab(t.id));
     });
 
+    // PointerLock & Context Menu
     renderer.domElement.addEventListener('click', () => {
       if (!isMobile && overlay.classList.contains('hidden') && !isPointerLocked) {
-        enterArenaGameplay();
+        try {
+          if (renderer.domElement.requestPointerLock) renderer.domElement.requestPointerLock();
+        } catch (e) {}
       }
     });
 
@@ -4214,11 +5204,36 @@
         isGameActive = true;
         updateCameraFovAndScope();
       } else if (!isMobile) {
-        if (currentView !== 'settings') {
+        if (roomState === 'IN_MATCH') {
           openPauseMenu();
         }
       }
     });
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      })[m]);
+    }
+
+    function openLobbyMenu() {
+      if (roomState === 'IN_MATCH') openPauseMenu();
+      else openLobby();
+    }
+
+    // 互換性ラッパー
+    function enterArenaGameplay() {
+      if (roomState === 'IN_MATCH') {
+        overlay.classList.add('hidden');
+        isGameActive = true;
+        try {
+          if (renderer.domElement.requestPointerLock) renderer.domElement.requestPointerLock();
+        } catch (e) {}
+      } else {
+        hostStartMatchCountdown();
+      }
+    }
 
     // キーボード入力＆Ctrlキー暴発防止
     document.addEventListener('keydown', (e) => {
@@ -4929,8 +5944,19 @@
       const pal = getActivePalette();
       for (const id in remotePlayers) {
         const rp = remotePlayers[id];
-        rp.bodyMat.color.setHex(pal.body);
-        rp.headMat.color.setHex(pal.head);
+        if (matchConfig.mode === 'tdm') {
+          const isAlly = (rp.team === localPlayer.team);
+          if (isAlly) {
+            rp.bodyMat.color.setHex(0x0284c7);
+            rp.headMat.color.setHex(0x38bdf8);
+          } else {
+            rp.bodyMat.color.setHex(0xb91c1c);
+            rp.headMat.color.setHex(0xf87171);
+          }
+        } else {
+          rp.bodyMat.color.setHex(pal.body);
+          rp.headMat.color.setHex(pal.head);
+        }
       }
     }
 
@@ -5188,9 +6214,21 @@
           // GPU合成レイヤーによるゼロリフロー高速配置
           rp.tagEl.style.transform = `translate3d(${sx}px, ${sy}px, 0) translate(-50%, -100%)`;
 
-          if (rp.lastNameText !== rp.name) {
-            rp.tagNameEl.textContent = rp.name;
-            rp.lastNameText = rp.name;
+          let tagText = rp.name;
+          let nameColor = '#ffffff';
+          if (matchConfig.mode === 'tdm') {
+            if (rp.team === localPlayer.team) {
+              tagText = '[ALLY] ' + rp.name;
+              nameColor = '#38bdf8';
+            } else {
+              tagText = '[ENEMY] ' + rp.name;
+              nameColor = '#ef4444';
+            }
+          }
+          if (rp.lastNameText !== tagText) {
+            rp.tagNameEl.textContent = tagText;
+            rp.tagNameEl.style.color = nameColor;
+            rp.lastNameText = tagText;
           }
           if (rp.lastShield !== activeShield) {
             rp.tagShieldEl.style.display = activeShield ? 'block' : 'none';
@@ -5367,28 +6405,43 @@
         return;
       }
 
-      // 対戦モード (Arena) の射撃判定
+      // 対戦モード (Arena) の射撃判定 (TDMフレンドリーファイア無効化・味方弾抜け対応)
       const allTargets = mapMeshes.concat(enemyHitboxes);
       const intersects = raycaster.intersectObjects(allTargets, false);
 
       let endPoint;
-      if (intersects.length > 0) {
-        const firstHit = intersects[0];
-        endPoint = firstHit.point;
+      let validHit = null;
 
-        if (firstHit.object && firstHit.object.userData && firstHit.object.userData.playerId) {
-          const targetId = firstHit.object.userData.playerId;
+      for (let i = 0; i < intersects.length; i++) {
+        const hit = intersects[i];
+        if (hit.object && hit.object.userData && hit.object.userData.playerId) {
+          const targetId = hit.object.userData.playerId;
+          const rp = remotePlayers[targetId];
+          // TDM時：味方プレイヤーへの着弾はスキップ (同士討ち無効 & 貫通)
+          if (matchConfig.mode === 'tdm' && rp && rp.team === localPlayer.team) {
+            continue;
+          }
+        }
+        validHit = hit;
+        break;
+      }
+
+      if (validHit) {
+        endPoint = validHit.point;
+
+        if (validHit.object && validHit.object.userData && validHit.object.userData.playerId) {
+          const targetId = validHit.object.userData.playerId;
           const rp = remotePlayers[targetId];
 
           if (rp && (rp.shielded || isShielded(rp))) {
-            spawnDamagePopup(firstHit.point, '🛡️ SHIELD', false);
+            spawnDamagePopup(validHit.point, '🛡️ SHIELD', false);
           } else if (rp) {
-            const isHead = Boolean(firstHit.object.userData.isHead);
+            const isHead = Boolean(validHit.object.userData.isHead);
             const damage = isHead ? wpn.headDmg : wpn.bodyDmg;
 
             playSound(isHead ? 'hit_head' : 'hit_body');
             triggerHitMarker();
-            spawnDamagePopup(firstHit.point, damage, isHead);
+            spawnDamagePopup(validHit.point, damage, isHead);
 
             sendNetworkEvent({
               type: 'hit',
@@ -6189,6 +7242,10 @@
               buildArenaMap(hostMap, hostTheme);
             }
           }
+          if (data.team) {
+            localPlayer.team = data.team;
+          }
+          updateRoomConfigUI();
         }
       } else if (data.type === 'pong') {
         if (typeof data.ts === 'number') {
@@ -6212,6 +7269,43 @@
         }
       } else if (data.type === 'killfeed') {
         handleKillFeedEvent(data);
+        if (matchConfig.mode === 'tdm') updateTdmScoreHud();
+      } else if (data.type === 'room_sync') {
+        if (!isHost) {
+          if (data.matchConfig) {
+            Object.assign(matchConfig, data.matchConfig);
+          }
+          if (data.roomState) {
+            roomState = data.roomState;
+          }
+          if (Array.isArray(data.players)) {
+            data.players.forEach(p => {
+              if (p.id === localPlayer.id) {
+                if (p.team) localPlayer.team = p.team;
+              } else if (remotePlayers[p.id]) {
+                if (p.name) remotePlayers[p.id].name = p.name;
+                if (p.team) remotePlayers[p.id].team = p.team;
+                if (typeof p.ping === 'number') remotePlayers[p.id].ping = p.ping;
+              }
+            });
+          }
+          updateRoomConfigUI();
+        }
+      } else if (data.type === 'match_start_countdown') {
+        if (!isHost) {
+          if (data.matchConfig) Object.assign(matchConfig, data.matchConfig);
+          runMatchStartCountdown(data.countdownSec || 3);
+        }
+      } else if (data.type === 'match_result') {
+        displayMatchResult(data);
+      } else if (data.type === 'return_to_lobby') {
+        openLobby();
+      } else if (data.type === 'update_profile') {
+        if (isHost && senderId && remotePlayers[senderId]) {
+          if (data.name) remotePlayers[senderId].name = data.name;
+          if (data.team) remotePlayers[senderId].team = data.team;
+          broadcastRoomSync();
+        }
       } else if (data.type === 'laser') {
         if (senderId !== localPlayer.id) {
           if (isHost && remotePlayers[senderId]) {
@@ -6252,6 +7346,8 @@
           }
           attackerObj.regenPool = Math.min(MAX_HP, (attackerObj.regenPool || 0) + KILL_REGEN_AMOUNT);
         }
+        checkMatchFinishConditions(attackerId, Boolean(isHead));
+        if (matchConfig.mode === 'tdm') updateTdmScoreHud();
 
         const kfPayload = {
           type: 'killfeed',
@@ -6506,6 +7602,14 @@
         tryShoot();
       }
 
+      if (!isGameActive && roomState === 'LOBBY') {
+        lobbyCamAngle += dt * 0.12;
+        const radius = 34;
+        camera.position.set(Math.cos(lobbyCamAngle) * radius, 18, Math.sin(lobbyCamAngle) * radius);
+        camera.lookAt(0, 4, 0);
+        camera.updateProjectionMatrix();
+      }
+
       updateLocalPhysics(dt);
       interpolateAndProjectRemotePlayers(dt);
 
@@ -6528,6 +7632,7 @@
     }
 
     updateLeaderboardUI();
+    openLobby();
     animate();
   </script>
 </body>
