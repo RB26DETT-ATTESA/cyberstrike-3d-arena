@@ -2469,6 +2469,197 @@
       padding: 1px 4px;
       border-radius: 3px;
     }
+  
+    /* Copy URL Button inside Room Card */
+    .btn-copy-card {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.25), rgba(0, 180, 216, 0.15));
+      border: 1.5px solid var(--accent);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.3);
+      white-space: nowrap;
+      touch-action: manipulation;
+    }
+    .btn-copy-card:hover {
+      background: var(--accent);
+      color: #040814;
+      box-shadow: 0 0 22px rgba(0, 229, 255, 0.7);
+      transform: translateY(-1px);
+    }
+    .btn-copy-card:active {
+      transform: translateY(1px);
+    }
+
+    .room-invite-card {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .invite-url-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .invite-url-row input {
+      flex: 1;
+      min-width: 0;
+    }
+    .room-sub-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Roster Match Action Container (Prominent START MATCH in Right Column) */
+    .roster-match-action-box {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(0, 229, 255, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .btn-fps-start-match {
+      width: 100%;
+      height: 52px;
+      background: linear-gradient(135deg, #00e5ff 0%, #00b4d8 100%);
+      color: #040814;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 16.5px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+      touch-action: manipulation;
+    }
+    .btn-fps-start-match:hover {
+      transform: translateY(-2px) scale(1.012);
+      background: linear-gradient(135deg, #38bdf8 0%, #00e5ff 100%);
+      box-shadow: 0 0 38px rgba(0, 229, 255, 0.85);
+    }
+    .btn-fps-start-match:active {
+      transform: translateY(1px);
+    }
+
+    /* Solo Gridshot Practice Settings Modal Window */
+    .gridshot-modal-window {
+      width: 620px;
+      max-width: 95vw;
+      background: rgba(10, 16, 30, 0.96);
+      border: 1.5px solid rgba(0, 229, 255, 0.45);
+      border-radius: 12px;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.95), 0 0 40px rgba(0, 229, 255, 0.3);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: pauseCardPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .gridshot-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 22px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.22);
+      background: rgba(0, 229, 255, 0.05);
+    }
+    .gridshot-modal-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .gridshot-modal-title-group .icon {
+      font-size: 26px;
+    }
+    .gridshot-modal-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+    .gridshot-modal-eyebrow {
+      font-size: 10px;
+      color: var(--accent);
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .gridshot-modal-body {
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+    .gridshot-intro-card {
+      background: rgba(0, 229, 255, 0.08);
+      border-left: 3px solid var(--accent);
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .gs-choice-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+    }
+    .gs-choice-pill {
+      background: rgba(13, 20, 36, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #94a3b8;
+      padding: 9px 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.16s ease;
+      touch-action: manipulation;
+    }
+    .gs-choice-pill:hover {
+      border-color: var(--accent);
+      color: #fff;
+      background: rgba(0, 229, 255, 0.12);
+    }
+    .gs-choice-pill.active {
+      background: var(--accent);
+      color: #040814;
+      border-color: var(--accent);
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.45);
+    }
+    .gridshot-modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 22px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.3);
+    }
+
   </style>
 </head>
 <body>
@@ -2517,6 +2708,7 @@
       <span id="gs-val-tps" class="gs-val">0.0</span>
     </div>
     <button id="gs-reset-btn" class="gs-btn">RESET</button>
+    <button id="gs-leave-hud-btn" class="gs-btn" style="background:rgba(255,23,68,0.2); border-color:#ff1744; color:#ff8a80; margin-left:6px;" type="button">✕ ロビーへ帰還</button>
   </div>
 
   <!-- 3-Second Match Start Countdown Overlay -->
@@ -2797,24 +2989,44 @@
               </div>
             </div>
 
-            <!-- Room Share Input (Hidden helper for copy URL & new room) -->
-            <div id="arena-host-box" class="host-url-box">
-              <div class="url-row">
-                <input type="text" id="invite-url-input" class="text-input" readonly>
-                <button id="new-room-btn" class="btn btn-secondary" type="button">🏠 部屋再作成</button>
-                <button id="manual-reconnect-btn" class="btn btn-secondary" type="button">🔄 再接続</button>
-              </div>
-            </div>
+            <!-- 4. Room Connection & Share Box with Immediate Copy Button -->
+            <div class="setting-row room-connect-section">
+              <label class="setting-label">
+                <span>ROOM CONNECTION & INVITE (部屋・招待URL)</span>
+                <span class="setting-sub">URLを友達に送って対戦！</span>
+              </label>
 
-            <!-- Guest Target Info Area (Visible only when Guest) -->
-            <div id="arena-guest-box" class="guest-info-box" style="display:none;">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:12px; color:var(--text-dim);">参加先ホストID:</span>
-                <span id="guest-target-room-label" style="font-size:13.5px; font-weight:800; color:var(--accent);">vsa-xxxxxx</span>
+              <!-- Host Box -->
+              <div id="arena-host-box" class="room-invite-card">
+                <div class="invite-url-row">
+                  <input type="text" id="invite-url-input" class="text-input" readonly placeholder="https://...">
+                  <button id="btn-copy-room-url" class="btn-copy-card" type="button" title="招待URLをクリップボードにコピー">
+                    <span class="icon">📋</span>
+                    <span id="btn-copy-room-url-text">招待URLをコピー</span>
+                  </button>
+                </div>
+                <div class="room-sub-actions">
+                  <button id="new-room-btn" class="btn btn-secondary" style="flex:1;" type="button">🏠 部屋再作成</button>
+                  <button id="manual-reconnect-btn" class="btn btn-secondary" style="flex:1;" type="button">🔄 再接続</button>
+                </div>
               </div>
-              <div style="display:flex; gap:8px;">
-                <button id="guest-retry-btn" class="btn btn-secondary" style="flex:1;" type="button">🔄 再接続</button>
-                <button id="guest-become-host-btn" class="btn" style="flex:1.2;" type="button">👑 自分で部屋を作る</button>
+
+              <!-- Guest Target Info Area -->
+              <div id="arena-guest-box" class="room-invite-card" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:12px; color:var(--text-dim);">参加先ホストID:</span>
+                  <span id="guest-target-room-label" style="font-size:13.5px; font-weight:800; color:var(--accent);">vsa-xxxxxx</span>
+                </div>
+                <div class="invite-url-row" style="margin-top:6px;">
+                  <button id="btn-copy-room-url-guest" class="btn-copy-card" style="flex:1;" type="button">
+                    <span class="icon">📋</span>
+                    <span id="btn-copy-guest-url-text">この部屋URLをコピー</span>
+                  </button>
+                </div>
+                <div class="room-sub-actions" style="margin-top:6px;">
+                  <button id="guest-retry-btn" class="btn btn-secondary" style="flex:1;" type="button">🔄 再接続</button>
+                  <button id="guest-become-host-btn" class="btn" style="flex:1.2; background:var(--accent); color:#040814; font-weight:800;" type="button">👑 自分で部屋を作る</button>
+                </div>
               </div>
             </div>
 
@@ -2913,33 +3125,39 @@
               <div class="net-log-line info">システム起動完了。ネットワーク初期化中...</div>
             </div>
           </div>
+
+          <!-- Prominent Match Action Area directly below Roster -->
+          <div id="roster-action-container" class="roster-match-action-box">
+            <!-- Host Start Match Button -->
+            <div id="host-action-box">
+              <button id="btn-start-match" class="btn-fps-start-match" type="button">
+                <span class="start-icon">▶</span>
+                <span class="start-text">START MATCH (全員で試合開始)</span>
+              </button>
+            </div>
+
+            <!-- Guest Waiting / Join In-Progress Banner -->
+            <div id="guest-action-box" style="display:none;">
+              <div id="guest-waiting-box" class="guest-status-banner">
+                <span class="spinner-dot"></span>
+                <span class="guest-msg">⏳ ホストが試合を開始するのを待っています...</span>
+                <button id="btn-guest-force-host" class="btn" style="margin-left:10px; background:var(--accent); color:#040814; font-weight:800; padding:4px 10px; font-size:11px;" type="button">👑 自分で部屋を作る</button>
+              </div>
+              <button id="btn-join-in-progress" class="btn-fps-join-in-progress" style="display:none;" type="button">
+                <span class="icon">⚔️</span>
+                <span>途中参戦する (JOIN IN-PROGRESS)</span>
+              </button>
+            </div>
+          </div>
         </section>
 
       </main>
 
-      <!-- Bottom Action Bar (Host: START MATCH / Guest: Waiting...) -->
-      <footer class="lobby-bottom-bar">
-        <!-- Host Start Match Button -->
-        <div id="host-action-box" class="bottom-action-container">
-          <button id="btn-start-match" class="btn-fps-start-match" type="button">
-            <span class="start-icon">▶</span>
-            <span class="start-text">START MATCH (全員で試合開始)</span>
-          </button>
+      <!-- Bottom Hint Bar -->
+      <footer class="lobby-bottom-bar" style="margin-top:2px;">
+        <div style="font-size:11px; color:#64748b; letter-spacing:0.5px;">
+          💡 ルーム設定・チーム分けを完了したら、右側の【▶ START MATCH】を押して全員で一斉に対戦を開始します。
         </div>
-
-        <!-- Guest Waiting / Join In-Progress Banner -->
-        <div id="guest-action-box" class="bottom-action-container" style="display:none;">
-          <div id="guest-waiting-box" class="guest-status-banner">
-            <span class="spinner-dot"></span>
-            <span class="guest-msg">⏳ ホストが試合を開始するのを待っています...</span>
-            <button id="btn-guest-force-host" class="btn" style="margin-left:12px; background:var(--accent); color:#040814; font-weight:800;" type="button">👑 自分で部屋を作る (ホストになる)</button>
-          </div>
-          <button id="btn-join-in-progress" class="btn-fps-join-in-progress" style="display:none;" type="button">
-            <span class="icon">⚔️</span>
-            <span>途中参戦する (JOIN IN-PROGRESS)</span>
-          </button>
-        </div>
-
         <!-- Hidden compat dummy buttons for existing code references -->
         <button id="resume-btn" type="button" style="display:none;"></button>
         <button id="tab-mode-arena" type="button" style="display:none;"></button>
@@ -3008,6 +3226,88 @@
           <button id="pause-leave-btn" class="btn-fps-pause btn-pause-danger" type="button">
             <span class="icon">🚪</span>
             <span class="label">RETURN TO LOBBY (ロビーへ戻る)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- E. GRIDSHOT AIM TRAINING SETTINGS MODAL (1人用練習設定モーダル) -->
+    <div id="modal-gridshot" class="settings-modal-overlay hidden">
+      <div class="gridshot-modal-window">
+        <div class="gridshot-modal-header">
+          <div class="gridshot-modal-title-group">
+            <span class="icon">🎯</span>
+            <div>
+              <div class="gridshot-modal-eyebrow">SOLO PRACTICE MODE</div>
+              <div class="gridshot-modal-title">AIM TRAINING (グリッドショット練習設定)</div>
+            </div>
+          </div>
+          <button id="btn-close-gridshot-modal" class="modal-close-btn" type="button">✕</button>
+        </div>
+
+        <div class="gridshot-modal-body">
+          <div class="gridshot-intro-card">
+            5×5の的が連続出現するエイム向上トレーニングです。<br>
+            スコア・命中率・破壊ペースをリアルタイム計測します。練習設定を選んで開始してください。
+          </div>
+
+          <!-- Target Count -->
+          <div class="field-group">
+            <div class="field-label">
+              <span>同時出現ターゲット数</span>
+              <span id="val-gs-targets" class="field-val">3個 (標準)</span>
+            </div>
+            <div class="gs-choice-grid" id="gs-target-count-choices">
+              <button type="button" class="gs-choice-pill active" data-targets="3">3個 (標準)</button>
+              <button type="button" class="gs-choice-pill" data-targets="4">4個 (高速)</button>
+              <button type="button" class="gs-choice-pill" data-targets="5">5個 (高密度)</button>
+            </div>
+          </div>
+
+          <!-- Target Size -->
+          <div class="field-group">
+            <div class="field-label">
+              <span>ターゲットの大きさ</span>
+              <span id="val-gs-size" class="field-val">通常 (0.85m)</span>
+            </div>
+            <div class="gs-choice-grid" id="gs-size-choices">
+              <button type="button" class="gs-choice-pill active" data-size="normal">通常 (0.85m)</button>
+              <button type="button" class="gs-choice-pill" data-size="precision">小型精密 (0.55m)</button>
+            </div>
+          </div>
+
+          <!-- Time Limit -->
+          <div class="field-group">
+            <div class="field-label">
+              <span>練習制限時間</span>
+              <span id="val-gs-time" class="field-val">60秒</span>
+            </div>
+            <div class="gs-choice-grid" id="gs-time-choices">
+              <button type="button" class="gs-choice-pill" data-time="30">30秒 スプリント</button>
+              <button type="button" class="gs-choice-pill active" data-time="60">60秒 スタンダード</button>
+              <button type="button" class="gs-choice-pill" data-time="0">無制限 フリー練習</button>
+            </div>
+          </div>
+
+          <!-- Weapon Choice -->
+          <div class="field-group">
+            <div class="field-label">
+              <span>使用武器</span>
+              <span id="val-gs-wpn" class="field-val">アサルトライフル (AR)</span>
+            </div>
+            <div class="gs-choice-grid" id="gs-wpn-choices">
+              <button type="button" class="gs-choice-pill active" data-wpn="ar">AR (アサルト)</button>
+              <button type="button" class="gs-choice-pill" data-wpn="dmr">DMR / PISTOL</button>
+              <button type="button" class="gs-choice-pill" data-wpn="sr">SNIPER (スナイパー)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="gridshot-modal-footer">
+          <button id="btn-cancel-gridshot" class="btn-fps-ghost" type="button">✕ ロビーに戻る</button>
+          <button id="btn-start-gridshot-confirmed" class="btn-fps-primary" style="background:linear-gradient(135deg, #00e5ff, #00b4d8); color:#040814; font-weight:900; padding:10px 22px; border-radius:8px; border:none; cursor:pointer;" type="button">
+            <span class="icon">▶</span>
+            <span>START TRAINING (練習開始)</span>
           </button>
         </div>
       </div>
@@ -4116,7 +4416,82 @@
     /*************************************************************************
      * 7. 5x5 エイム練習場（Gridshot Training）空間＆ターゲットロジック
      *************************************************************************/
-    const gridTargets = [];       // 25個のターゲットメッシュ配列
+        const gridPracticeConfig = {
+      targets: 3,        // 3 | 4 | 5
+      size: 'normal',    // 'normal' (0.85m) | 'precision' (0.55m)
+      time: 60,          // 30 | 60 | 0 (無制限)
+      weapon: 'ar'       // 'ar' | 'dmr' | 'sr'
+    };
+    let gridTimerInterval = null;
+    let gridTimeRemaining = 60;
+
+    function openGridshotModal() {
+      const modal = document.getElementById('modal-gridshot');
+      if (modal) {
+        modal.classList.remove('hidden');
+      }
+    }
+
+    function closeGridshotModal() {
+      const modal = document.getElementById('modal-gridshot');
+      if (modal) {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function startGridshotTraining() {
+      closeGridshotModal();
+
+      if (gridPracticeConfig.weapon && typeof switchWeapon === 'function') {
+        switchWeapon(gridPracticeConfig.weapon);
+      }
+
+      buildGridshotRoom();
+
+      roomState = 'IN_MATCH';
+      overlay.classList.add('hidden');
+      isGameActive = true;
+
+      localPlayer.yaw = 0;
+      localPlayer.pitch = 0;
+      camera.rotation.set(0, 0, 0);
+      camera.rotation.order = 'YXZ';
+
+      respawnLocalPlayer();
+      camera.position.set(localPlayer.x, localPlayer.y + localPlayer.currentEyeH, localPlayer.z);
+
+      if (gridTimerInterval) {
+        clearInterval(gridTimerInterval);
+        gridTimerInterval = null;
+      }
+      gridTimeRemaining = gridPracticeConfig.time;
+
+      if (gridPracticeConfig.time > 0) {
+        gridTimerInterval = setInterval(() => {
+          if (!isGameActive || config.gameMode !== 'gridshot') {
+            clearInterval(gridTimerInterval);
+            gridTimerInterval = null;
+            return;
+          }
+          gridTimeRemaining--;
+          if (gridTimeRemaining <= 0) {
+            clearInterval(gridTimerInterval);
+            gridTimerInterval = null;
+            playSound('elim');
+            alert('🎯 練習時間終了！\n\nスコア: ' + gridStats.score + '点\n命中率: ' + document.getElementById('gs-val-acc').textContent + '\n秒間破壊数: ' + document.getElementById('gs-val-tps').textContent);
+            openLobby();
+          }
+        }, 1000);
+      }
+
+      try {
+        if (renderer.domElement && renderer.domElement.requestPointerLock) {
+          renderer.domElement.requestPointerLock();
+        }
+      } catch (e) {}
+    }
+
+    const gridTargets = [];
     const gridActiveIndices = new Set(); // 現在点灯中のインデックス（常時3個）
     const gridStats = {
       score: 0,
@@ -4213,7 +4588,8 @@
       addRoomWall( 12.5, 8, 0, 1, 16, 24); // 右壁
 
       // 5x5 (計25個) ターゲットの構築
-      const targetGeo = new THREE.BoxGeometry(0.85, 0.85, 0.18);
+      const tgSize = (gridPracticeConfig.size === 'precision') ? 0.55 : 0.85;
+      const targetGeo = new THREE.BoxGeometry(tgSize, tgSize, 0.18);
       const inactiveMat = new THREE.MeshLambertMaterial({ color: 0x111827 });
       const activeMat = new THREE.MeshLambertMaterial({ color: 0xff1744, emissive: 0xff1744, emissiveIntensity: 0.45 });
 
@@ -4661,7 +5037,7 @@
       if (tdmGoal) tdmGoal.textContent = matchConfig.scoreLimit;
 
       renderRosterList();
-      drawMapPreview();
+      render2DMapPreview(matchConfig.mapId, matchConfig.mapTheme);
     }
 
     function renderRosterList() {
@@ -5074,20 +5450,73 @@
     });
 
     // 1人用練習 (Gridshot)
+        // 1人用練習 (Gridshot) 設定モーダルを開く
     const btnSoloGrid = document.getElementById('btn-solo-gridshot');
     if (btnSoloGrid) {
-      btnSoloGrid.addEventListener('click', () => {
-        setGameMode('gridshot');
-        roomState = 'IN_MATCH';
-        overlay.classList.add('hidden');
-        isGameActive = true;
-        try {
-          if (renderer.domElement && renderer.domElement.requestPointerLock) {
-            renderer.domElement.requestPointerLock();
-          }
-        } catch (e) {}
+      btnSoloGrid.addEventListener('click', openGridshotModal);
+    }
+
+    const btnCloseGridModal = document.getElementById('btn-close-gridshot-modal');
+    if (btnCloseGridModal) btnCloseGridModal.addEventListener('click', closeGridshotModal);
+
+    const btnCancelGridModal = document.getElementById('btn-cancel-gridshot');
+    if (btnCancelGridModal) btnCancelGridModal.addEventListener('click', closeGridshotModal);
+
+    const btnStartGridConfirmed = document.getElementById('btn-start-gridshot-confirmed');
+    if (btnStartGridConfirmed) btnStartGridConfirmed.addEventListener('click', startGridshotTraining);
+
+    // グリッドショットHUDの「✕ ロビーへ帰還」ボタン
+    const gsLeaveHudBtn = document.getElementById('gs-leave-hud-btn');
+    if (gsLeaveHudBtn) {
+      gsLeaveHudBtn.addEventListener('click', () => {
+        if (gridTimerInterval) {
+          clearInterval(gridTimerInterval);
+          gridTimerInterval = null;
+        }
+        openLobby();
       });
     }
+
+    // グリッドショット練習設定ピル選択イベントリスナー
+    document.querySelectorAll('#gs-target-count-choices .gs-choice-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#gs-target-count-choices .gs-choice-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        gridPracticeConfig.targets = Number(btn.dataset.targets);
+        const valEl = document.getElementById('val-gs-targets');
+        if (valEl) valEl.textContent = btn.textContent;
+      });
+    });
+
+    document.querySelectorAll('#gs-size-choices .gs-choice-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#gs-size-choices .gs-choice-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        gridPracticeConfig.size = btn.dataset.size;
+        const valEl = document.getElementById('val-gs-size');
+        if (valEl) valEl.textContent = btn.textContent;
+      });
+    });
+
+    document.querySelectorAll('#gs-time-choices .gs-choice-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#gs-time-choices .gs-choice-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        gridPracticeConfig.time = Number(btn.dataset.time);
+        const valEl = document.getElementById('val-gs-time');
+        if (valEl) valEl.textContent = btn.textContent;
+      });
+    });
+
+    document.querySelectorAll('#gs-wpn-choices .gs-choice-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#gs-wpn-choices .gs-choice-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        gridPracticeConfig.weapon = btn.dataset.wpn;
+        const valEl = document.getElementById('val-gs-wpn');
+        if (valEl) valEl.textContent = btn.textContent;
+      });
+    });
 
     // Result return to lobby button
     const btnResultLobby = document.getElementById('btn-result-return-lobby');
@@ -7107,33 +7536,53 @@
       }
     }
 
-    const copyUrlBtn = document.getElementById('copy-url-btn');
-    if (copyUrlBtn) {
-      copyUrlBtn.addEventListener('click', () => {
-        const urlInput = document.getElementById('invite-url-input');
-        const textToCopy = (urlInput && urlInput.value) ? urlInput.value : window.location.href;
+    function executeCopyRoomUrl(btnElement, textElement) {
+      const urlInput = document.getElementById('invite-url-input');
+      const textToCopy = (urlInput && urlInput.value) ? urlInput.value : window.location.href;
 
-        const showCopied = () => {
-          const origHtml = copyUrlBtn.innerHTML;
-          copyUrlBtn.innerHTML = '<span class="icon">✅</span><span>コピー完了！</span>';
-          copyUrlBtn.style.borderColor = '#00e676';
-          copyUrlBtn.style.color = '#00e676';
-          setTimeout(() => {
-            copyUrlBtn.innerHTML = origHtml;
-            copyUrlBtn.style.borderColor = '';
-            copyUrlBtn.style.color = '';
-          }, 2000);
-        };
+      const showCopied = () => {
+        const origBtnText = btnElement ? btnElement.innerHTML : '';
+        const origSpanText = textElement ? textElement.textContent : '';
 
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(textToCopy).then(showCopied).catch(() => {
-            fallbackCopyText(textToCopy, showCopied);
-          });
-        } else {
-          fallbackCopyText(textToCopy, showCopied);
+        if (textElement) {
+          textElement.textContent = '✅ コピー完了！友達に送ってください';
+        } else if (btnElement) {
+          btnElement.innerHTML = '<span class="icon">✅</span><span>コピー完了！</span>';
         }
-      });
+        if (btnElement) {
+          btnElement.style.borderColor = '#00e676';
+          btnElement.style.color = '#00e676';
+        }
+
+        setTimeout(() => {
+          if (textElement) textElement.textContent = origSpanText;
+          else if (btnElement) btnElement.innerHTML = origBtnText;
+          if (btnElement) {
+            btnElement.style.borderColor = '';
+            btnElement.style.color = '';
+          }
+        }, 2200);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textToCopy).then(showCopied).catch(() => {
+          fallbackCopyText(textToCopy, showCopied);
+        });
+      } else {
+        fallbackCopyText(textToCopy, showCopied);
+      }
     }
+
+    const copyUrlBtn = document.getElementById('copy-url-btn');
+    if (copyUrlBtn) copyUrlBtn.addEventListener('click', () => executeCopyRoomUrl(copyUrlBtn, null));
+
+    const btnCopyRoomCard = document.getElementById('btn-copy-room-url');
+    const textCopyRoomCard = document.getElementById('btn-copy-room-url-text');
+    if (btnCopyRoomCard) btnCopyRoomCard.addEventListener('click', () => executeCopyRoomUrl(btnCopyRoomCard, textCopyRoomCard));
+
+    const btnCopyRoomGuest = document.getElementById('btn-copy-room-url-guest');
+    const textCopyRoomGuest = document.getElementById('btn-copy-guest-url-text');
+    if (btnCopyRoomGuest) btnCopyRoomGuest.addEventListener('click', () => executeCopyRoomUrl(btnCopyRoomGuest, textCopyRoomGuest));
 
     function createFreshHostRoom() {
       const freshRoom = generateRoomId();
