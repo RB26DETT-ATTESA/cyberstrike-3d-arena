@@ -1824,7 +1824,7 @@
           <p>5x5エイム練習場(Gridshot)＆AR/SR/DMR搭載・PC＆スマホ両対応3Dエイム対戦アリーナ</p>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:11px; color:#38bdf8; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); padding:4px 8px; border-radius:12px; font-weight:700;">v2.3.0 (Zero-Lag Ultra-Fast)</span>
+          <span style="font-size:11px; color:#38bdf8; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.3); padding:4px 8px; border-radius:12px; font-weight:700;">v2.4.0 (Adaptive Netcode)</span>
           <div id="device-mode-badge" style="font-size:12px; color:var(--accent); font-weight:800; background:rgba(0,229,255,0.12); padding:5px 12px; border-radius:20px; border:1px solid var(--border-col);">
             💻 PCモード
           </div>
@@ -4319,6 +4319,11 @@
           tx: safeX,
           ty: safeY,
           tz: safeZ,
+          vx: 0,
+          vy: 0,
+          vz: 0,
+          lastPacketTime: performance.now(),
+          extrapolateUntil: 0,
           yaw: safeYaw,
           pitch: safePitch,
           crouch: Boolean(pData.crouch),
@@ -4349,16 +4354,42 @@
         remotePlayers[pData.id] = rp;
         refreshConnectionStatusBanner();
       } else {
+        const now = performance.now();
+        const dtPacket = Math.max(0.015, Math.min(0.25, (now - (rp.lastPacketTime || now)) / 1000));
         const distSq = (rp.x - safeX) ** 2 + (rp.y - safeY) ** 2 + (rp.z - safeZ) ** 2;
-        rp.tx = safeX;
-        rp.ty = safeY;
-        rp.tz = safeZ;
+
         if (distSq > 64) {
+          // テレポート時
           rp.x = safeX;
           rp.y = safeY;
           rp.z = safeZ;
+          rp.tx = safeX;
+          rp.ty = safeY;
+          rp.tz = safeZ;
+          rp.vx = 0;
+          rp.vy = 0;
+          rp.vz = 0;
           rp.group.position.set(rp.x, rp.y, rp.z);
+        } else {
+          // 速度ベクトル推定（学校回線等のジッター吸収用）
+          const mVx = (safeX - rp.tx) / dtPacket;
+          const mVy = (safeY - rp.ty) / dtPacket;
+          const mVz = (safeZ - rp.tz) / dtPacket;
+          const mSpeed = Math.hypot(mVx, mVz);
+          if (mSpeed < 22.0) {
+            rp.vx = rp.vx * 0.35 + mVx * 0.65;
+            rp.vy = rp.vy * 0.35 + mVy * 0.65;
+            rp.vz = rp.vz * 0.35 + mVz * 0.65;
+          } else {
+            rp.vx = 0; rp.vy = 0; rp.vz = 0;
+          }
+          rp.tx = safeX;
+          rp.ty = safeY;
+          rp.tz = safeZ;
+          rp.extrapolateUntil = now + 130; // パケットが途絶えても130msまで直進補完
         }
+
+        rp.lastPacketTime = now;
         if (pData.name) rp.name = pData.name;
         rp.yaw = safeYaw;
         rp.pitch = safePitch;
@@ -4369,7 +4400,7 @@
         if (typeof pData.hsKills === 'number') rp.hsKills = pData.hsKills;
         if (typeof pData.ping === 'number') rp.ping = pData.ping;
         if (typeof pData.shielded === 'boolean') rp.shielded = pData.shielded;
-        rp.lastSeen = performance.now();
+        rp.lastSeen = now;
       }
     }
 
@@ -4425,9 +4456,10 @@
 
     function interpolateAndProjectRemotePlayers(dt) {
       if (config.gameMode === 'gridshot') return;
-      const LERP_FACTOR = 0.25;
+      const now = performance.now();
       const halfW = window.innerWidth / 2;
       const halfH = window.innerHeight / 2;
+      const LERP_FACTOR = Math.min(1.0, dt * 14.0); // 良好回線での吸い付き追従
 
       for (const id in remotePlayers) {
         const rp = remotePlayers[id];
@@ -4437,6 +4469,15 @@
           rp.hp = Math.min(MAX_HP, rp.hp + tickHeal);
           rp.regenPool = Math.max(0, rp.regenPool - tickHeal);
           if (rp.hp >= MAX_HP) rp.regenPool = 0;
+        }
+
+        // ハイブリッド・デッドレコニング（パケット遅延時のみ慣性直進補完し、ワープ感を完全消去）
+        const timeSincePacket = now - (rp.lastPacketTime || now);
+        if (timeSincePacket > 35 && now < (rp.extrapolateUntil || 0)) {
+          const extraDt = Math.min(dt, 0.033);
+          rp.tx += rp.vx * extraDt;
+          rp.ty += rp.vy * extraDt;
+          rp.tz += rp.vz * extraDt;
         }
 
         rp.x += (rp.tx - rp.x) * LERP_FACTOR;
