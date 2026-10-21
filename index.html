@@ -1165,11 +1165,277 @@
       to { opacity: 1; transform: scale(1); }
     }
 
+    /* --- 0. TITLE MENU (メインメニュー / タイトル画面) --- */
+    #view-title {
+      justify-content: flex-start;
+      align-items: center;
+      padding: 12px max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left));
+      background: radial-gradient(circle at center, rgba(13, 20, 36, 0.75) 0%, rgba(4, 8, 16, 0.94) 100%);
+      box-sizing: border-box;
+      gap: 10px;
+    }
+
+    .title-topbar {
+      width: 100%;
+      max-width: 860px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+    }
+    .title-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .title-brand-icon {
+      font-size: 26px;
+      filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.8));
+    }
+    .title-brand-text {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 0 14px rgba(0, 229, 255, 0.6);
+    }
+    .title-brand-sub {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 2px;
+    }
+    .title-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-main-card {
+      width: 100%;
+      max-width: 860px;
+      background: rgba(10, 17, 32, 0.88);
+      border: 1.5px solid rgba(0, 229, 255, 0.35);
+      border-radius: 12px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 229, 255, 0.2);
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+      flex: 1;
+      max-height: calc(100vh - 70px);
+    }
+
+    .title-player-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0, 229, 255, 0.08);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+    .title-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #cbd5e1;
+      white-space: nowrap;
+    }
+    #title-player-name {
+      flex: 1;
+      max-width: 240px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .title-mode-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .title-mode-tab {
+      background: rgba(13, 20, 36, 0.7);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      color: #cbd5e1;
+      transition: all 0.16s ease;
+      touch-action: manipulation;
+    }
+    .title-mode-tab:hover {
+      border-color: rgba(0, 229, 255, 0.5);
+      background: rgba(0, 229, 255, 0.08);
+    }
+    .title-mode-tab.active {
+      background: rgba(0, 229, 255, 0.18);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 16px rgba(0, 229, 255, 0.4);
+    }
+    .tab-icon {
+      font-size: 22px;
+    }
+    .tab-text {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+    .tab-main-title {
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+    .tab-sub-title {
+      font-size: 10px;
+      color: #94a3b8;
+    }
+
+    .title-tab-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .title-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 600px) {
+      .title-form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .title-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .title-field-label {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .title-field-sub {
+      font-size: 9px;
+      color: #64748b;
+      font-weight: normal;
+    }
+    .btn-mini-rnd {
+      background: rgba(0, 229, 255, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 9.5px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .title-choice-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .title-choice-btn {
+      background: rgba(13, 20, 36, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #94a3b8;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .title-choice-btn.active {
+      background: rgba(0, 229, 255, 0.2);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .title-score-row {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .title-score-btn {
+      background: rgba(13, 20, 36, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #94a3b8;
+      padding: 6px 4px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+    }
+    .title-score-btn.active {
+      background: var(--accent);
+      color: #040814;
+      border-color: var(--accent);
+    }
+
+    .btn-title-action {
+      height: 46px;
+      border-radius: 8px;
+      border: none;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      touch-action: manipulation;
+      transition: transform 0.14s ease, box-shadow 0.15s ease;
+      margin-top: 4px;
+    }
+    .btn-title-action.create {
+      background: linear-gradient(135deg, #00e5ff 0%, #00b4d8 100%);
+      color: #040814;
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
+    }
+    .btn-title-action.join {
+      background: linear-gradient(135deg, #00e676 0%, #00b0ff 100%);
+      color: #040814;
+      box-shadow: 0 0 25px rgba(0, 230, 118, 0.5);
+    }
+    .btn-title-action:active {
+      transform: scale(0.98);
+    }
+
+    .title-error-box {
+      background: rgba(255, 23, 68, 0.15);
+      border: 1px solid rgba(255, 23, 68, 0.4);
+      color: #ff8a80;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     /* --- A. CUSTOM ROOM LOBBY VIEW --- */
     #view-lobby {
       justify-content: space-between;
       align-items: center;
-      padding: 14px 20px 14px;
+      padding: 6px max(14px, env(safe-area-inset-right)) 6px max(14px, env(safe-area-inset-left));
       overflow-y: auto;
     }
 
@@ -2927,6 +3193,58 @@
        15. iPhone 15 / 横画面スマートフォン（高さ540px以下）専用モダンFPS UI
        ========================================================================= */
     @media (max-height: 540px) {
+      /* タイトル画面（Main Menu）の横画面スマホ最適化 */
+      #view-title {
+        padding: 4px max(14px, env(safe-area-inset-right)) 4px max(14px, env(safe-area-inset-left)) !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        overflow: hidden !important;
+        gap: 4px !important;
+      }
+      .title-topbar {
+        padding-bottom: 2px !important;
+      }
+      .title-brand-text {
+        font-size: 15px !important;
+      }
+      .title-brand-icon {
+        font-size: 18px !important;
+      }
+      .title-main-card {
+        padding: 6px 12px !important;
+        gap: 6px !important;
+        max-height: calc(100vh - 44px) !important;
+        max-height: calc(100dvh - 44px) !important;
+      }
+      .title-player-bar {
+        padding: 3px 8px !important;
+      }
+      .title-mode-tab {
+        padding: 4px 8px !important;
+        gap: 6px !important;
+      }
+      .tab-icon {
+        font-size: 16px !important;
+      }
+      .tab-main-title {
+        font-size: 11px !important;
+      }
+      .tab-sub-title {
+        font-size: 8.5px !important;
+      }
+      .title-field {
+        gap: 2px !important;
+      }
+      .title-choice-btn, .title-score-btn {
+        padding: 4px !important;
+        font-size: 10px !important;
+      }
+      .btn-title-action {
+        height: 38px !important;
+        font-size: 13px !important;
+        margin-top: 2px !important;
+      }
+
       /* 全画面ビューのパディングとスクロール制御（セーフエリア考慮） */
       #view-lobby {
         padding: 4px max(14px, env(safe-area-inset-right)) 4px max(14px, env(safe-area-inset-left)) !important;
@@ -3481,8 +3799,131 @@
   <!-- Custom Room & Modular Modern FPS Overlay System (#overlay) -->
   <div id="overlay">
 
+    <!-- 0. TITLE MENU (メインメニュー / タイトル画面) -->
+    <div id="view-title" class="ui-view">
+      <!-- Title Header -->
+      <header class="title-topbar">
+        <div class="title-brand">
+          <span class="title-brand-icon">⚡</span>
+          <div>
+            <h1 class="title-brand-text">CYBERSTRIKE 3D</h1>
+            <div class="title-brand-sub">CUSTOM TACTICAL ARENA</div>
+          </div>
+        </div>
+        <div class="title-top-actions">
+          <button id="btn-title-gridshot" class="btn-lobby-action" type="button" title="1人用エイム練習場へ">
+            <span class="icon">🎯</span>
+            <span>1人用練習</span>
+          </button>
+          <button id="btn-title-settings" class="btn-fps-ghost" type="button" title="個人設定を開く">
+            <span class="icon">⚙️</span>
+            <span>SETTINGS</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Title Main Content (左右2分割 / iPhone 15最適化) -->
+      <main class="title-main-card">
+        <!-- プレイヤー名入力バー -->
+        <div class="title-player-bar">
+          <span class="title-label">👤 プレイヤー名:</span>
+          <input type="text" id="title-player-name" class="text-input" maxlength="18" placeholder="Player_1">
+        </div>
+
+        <!-- 2大モード選択ナビゲーションタブ -->
+        <div class="title-mode-tabs">
+          <button type="button" id="tab-btn-create-room" class="title-mode-tab active" data-tab="create">
+            <span class="tab-icon">👑</span>
+            <div class="tab-text">
+              <span class="tab-main-title">CREATE ROOM</span>
+              <span class="tab-sub-title">部屋を立てる（ホスト）</span>
+            </div>
+          </button>
+          <button type="button" id="tab-btn-join-room" class="title-mode-tab" data-tab="join">
+            <span class="tab-icon">🚪</span>
+            <div class="tab-text">
+              <span class="tab-main-title">JOIN ROOM</span>
+              <span class="tab-sub-title">部屋に入る（パスワード対応）</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- パネルA: CREATE ROOM (部屋を立てる) -->
+        <div id="title-panel-create" class="title-tab-panel">
+          <div class="title-form-grid">
+            <div class="title-field">
+              <label class="title-field-label">
+                <span>ROOM ID (部屋ID・半角英数字)</span>
+                <button type="button" id="btn-random-room-id" class="btn-mini-rnd">🎲 ランダム生成</button>
+              </label>
+              <input type="text" id="create-room-id" class="text-input" maxlength="20" placeholder="例: alpha">
+            </div>
+            <div class="title-field">
+              <label class="title-field-label">
+                <span>PASSWORD (パスワード・空欄可)</span>
+                <span class="title-field-sub">友達と合言葉を決めて対戦</span>
+              </label>
+              <input type="password" id="create-room-pw" class="text-input" maxlength="20" placeholder="パスワード（空欄なら誰でも参加可）">
+            </div>
+            <div class="title-field">
+              <label class="title-field-label">
+                <span>対戦ルール</span>
+              </label>
+              <div class="title-choice-row">
+                <button type="button" id="title-mode-ffa" class="title-choice-btn active" data-mode="ffa">⚔️ 個人戦 (FFA)</button>
+                <button type="button" id="title-mode-tdm" class="title-choice-btn" data-mode="tdm">🛡️ チーム戦 (TDM)</button>
+              </div>
+            </div>
+            <div class="title-field">
+              <label class="title-field-label">
+                <span>目標キル数</span>
+              </label>
+              <div class="title-choice-row title-score-row">
+                <button type="button" class="title-score-btn" data-score="10">10</button>
+                <button type="button" class="title-score-btn active" data-score="20">20</button>
+                <button type="button" class="title-score-btn" data-score="30">30</button>
+                <button type="button" class="title-score-btn" data-score="50">50</button>
+              </div>
+            </div>
+          </div>
+          <button type="button" id="btn-title-host-game" class="btn-title-action create">
+            <span class="action-icon">👑</span>
+            <span class="action-text">HOST GAME (部屋を作成してロビーへ)</span>
+          </button>
+        </div>
+
+        <!-- パネルB: JOIN ROOM (部屋に入る) -->
+        <div id="title-panel-join" class="title-tab-panel" style="display:none;">
+          <div class="title-form-grid">
+            <div class="title-field">
+              <label class="title-field-label">
+                <span>JOIN ROOM ID (入りたい部屋ID)</span>
+                <span class="title-field-sub">ホストの部屋IDを入力</span>
+              </label>
+              <input type="text" id="join-room-id" class="text-input" maxlength="20" placeholder="例: alpha">
+            </div>
+            <div class="title-field">
+              <label class="title-field-label">
+                <span>ROOM PASSWORD (パスワード)</span>
+                <span class="title-field-sub">設定されていない場合は空欄でOK</span>
+              </label>
+              <input type="password" id="join-room-pw" class="text-input" maxlength="20" placeholder="パスワード（ない場合は空欄）">
+            </div>
+          </div>
+          <div id="title-join-error" class="title-error-box" style="display:none;">
+            <span class="error-icon">⚠️</span>
+            <span id="title-join-error-text">パスワードが一致しません</span>
+          </div>
+          <button type="button" id="btn-title-join-game" class="btn-title-action join">
+            <span class="action-icon">⚔️</span>
+            <span class="action-text">JOIN GAME (部屋に参加する)</span>
+          </button>
+        </div>
+      </main>
+    </div>
+
     <!-- A. CUSTOM ROOM LOBBY (メイン待機ロビー画面) -->
-    <div id="view-lobby" class="ui-view">
+    <div id="view-lobby" class="ui-view hidden">
       <!-- Top Bar -->
       <header class="lobby-topbar">
         <div class="lobby-top-left">
@@ -3510,6 +3951,18 @@
             <span>招待URLコピー</span>
           </button>
           <button id="btn-solo-gridshot" class="btn-lobby-action" type="button" title="1人用エイム練習場へ">
+            <span class="icon">🎯</span>
+            <span>1人用練習</span>
+          </button>
+          <button id="btn-open-settings" class="btn-fps-ghost" type="button" title="個人設定を開く">
+            <span class="icon">⚙️</span>
+            <span>SETTINGS</span>
+          </button>
+          <button id="btn-leave-lobby" class="btn-fps-ghost" style="border-color:rgba(255,23,68,0.4); color:#ff5252;" type="button" title="部屋を退出してタイトル画面へ戻る">
+            <span>🚪 退出</span>
+          </button>
+        </div>
+      </header>
             <span class="icon">🎯</span>
             <span>1人用練習</span>
           </button>
@@ -3844,6 +4297,10 @@
           <button id="pause-leave-btn" class="btn-fps-pause btn-pause-danger" type="button">
             <span class="icon">🚪</span>
             <span class="label">RETURN TO LOBBY (ロビーへ戻る)</span>
+          </button>
+          <button id="pause-quit-title-btn" class="btn-fps-pause" style="background:rgba(255,23,68,0.18); border:1px solid rgba(255,23,68,0.45); color:#ff8a80; padding:6px 12px; font-size:11px;" type="button">
+            <span class="icon">🏠</span>
+            <span class="label">QUIT TO MAIN MENU (タイトルへ戻る)</span>
           </button>
         </div>
       </div>
@@ -5753,13 +6210,198 @@
     }
 
     function switchView(viewName) {
+      const vTitle = document.getElementById('view-title');
       const vLobby = document.getElementById('view-lobby');
       const vResult = document.getElementById('view-result');
       const vPause = document.getElementById('view-pause-menu');
 
+      if (vTitle) vTitle.classList.toggle('hidden', viewName !== 'title');
       if (vLobby) vLobby.classList.toggle('hidden', viewName !== 'lobby');
       if (vResult) vResult.classList.toggle('hidden', viewName !== 'result');
       if (vPause) vPause.classList.toggle('hidden', viewName !== 'pause');
+    }
+
+    function openTitleMenu(tab = 'create') {
+      roomState = 'TITLE';
+      isGameActive = false;
+      isMouseDown = false;
+      Object.keys(pressedCodes).forEach(k => pressedCodes[k] = false);
+      updateCameraFovAndScope();
+      tabBoard.classList.remove('show');
+      mobileControlsEl.classList.remove('active');
+      const tdmBar = document.getElementById('tdm-hud-bar');
+      if (tdmBar) tdmBar.style.display = 'none';
+
+      switchView('title');
+      overlay.classList.remove('hidden');
+
+      if (tab === 'join') {
+        switchTitleTab('join');
+      } else {
+        switchTitleTab('create');
+      }
+
+      try {
+        if (document.pointerLockElement && document.exitPointerLock) {
+          document.exitPointerLock();
+        }
+      } catch (e) {}
+    }
+
+    let titleCreateMode = 'ffa';
+    let titleCreateScore = 20;
+
+    function switchTitleTab(tabName) {
+      const tabCreate = document.getElementById('tab-btn-create-room');
+      const tabJoin = document.getElementById('tab-btn-join-room');
+      const panelCreate = document.getElementById('title-panel-create');
+      const panelJoin = document.getElementById('title-panel-join');
+
+      if (tabName === 'join') {
+        if (tabCreate) tabCreate.classList.remove('active');
+        if (tabJoin) tabJoin.classList.add('active');
+        if (panelCreate) panelCreate.style.display = 'none';
+        if (panelJoin) panelJoin.style.display = 'flex';
+      } else {
+        if (tabCreate) tabCreate.classList.add('active');
+        if (tabJoin) tabJoin.classList.remove('active');
+        if (panelCreate) panelCreate.style.display = 'flex';
+        if (panelJoin) panelJoin.style.display = 'none';
+      }
+    }
+
+    function showJoinError(msg) {
+      const errBox = document.getElementById('title-join-error');
+      const errText = document.getElementById('title-join-error-text');
+      if (errBox && errText) {
+        errText.textContent = msg;
+        errBox.style.display = 'flex';
+      }
+    }
+
+    function hideJoinError() {
+      const errBox = document.getElementById('title-join-error');
+      if (errBox) errBox.style.display = 'none';
+    }
+
+    function initTitleMenu() {
+      const nameInput = document.getElementById('title-player-name');
+      const lobbyNameInput = document.getElementById('opt-name');
+      const tabCreate = document.getElementById('tab-btn-create-room');
+      const tabJoin = document.getElementById('tab-btn-join-room');
+      const btnRndRoom = document.getElementById('btn-random-room-id');
+      const createRoomInput = document.getElementById('create-room-id');
+      const createPwInput = document.getElementById('create-room-pw');
+      const joinRoomInput = document.getElementById('join-room-id');
+      const joinPwInput = document.getElementById('join-room-pw');
+      const btnHostGame = document.getElementById('btn-title-host-game');
+      const btnJoinGame = document.getElementById('btn-title-join-game');
+      const btnTitleGrid = document.getElementById('btn-title-gridshot');
+      const btnTitleSettings = document.getElementById('btn-title-settings');
+      const btnLeaveLobby = document.getElementById('btn-leave-lobby');
+
+      // プレイヤー名の同期
+      const savedName = localStorage.getItem('cyberstrike_player_name') || localPlayer.name;
+      if (nameInput) {
+        nameInput.value = savedName;
+        nameInput.addEventListener('input', (e) => {
+          const val = e.target.value.trim() || 'Player_1';
+          localPlayer.name = val;
+          if (lobbyNameInput) lobbyNameInput.value = val;
+          try { localStorage.setItem('cyberstrike_player_name', val); } catch(e){}
+        });
+      }
+      if (lobbyNameInput) {
+        lobbyNameInput.addEventListener('input', (e) => {
+          const val = e.target.value.trim() || 'Player_1';
+          localPlayer.name = val;
+          if (nameInput) nameInput.value = val;
+          try { localStorage.setItem('cyberstrike_player_name', val); } catch(e){}
+        });
+      }
+
+      function generateRandomRoomName() {
+        const adjectives = ['alpha', 'bravo', 'cyber', 'neon', 'apex', 'strike', 'delta', 'ghost', 'shadow', 'blaze'];
+        const num = Math.floor(100 + Math.random() * 900);
+        return adjectives[Math.floor(Math.random() * adjectives.length)] + num;
+      }
+
+      if (createRoomInput && !createRoomInput.value) {
+        createRoomInput.value = generateRandomRoomName();
+      }
+      if (btnRndRoom && createRoomInput) {
+        btnRndRoom.addEventListener('click', () => {
+          createRoomInput.value = generateRandomRoomName();
+        });
+      }
+
+      if (tabCreate) tabCreate.addEventListener('click', () => switchTitleTab('create'));
+      if (tabJoin) tabJoin.addEventListener('click', () => switchTitleTab('join'));
+
+      const btnFfa = document.getElementById('title-mode-ffa');
+      const btnTdm = document.getElementById('title-mode-tdm');
+      if (btnFfa && btnTdm) {
+        btnFfa.addEventListener('click', () => {
+          titleCreateMode = 'ffa';
+          btnFfa.classList.add('active');
+          btnTdm.classList.remove('active');
+        });
+        btnTdm.addEventListener('click', () => {
+          titleCreateMode = 'tdm';
+          btnTdm.classList.add('active');
+          btnFfa.classList.remove('active');
+        });
+      }
+
+      const scoreBtns = document.querySelectorAll('.title-score-btn');
+      scoreBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          scoreBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          titleCreateScore = parseInt(btn.dataset.score, 10) || 20;
+        });
+      });
+
+      if (btnHostGame) {
+        btnHostGame.addEventListener('click', () => {
+          const rawId = createRoomInput ? createRoomInput.value : '';
+          const rawPw = createPwInput ? createPwInput.value : '';
+          const cleanId = sanitizeRoomId(rawId);
+          matchConfig.mode = titleCreateMode;
+          matchConfig.scoreLimit = titleCreateScore;
+          updateRoomConfigUI();
+          startHostRoom(cleanId, rawPw);
+          openLobby();
+        });
+      }
+
+      if (btnJoinGame) {
+        btnJoinGame.addEventListener('click', () => {
+          hideJoinError();
+          const rawId = joinRoomInput ? joinRoomInput.value : '';
+          const rawPw = joinPwInput ? joinPwInput.value : '';
+          const cleanId = sanitizeRoomId(rawId);
+          if (!cleanId) {
+            showJoinError('⚠️ Room ID を入力してください');
+            return;
+          }
+          startGuestRoom(cleanId, rawPw);
+          openLobby();
+        });
+      }
+
+      if (btnTitleGrid) btnTitleGrid.addEventListener('click', openGridshotModal);
+      if (btnTitleSettings) btnTitleSettings.addEventListener('click', openSettingsModal);
+
+      if (btnLeaveLobby) {
+        btnLeaveLobby.addEventListener('click', () => {
+          if (confirm('部屋を退出してメインメニューへ戻りますか？')) {
+            teardownNetwork(() => {
+              openTitleMenu('create');
+            });
+          }
+        });
+      }
     }
 
     function openLobby() {
@@ -6228,6 +6870,15 @@
     if (pauseLeave) pauseLeave.addEventListener('click', () => {
       if (isHost) hostReturnToLobby();
       else openLobby();
+    });
+
+    const pauseQuitTitle = document.getElementById('pause-quit-title-btn');
+    if (pauseQuitTitle) pauseQuitTitle.addEventListener('click', () => {
+      if (confirm('試合を抜けてメインメニューへ戻りますか？')) {
+        teardownNetwork(() => {
+          openTitleMenu('create');
+        });
+      }
     });
 
     // Settings Modal Open / Close
@@ -8311,14 +8962,31 @@
       return code;
     }
 
-    function updateUrlAndUi(roomId) {
+    let currentRoomPassword = '';
+    let currentRoomCleanId = '';
+
+    function sanitizeRoomId(raw) {
+      const s = String(raw || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+      return s || ('room' + Math.floor(100 + Math.random() * 900));
+    }
+
+    function updateUrlAndUi(roomId, password = '') {
+      currentRoomCleanId = roomId;
+      currentRoomPassword = String(password || '').trim();
       currentRoomId = roomId;
-      const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + '?room=' + roomId;
-      window.history.replaceState({ path: newUrl }, '', newUrl);
+
+      let newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + '?room=' + encodeURIComponent(roomId);
+      if (currentRoomPassword) {
+        newUrl += '&pw=' + encodeURIComponent(currentRoomPassword);
+      }
+      try {
+        window.history.replaceState({ path: newUrl }, '', newUrl);
+      } catch (e) {}
+
       const urlInput = document.getElementById('invite-url-input');
       if (urlInput) urlInput.value = newUrl;
       const roomLabel = document.getElementById('sb-room-label');
-      if (roomLabel) roomLabel.textContent = 'Room ID: ' + roomId;
+      if (roomLabel) roomLabel.textContent = 'Room ID: ' + roomId + (currentRoomPassword ? ' 🔒[PWあり]' : '');
       if (guestTargetRoomLabel) guestTargetRoomLabel.textContent = roomId;
     }
 
@@ -8373,19 +9041,25 @@
       }
     }
 
-    // 1. ホストとして部屋を開設（自分が主催者）
-    function startHostRoom(roomId) {
+    // 1. ホストとして部屋を開設（自分が主催者・パスワード対応）
+    function startHostRoom(roomId, password = '') {
+      const cleanRoom = sanitizeRoomId(roomId);
+      currentRoomCleanId = cleanRoom;
+      currentRoomPassword = String(password || '').trim();
+
+      const hostPeerId = 'vsa-room-' + cleanRoom;
+
       teardownNetwork(() => {
         hideConnectionAlert();
-        updateUrlAndUi(roomId);
+        updateUrlAndUi(cleanRoom, currentRoomPassword);
         isHost = true;
-        updateRoleBanner('host', roomId);
+        updateRoleBanner('host', cleanRoom);
         updateHostUiPermissions();
-        setVisualStatus('🟡 ホスト部屋を開設中...（シグナリングサーバー接続）', '#ffca28');
-        appendNetLog(`👑 ホスト部屋開設開始... (Room: ${roomId})`, 'info');
+        setVisualStatus('🟡 ホスト部屋を開設中... (Room: ' + cleanRoom + ')', '#ffca28');
+        appendNetLog(`👑 ホスト部屋開設開始... (Room: ${cleanRoom}${currentRoomPassword ? ' [パスワード保護]' : ''})`, 'info');
 
         try {
-          peer = new Peer(roomId, PEER_CONFIG);
+          peer = new Peer(hostPeerId, PEER_CONFIG);
         } catch (e) {
           appendNetLog(`Peer初期化例外: ${e.message}`, 'err');
         }
@@ -8407,8 +9081,8 @@
           startHeartbeat();
           localPlayer.id = id;
           localPlayer.ping = 0;
-          appendNetLog(`👑 ホスト開設完了！ 待機中... (あなたのPeer ID: ${id})`, 'ok');
-          appendNetLog('💡 友達に招待URLを送り、このブラウザを開いたまま待機してください', 'info');
+          appendNetLog(`👑 ホスト開設完了！ 待機中... (Room ID: ${cleanRoom})`, 'ok');
+          appendNetLog('💡 友達にRoom IDや招待URLを送り、このブラウザを開いたまま待機してください', 'info');
           if (config.gameMode === 'gridshot') {
             buildGridshotRoom();
           } else {
@@ -8423,6 +9097,21 @@
           appendNetLog(`ゲストからの接続要求を受信: ${conn.peer}`, 'info');
           conn.serialization = 'json';
 
+          // パスワード照合
+          const clientPw = (conn.metadata && conn.metadata.password) ? String(conn.metadata.password).trim() : '';
+          if (currentRoomPassword && clientPw !== currentRoomPassword) {
+            appendNetLog(`⚠️ ゲスト (${conn.peer}) がパスワード不一致のため接続を拒否しました`, 'err');
+            const rejectAuth = () => {
+              try {
+                conn.send({ type: 'auth_error', reason: 'パスワードが違います' });
+              } catch (e) {}
+              setTimeout(() => { try { conn.close(); } catch(e){} }, 300);
+            };
+            if (conn.open) rejectAuth();
+            else conn.on('open', rejectAuth);
+            return;
+          }
+
           let isSetup = false;
           const setupConnection = () => {
             if (isSetup) return;
@@ -8430,11 +9119,11 @@
             clientConns[conn.peer] = conn;
             appendNetLog(`✅ ゲスト (${conn.peer}) とP2P接続確立！ 対戦可能`, 'ok');
 
-            // ゲストをロスターに即時仮登録（パケット到着前でも画面に即座に出す）
+            const guestName = (conn.metadata && conn.metadata.name) ? conn.metadata.name : ('Player_' + conn.peer.slice(-4));
             if (!remotePlayers[conn.peer]) {
               createOrUpdateRemotePlayer({
                 id: conn.peer,
-                name: 'Player_' + conn.peer.slice(-4),
+                name: guestName,
                 team: 'red',
                 ping: 0
               });
@@ -8443,7 +9132,6 @@
             renderRosterList();
             broadcastRoomSync();
 
-            // 新規参加者へ即時welcome ACKおよび現在のマップ設定を送信
             try {
               const validMapId = MAP_DEFINITIONS[currentArenaMapId] ? currentArenaMapId : 'standard';
               const validThemeId = MAP_THEMES[currentArenaThemeId] ? currentArenaThemeId : 'cyber';
@@ -8492,9 +9180,11 @@
           appendNetLog(`ホストエラー: ${err.type} - ${err.message || ''}`, 'err');
           console.warn('Host peer error:', err);
           if (err.type === 'unavailable-id') {
-            appendNetLog('部屋IDが重複しました。新しいIDで自動再開設します...', 'warn');
-            const retryRoom = generateRoomId();
-            startHostRoom(retryRoom);
+            appendNetLog('部屋IDが重複しています。別のRoom IDで部屋を作成してください', 'err');
+            showConnectionAlert(
+              '⚠️ Room IDの重複',
+              `「${cleanRoom}」という部屋IDは現在既に使用されています。別のRoom IDを指定してください。`
+            );
           } else {
             setVisualStatus('🔴 通信エラー (' + err.type + ')', '#ff1744');
             showConnectionAlert(
@@ -8506,24 +9196,29 @@
       });
     }
 
-    // 2. ゲストとしてホストへ直接参加（招待URLを踏んだ人）
+    // 2. ゲストとしてホストへ直接参加（パスワード認証付き）
     let connected = false;
-    function startGuestRoom(roomId) {
+    function startGuestRoom(roomId, password = '') {
+      const cleanRoom = sanitizeRoomId(roomId);
+      currentRoomCleanId = cleanRoom;
+      currentRoomPassword = String(password || '').trim();
+
+      const targetHostPeerId = 'vsa-room-' + cleanRoom;
+
       teardownNetwork(() => {
         hideConnectionAlert();
-        updateUrlAndUi(roomId);
+        updateUrlAndUi(cleanRoom, currentRoomPassword);
         isHost = false;
         connected = false;
-        updateRoleBanner('guest', roomId);
+        updateRoleBanner('guest', cleanRoom);
         updateHostUiPermissions();
-        setVisualStatus('🟡 ホストに接続中...（' + roomId + ' を探索）', '#ffca28');
+        setVisualStatus('🟡 ホストに接続中... (' + cleanRoom + ' を探索)', '#ffca28');
 
         let retryCount = 0;
-        const MAX_RETRIES = 10; // 最大10回（計約35秒間）粘り強く探索
+        const MAX_RETRIES = 10;
 
-        // ゲストはユニークなランダムIDを生成して即時起動
         const guestId = 'vsa-g-' + Math.random().toString(36).substring(2, 8);
-        appendNetLog(`🎮 ゲスト起動 (My ID: ${guestId}) -> ホスト (${roomId}) 探索準備`, 'info');
+        appendNetLog(`🎮 ゲスト起動 (My ID: ${guestId}) -> ホスト [${cleanRoom}] へ接続中...`, 'info');
 
         try {
           peer = new Peer(guestId, PEER_CONFIG);
@@ -8537,26 +9232,30 @@
             try { if (hostConn) hostConn.close(); } catch (e) {}
             try { if (peer) peer.destroy(); } catch (e) {}
             setVisualStatus('🔴 ホストが見つかりませんでした（タイムアウト）', '#ff1744');
-            appendNetLog('ホスト探索タイムアウト。ホストが画面を開いていないか、通信が遮断されています', 'err');
+            appendNetLog('ホスト探索タイムアウト。ホストが部屋を立てていないか、Room IDが誤っています', 'err');
             showConnectionAlert(
               '⚠️ ホストが見つかりませんでした',
-              'ホスト（友達）がまだゲーム画面を開いていないか、LINE等の別アプリを開いたまま待機している可能性があります。友達に「ゲーム画面（ブラウザ）を開いて待ってて！」と伝えて、下の【🔄 もう一度接続を試す】を押してください。'
+              `部屋 [${cleanRoom}] が見つかりませんでした。ホストが部屋を開設しているか、正しいRoom IDをご確認ください。`
             );
           }
-        }, 36000); // 36秒のゆとりを持ったタイムアウト
+        }, 36000);
 
         const connectToHost = () => {
           if (connected) return;
           retryCount++;
           setVisualStatus(`🟡 ホスト接続試行中... (${retryCount}/${MAX_RETRIES})`, '#ffca28');
-          appendNetLog(`[${retryCount}/${MAX_RETRIES}] ホスト (${roomId}) へP2P接続要求を送信中...`, 'info');
+          appendNetLog(`[${retryCount}/${MAX_RETRIES}] ホスト (${cleanRoom}) へ認証接続要求を送信中...`, 'info');
 
           try {
             if (hostConn) {
               try { hostConn.close(); } catch (e) {}
               hostConn = null;
             }
-            hostConn = peer.connect(roomId, {
+            hostConn = peer.connect(targetHostPeerId, {
+              metadata: {
+                password: currentRoomPassword,
+                name: localPlayer.name
+              },
               reliable: true,
               serialization: 'json'
             });
@@ -8565,10 +9264,9 @@
             return;
           }
 
-          // 一定時間内に接続が開かなければ自動で次のリトライへ
           const handshakeTimer = setTimeout(() => {
             if (!connected && retryCount < MAX_RETRIES && peer && !peer.destroyed) {
-              appendNetLog(`相手の待機を確認中... 友達が画面を開いていれば自動で繋がります (${retryCount}/${MAX_RETRIES})`, 'warn');
+              appendNetLog(`相手の待機を確認中... (${retryCount}/${MAX_RETRIES})`, 'warn');
               connectToHost();
             }
           }, 3500);
@@ -8579,10 +9277,9 @@
             clearConnTimeout();
             hideConnectionAlert();
             startHeartbeat();
-            appendNetLog(`🎉 ホスト (${roomId}) とP2P接続が確立しました！ 対戦可能です`, 'ok');
+            appendNetLog(`🎉 ホスト (${cleanRoom}) とP2P接続が確立しました！ 対戦可能です`, 'ok');
             refreshConnectionStatusBanner();
             updateLeaderboardUI();
-            // ホストへ自己紹介ステートを即時送信
             try {
               hostConn.send({
                 type: 'state',
@@ -8611,8 +9308,18 @@
           }
 
           hostConn.on('data', (data) => {
+            if (data && data.type === 'auth_error') {
+              clearTimeout(handshakeTimer);
+              clearConnTimeout();
+              appendNetLog(`❌ 認証エラー: ${data.reason}`, 'err');
+              showJoinError('❌ ' + (data.reason || 'パスワードが違います'));
+              teardownNetwork(() => {
+                openTitleMenu('join');
+              });
+              return;
+            }
             onHostOpen();
-            handleIncomingData(data, roomId);
+            handleIncomingData(data, cleanRoom);
           });
 
           const onHostLost = () => {
@@ -8664,7 +9371,7 @@
             setVisualStatus('🔴 接続先が見つかりません (' + err.type + ')', '#ff1744');
             showConnectionAlert(
               '⚠️ ホストが見つかりませんでした',
-              'ホスト（友達）がまだゲーム画面を開いていないか、LINE等の別アプリを開いたまま待機している可能性があります。友達に「ゲーム画面（ブラウザ）を開いて待ってて！」と伝えて、下の【🔄 もう一度接続を試す】を押してください。'
+              `部屋 [${cleanRoom}] が見つかりませんでした。ホストが部屋を開設しているか、Room ID をご確認ください。`
             );
           }
         });
@@ -8764,49 +9471,22 @@
       localPlayer.hsKills = 0;
       isHost = true;
 
-      // ブラウザURLを新しいホストURLに更新
-      const cleanUrl = window.location.origin + window.location.pathname + '?room=' + freshRoom;
-      try {
-        window.history.replaceState(null, '', cleanUrl);
-      } catch (e) {}
-
-      const inviteInput = document.getElementById('invite-url-input');
-      if (inviteInput) inviteInput.value = cleanUrl;
+      currentRoomCleanId = freshRoom;
+      currentRoomPassword = '';
 
       hideConnectionAlert();
-      appendNetLog(`👑 新しい部屋を開設しました (Host ID: ${freshRoom})`, 'ok');
-      startHostRoom(freshRoom);
+      appendNetLog(`👑 新しい部屋を開設しました (Room ID: ${freshRoom})`, 'ok');
+      startHostRoom(freshRoom, '');
       updateRoleBanner('host', freshRoom);
       updateRoomConfigUI();
-    }
-
-    const newRoomBtn = document.getElementById('new-room-btn');
-    if (newRoomBtn) newRoomBtn.addEventListener('click', createFreshHostRoom);
-
-    const guestBecomeHostBtn = document.getElementById('guest-become-host-btn');
-    if (guestBecomeHostBtn) guestBecomeHostBtn.addEventListener('click', createFreshHostRoom);
-
-    const becomeHostBtn = document.getElementById('become-host-btn');
-    if (becomeHostBtn) becomeHostBtn.addEventListener('click', createFreshHostRoom);
-
-    const hostConfigBadge = document.getElementById('host-config-badge');
-    if (hostConfigBadge) {
-      hostConfigBadge.style.cursor = 'pointer';
-      hostConfigBadge.addEventListener('click', () => {
-        if (!isHost) {
-          if (confirm('ホストの待機をやめて、自分で新しく部屋を作成（ホスト）しますか？')) {
-            createFreshHostRoom();
-          }
-        }
-      });
     }
 
     function retryCurrentRoom() {
       appendNetLog('再接続を試行中...', 'info');
       if (isHost) {
-        startHostRoom(currentRoomId || generateRoomId());
+        startHostRoom(currentRoomCleanId || currentRoomId || generateRoomId(), currentRoomPassword);
       } else {
-        startGuestRoom(currentRoomId || generateRoomId());
+        startGuestRoom(currentRoomCleanId || currentRoomId || generateRoomId(), currentRoomPassword);
       }
     }
 
@@ -9339,7 +10019,7 @@
         tryShoot();
       }
 
-      if (!isGameActive && roomState === 'LOBBY') {
+      if (!isGameActive && (roomState === 'LOBBY' || roomState === 'TITLE')) {
         lobbyCamAngle += dt * 0.12;
         const radius = 34;
         camera.position.set(Math.cos(lobbyCamAngle) * radius, 18, Math.sin(lobbyCamAngle) * radius);
@@ -9356,22 +10036,26 @@
     // 起動処理
     loadSettings();
     updateHpHud();
+    initTitleMenu();
 
     const urlParams = new URLSearchParams(window.location.search);
     const targetRoom = urlParams.get('room');
+    const targetPw = urlParams.get('pw') || '';
+
     if (targetRoom && targetRoom.trim() !== '') {
-      // 招待URLを踏んだ人 -> 最初から同期的にゲストとして初期化！
-      isHost = false;
-      startGuestRoom(targetRoom.trim());
+      const cleanTarget = sanitizeRoomId(targetRoom);
+      const joinRoomInput = document.getElementById('join-room-id');
+      const joinPwInput = document.getElementById('join-room-pw');
+      if (joinRoomInput) joinRoomInput.value = cleanTarget;
+      if (joinPwInput) joinPwInput.value = targetPw;
+
+      openTitleMenu('join');
+      appendNetLog(`招待リンクを検知: Room [${cleanTarget}]。プレイヤー名を確認して「JOIN GAME」を押してください`, 'info');
     } else {
-      // 部屋指定なし -> 最初から同期的にホストとして初期化！
-      isHost = true;
-      const freshRoom = generateRoomId();
-      startHostRoom(freshRoom);
+      openTitleMenu('create');
     }
 
     updateLeaderboardUI();
-    openLobby();
     animate();
   </script>
 </body>
