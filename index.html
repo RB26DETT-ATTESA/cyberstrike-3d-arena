@@ -2,12 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="CyberStrike">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#070a12">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -380,7 +375,6 @@
       border-radius: 5px;
       font-size: 11px;
       font-weight: 800;
-      white-space: nowrap;
       cursor: pointer;
       transition: all 0.12s ease;
     }
@@ -1156,10 +1150,6 @@
       animation: viewFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    #view-title.hidden,
-    #view-lobby.hidden,
-    #view-result.hidden,
-    #view-pause-menu.hidden,
     .ui-view.hidden {
       display: none !important;
       pointer-events: none !important;
@@ -1170,277 +1160,11 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    /* --- 0. TITLE MENU (メインメニュー / タイトル画面) --- */
-    #view-title {
-      justify-content: flex-start;
-      align-items: center;
-      padding: 12px max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left));
-      background: radial-gradient(circle at center, rgba(13, 20, 36, 0.75) 0%, rgba(4, 8, 16, 0.94) 100%);
-      box-sizing: border-box;
-      gap: 10px;
-    }
-
-    .title-topbar {
-      width: 100%;
-      max-width: 860px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-shrink: 0;
-      padding-bottom: 6px;
-      border-bottom: 1px solid rgba(0, 229, 255, 0.2);
-    }
-    .title-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .title-brand-icon {
-      font-size: 26px;
-      filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.8));
-    }
-    .title-brand-text {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: #fff;
-      text-shadow: 0 0 14px rgba(0, 229, 255, 0.6);
-    }
-    .title-brand-sub {
-      font-size: 9.5px;
-      font-weight: 800;
-      color: var(--accent);
-      letter-spacing: 2px;
-    }
-    .title-top-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .title-main-card {
-      width: 100%;
-      max-width: 860px;
-      background: rgba(10, 17, 32, 0.88);
-      border: 1.5px solid rgba(0, 229, 255, 0.35);
-      border-radius: 12px;
-      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 229, 255, 0.2);
-      padding: 14px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      box-sizing: border-box;
-      overflow-y: auto;
-      touch-action: pan-y;
-      -webkit-overflow-scrolling: touch;
-      flex: 1;
-      max-height: calc(100vh - 70px);
-    }
-
-    .title-player-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(0, 229, 255, 0.08);
-      border: 1px solid rgba(0, 229, 255, 0.3);
-      padding: 6px 12px;
-      border-radius: 8px;
-    }
-    .title-label {
-      font-size: 11px;
-      font-weight: 800;
-      color: #cbd5e1;
-      white-space: nowrap;
-    }
-    #title-player-name {
-      flex: 1;
-      max-width: 240px;
-      padding: 5px 10px;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .title-mode-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .title-mode-tab {
-      background: rgba(13, 20, 36, 0.7);
-      border: 1.5px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      color: #cbd5e1;
-      transition: all 0.16s ease;
-      touch-action: manipulation;
-    }
-    .title-mode-tab:hover {
-      border-color: rgba(0, 229, 255, 0.5);
-      background: rgba(0, 229, 255, 0.08);
-    }
-    .title-mode-tab.active {
-      background: rgba(0, 229, 255, 0.18);
-      border-color: var(--accent);
-      color: #fff;
-      box-shadow: 0 0 16px rgba(0, 229, 255, 0.4);
-    }
-    .tab-icon {
-      font-size: 22px;
-    }
-    .tab-text {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
-    }
-    .tab-main-title {
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: 0.5px;
-    }
-    .tab-sub-title {
-      font-size: 10px;
-      color: #94a3b8;
-    }
-
-    .title-tab-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .title-form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    @media (max-width: 600px) {
-      .title-form-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    .title-field {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .title-field-label {
-      font-size: 10.5px;
-      font-weight: 800;
-      color: #94a3b8;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .title-field-sub {
-      font-size: 9px;
-      color: #64748b;
-      font-weight: normal;
-    }
-    .btn-mini-rnd {
-      background: rgba(0, 229, 255, 0.15);
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-size: 9.5px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-    .title-choice-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-    }
-    .title-choice-btn {
-      background: rgba(13, 20, 36, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #94a3b8;
-      padding: 6px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s ease;
-    }
-    .title-choice-btn.active {
-      background: rgba(0, 229, 255, 0.2);
-      border-color: var(--accent);
-      color: #fff;
-    }
-    .title-score-row {
-      grid-template-columns: repeat(4, 1fr);
-    }
-    .title-score-btn {
-      background: rgba(13, 20, 36, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #94a3b8;
-      padding: 6px 4px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      text-align: center;
-    }
-    .title-score-btn.active {
-      background: var(--accent);
-      color: #040814;
-      border-color: var(--accent);
-    }
-
-    .btn-title-action {
-      height: 46px;
-      border-radius: 8px;
-      border: none;
-      font-family: inherit;
-      font-size: 15px;
-      font-weight: 900;
-      letter-spacing: 1.5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      touch-action: manipulation;
-      transition: transform 0.14s ease, box-shadow 0.15s ease;
-      margin-top: 4px;
-    }
-    .btn-title-action.create {
-      background: linear-gradient(135deg, #00e5ff 0%, #00b4d8 100%);
-      color: #040814;
-      box-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
-    }
-    .btn-title-action.join {
-      background: linear-gradient(135deg, #00e676 0%, #00b0ff 100%);
-      color: #040814;
-      box-shadow: 0 0 25px rgba(0, 230, 118, 0.5);
-    }
-    .btn-title-action:active {
-      transform: scale(0.98);
-    }
-
-    .title-error-box {
-      background: rgba(255, 23, 68, 0.15);
-      border: 1px solid rgba(255, 23, 68, 0.4);
-      color: #ff8a80;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
     /* --- A. CUSTOM ROOM LOBBY VIEW --- */
     #view-lobby {
       justify-content: space-between;
       align-items: center;
-      padding: 6px max(14px, env(safe-area-inset-right)) 6px max(14px, env(safe-area-inset-left));
+      padding: 14px 20px 14px;
       overflow-y: auto;
     }
 
@@ -1588,19 +1312,16 @@
       max-width: 1240px;
       flex: 1;
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 12px;
-      margin: 6px 0;
-      overflow: hidden;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 16px;
+      margin: 10px 0;
+      overflow-y: auto;
       z-index: 2;
-      box-sizing: border-box;
     }
 
-    /* 縦画面PCウィンドウ（幅狭かつ縦十分）時のみ縦1カラム */
-    @media (max-width: 768px) and (min-height: 560px) {
+    @media (max-width: 900px) {
       .lobby-main-grid {
         grid-template-columns: 1fr;
-        overflow-y: auto;
       }
       .lobby-topbar {
         justify-content: center;
@@ -2900,10 +2621,8 @@
 
     /* Solo Gridshot Practice Settings Modal Window */
     .gridshot-modal-window {
-      width: 640px;
+      width: 620px;
       max-width: 95vw;
-      height: 92vh;
-      max-height: 580px;
       background: rgba(10, 16, 30, 0.96);
       border: 1.5px solid rgba(0, 229, 255, 0.45);
       border-radius: 12px;
@@ -2912,16 +2631,14 @@
       flex-direction: column;
       overflow: hidden;
       animation: pauseCardPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      box-sizing: border-box;
     }
     .gridshot-modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 20px;
+      padding: 16px 22px;
       border-bottom: 1px solid rgba(0, 229, 255, 0.22);
       background: rgba(0, 229, 255, 0.05);
-      flex-shrink: 0;
     }
     .gridshot-modal-title-group {
       display: flex;
@@ -2945,14 +2662,11 @@
       text-transform: uppercase;
     }
     .gridshot-modal-body {
-      padding: 16px 20px;
+      padding: 20px 22px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
       overflow-y: auto;
-      flex: 1;
-      touch-action: pan-y;
-      -webkit-overflow-scrolling: touch;
     }
     .gridshot-intro-card {
       background: rgba(0, 229, 255, 0.08);
@@ -2998,669 +2712,14 @@
       justify-content: flex-end;
       align-items: center;
       gap: 12px;
-      padding: 12px 20px;
+      padding: 14px 22px;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(0, 0, 0, 0.4);
-      flex-shrink: 0;
-    }
-
-    /* =========================================================================
-       14. 縦画面強制ガード & HUDエディタ & モバイル横画面スタイル
-       ========================================================================= */
-    #orientation-guard {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 9999999;
-      background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
-      color: #ffffff;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 30px;
-    }
-    @media (orientation: portrait) and (max-width: 960px) {
-      #orientation-guard {
-        display: flex;
-      }
-    }
-    .og-icon-box {
-      width: 80px;
-      height: 80px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 20px;
-      background: rgba(0, 229, 255, 0.1);
-      border: 2px solid rgba(0, 229, 255, 0.4);
-      box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
-    }
-    .og-icon {
-      font-size: 38px;
-      display: inline-block;
-      animation: rotatePhone 2.2s ease-in-out infinite;
-    }
-    @keyframes rotatePhone {
-      0%, 10% { transform: rotate(0deg); }
-      45%, 65% { transform: rotate(-90deg); }
-      90%, 100% { transform: rotate(0deg); }
-    }
-    .og-title {
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: 1.5px;
-      color: #00e5ff;
-      margin-bottom: 10px;
-      text-shadow: 0 0 16px rgba(0, 229, 255, 0.5);
-    }
-    .og-desc {
-      font-size: 13px;
-      color: #94a3b8;
-      max-width: 340px;
-      line-height: 1.6;
-    }
-
-    /* PWA Banner */
-    .pwa-banner {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0, 229, 255, 0.08);
-      border: 1px solid rgba(0, 229, 255, 0.3);
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 11px;
-      color: #cbd5e1;
-      margin-top: 8px;
-    }
-
-    /* HUD Editor Overlay */
-    #hud-editor-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 999990;
-      background: rgba(5, 8, 15, 0.88);
-      backdrop-filter: blur(6px);
-      user-select: none;
-      touch-action: none;
-    }
-    #hud-editor-overlay.active {
-      display: block;
-    }
-    .he-grid-bg {
-      position: absolute;
-      inset: 0;
-      background-size: 40px 40px;
-      background-image: 
-        linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-      pointer-events: none;
-    }
-    .he-header {
-      position: absolute;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(13, 19, 32, 0.95);
-      border: 1px solid rgba(0, 229, 255, 0.4);
-      padding: 8px 24px;
-      border-radius: 30px;
-      color: #ffffff;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-      pointer-events: none;
-      z-index: 10;
-    }
-    .he-item {
-      position: absolute;
-      cursor: grab;
-      touch-action: none;
-      border: 2px dashed rgba(255, 255, 255, 0.35);
-      border-radius: 8px;
-      transition: border-color 0.15s, box-shadow 0.15s;
-      transform-origin: center center;
-    }
-    .he-item:active {
-      cursor: grabbing;
-    }
-    .he-item.selected {
-      border: 2px solid #ffd600 !important;
-      box-shadow: 0 0 18px rgba(255, 214, 0, 0.7) !important;
-    }
-    .he-item-tag {
-      position: absolute;
-      top: -22px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #ffd600;
-      color: #05080f;
-      font-size: 9px;
-      font-weight: 900;
-      padding: 1px 6px;
-      border-radius: 4px;
-      white-space: nowrap;
-      pointer-events: none;
-      display: none;
-    }
-    .he-item.selected .he-item-tag {
-      display: block;
-    }
-    .he-toolbar {
-      position: absolute;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(13, 19, 32, 0.96);
-      border: 1px solid rgba(0, 229, 255, 0.5);
-      border-radius: 14px;
-      padding: 10px 18px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.8);
-      z-index: 10;
-      max-width: 95vw;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .he-tool-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #cbd5e1;
-    }
-    .he-tool-group input[type="range"] {
-      width: 90px;
-      cursor: pointer;
-    }
-    .he-btn {
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      border: none;
-      transition: transform 0.1s, filter 0.15s;
-    }
-    .he-btn:active { transform: scale(0.95); }
-    .he-btn-primary { background: var(--accent); color: #05080f; }
-    .he-btn-secondary { background: rgba(255,255,255,0.12); color: #ffffff; }
-    .he-btn-danger { background: rgba(255, 23, 68, 0.25); color: #ff5252; border: 1px solid rgba(255, 23, 68, 0.4); }
-
-    /* =========================================================================
-       15. iPhone 15 / 横画面スマートフォン（高さ540px以下）専用モダンFPS UI
-       ========================================================================= */
-    @media (max-height: 540px) {
-      /* タイトル画面（Main Menu）の横画面スマホ最適化 */
-      #view-title {
-        padding: 4px max(14px, env(safe-area-inset-right)) 4px max(14px, env(safe-area-inset-left)) !important;
-        height: 100vh !important;
-        height: 100dvh !important;
-        overflow: hidden !important;
-        gap: 4px !important;
-      }
-      .title-topbar {
-        padding-bottom: 2px !important;
-      }
-      .title-brand-text {
-        font-size: 15px !important;
-      }
-      .title-brand-icon {
-        font-size: 18px !important;
-      }
-      .title-main-card {
-        padding: 6px 12px !important;
-        gap: 6px !important;
-        max-height: calc(100vh - 44px) !important;
-        max-height: calc(100dvh - 44px) !important;
-      }
-      .title-player-bar {
-        padding: 3px 8px !important;
-      }
-      .title-mode-tab {
-        padding: 4px 8px !important;
-        gap: 6px !important;
-      }
-      .tab-icon {
-        font-size: 16px !important;
-      }
-      .tab-main-title {
-        font-size: 11px !important;
-      }
-      .tab-sub-title {
-        font-size: 8.5px !important;
-      }
-      .title-field {
-        gap: 2px !important;
-      }
-      .title-choice-btn, .title-score-btn {
-        padding: 4px !important;
-        font-size: 10px !important;
-      }
-      .btn-title-action {
-        height: 38px !important;
-        font-size: 13px !important;
-        margin-top: 2px !important;
-      }
-
-      /* 全画面ビューのパディングとスクロール制御（セーフエリア考慮） */
-      #view-lobby {
-        padding: 4px max(14px, env(safe-area-inset-right)) 4px max(14px, env(safe-area-inset-left)) !important;
-        height: 100vh !important;
-        height: 100dvh !important;
-        overflow: hidden !important;
-        justify-content: flex-start !important;
-        gap: 4px !important;
-      }
-
-      /* トップバーを36pxスリム1行化 */
-      .lobby-topbar {
-        height: 36px !important;
-        min-height: 36px !important;
-        padding-bottom: 2px !important;
-        margin-bottom: 2px !important;
-        flex-wrap: nowrap !important;
-        gap: 6px !important;
-      }
-      .lobby-top-left {
-        gap: 5px !important;
-      }
-      .badge-role {
-        font-size: 9.5px !important;
-        padding: 2px 7px !important;
-      }
-      .badge-version, .badge-device, .pwa-banner {
-        display: none !important; /* 横画面の貴重な横幅確保のため非表示 */
-      }
-      #lobby-status-banner {
-        padding: 2px 8px !important;
-        gap: 6px !important;
-        max-width: 220px !important;
-        overflow: hidden !important;
-      }
-      #lobby-status-text {
-        font-size: 11px !important;
-        max-width: 120px !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-      }
-      #lobby-peer-count {
-        font-size: 10px !important;
-        padding: 1px 6px !important;
-      }
-      .btn-lobby-action {
-        padding: 4px 8px !important;
-        font-size: 10.5px !important;
-        gap: 4px !important;
-      }
-      #btn-open-settings {
-        padding: 4px 8px !important;
-        font-size: 10.5px !important;
-      }
-
-      /* メイン領域：必ず左右2分割（左:設定 56% / 右:ロスター＆右下固定START 44%） */
-      .lobby-main-grid {
-        display: grid !important;
-        grid-template-columns: 56% 44% !important;
-        gap: 8px !important;
-        margin: 0 !important;
-        height: calc(100vh - 46px) !important;
-        height: calc(100dvh - 46px) !important;
-        overflow: hidden !important;
-      }
-
-      /* 左右パネル共通 */
-      .panel-match-settings, .panel-roster {
-        padding: 6px 10px !important;
-        gap: 6px !important;
-        height: 100% !important;
-        box-sizing: border-box !important;
-        overflow: hidden !important;
-      }
-
-      .panel-header {
-        padding-bottom: 4px !important;
-      }
-      .panel-header-title {
-        font-size: 11px !important;
-      }
-
-      /* 左パネル：設定フォームの内部タッチスクロール */
-      .settings-form-scroll {
-        flex: 1 !important;
-        overflow-y: auto !important;
-        touch-action: pan-y !important;
-        -webkit-overflow-scrolling: touch !important;
-        gap: 8px !important;
-        padding-right: 2px !important;
-      }
-      .setting-row {
-        gap: 4px !important;
-      }
-      .setting-label {
-        font-size: 10px !important;
-      }
-      .mode-choice-btn {
-        padding: 5px 8px !important;
-        gap: 6px !important;
-      }
-      .choice-icon {
-        font-size: 15px !important;
-      }
-      .choice-title {
-        font-size: 10.5px !important;
-      }
-      .choice-desc {
-        font-size: 8.5px !important;
-      }
-      .score-btn {
-        padding: 4px 2px !important;
-        font-size: 10px !important;
-      }
-      .select-input {
-        padding: 4px 6px !important;
-        font-size: 10.5px !important;
-      }
-      #map-preview-wrap {
-        width: 90px !important;
-        height: 90px !important;
-      }
-      #map-preview-canvas {
-        width: 90px !important;
-        height: 90px !important;
-      }
-      .room-invite-card {
-        padding: 6px !important;
-      }
-      .btn-copy-card {
-        padding: 4px 8px !important;
-        font-size: 10.5px !important;
-      }
-
-      /* 右パネル：参加者リスト ＆ 右下固定巨大STARTボタン */
-      .panel-roster {
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: space-between !important;
-      }
-      .roster-content-area {
-        flex: 1 !important;
-        min-height: 0 !important;
-        overflow-y: auto !important;
-        touch-action: pan-y !important;
-        -webkit-overflow-scrolling: touch !important;
-      }
-      .player-cards-scroll {
-        max-height: calc(100vh - 145px) !important;
-      }
-      .roster-player-row {
-        padding: 4px 8px !important;
-        font-size: 11px !important;
-      }
-      .tdm-roster-split {
-        gap: 4px !important;
-      }
-      .team-roster-col {
-        padding: 2px !important;
-        border-radius: 6px !important;
-        min-height: 80px !important;
-      }
-      .tdm-actions-bar {
-        margin-top: 4px !important;
-        gap: 6px !important;
-      }
-      .btn-team-act {
-        padding: 4px 8px !important;
-        font-size: 10px !important;
-      }
-      .team-header {
-        padding: 2px 6px !important;
-        min-height: 22px !important;
-      }
-      .team-header .team-icon {
-        font-size: 12px !important;
-      }
-      .team-header .team-title {
-        font-size: 10px !important;
-        font-weight: 800 !important;
-      }
-      .team-header .team-count {
-        font-size: 9px !important;
-      }
-      .team-players-list {
-        max-height: calc(100vh - 190px) !important;
-        max-height: calc(100dvh - 190px) !important;
-      }
-      .net-log-container {
-        display: none !important; /* スマホ横画面では通信ログ枠を非表示にしてスッキリ */
-      }
-
-      /* 右下固定 START MATCH ボタン (CoD Mobile / PUBG Mobile スタイル) */
-      .roster-match-action-box {
-        margin-top: 4px !important;
-        flex-shrink: 0 !important;
-      }
-      .btn-fps-start-match {
-        height: 44px !important;
-        font-size: 14.5px !important;
-        letter-spacing: 1px !important;
-        border-radius: 8px !important;
-        box-shadow: 0 0 20px rgba(0, 229, 255, 0.6) !important;
-      }
-      .guest-status-banner {
-        padding: 6px 10px !important;
-        font-size: 11px !important;
-      }
-      .guest-msg {
-        font-size: 11px !important;
-      }
-
-      /* ボトムヒントバー */
-      .lobby-bottom-bar {
-        display: none !important; /* 縦幅節約 */
-      }
-
-      /* -------------------------------------------------------------
-         1人用練習モーダル（Gridshot Modal）のスマホゲームUI化
-         ------------------------------------------------------------- */
-      .gridshot-modal-window {
-        width: 95vw !important;
-        max-width: 680px !important;
-        height: 94vh !important;
-        height: 94dvh !important;
-        max-height: 380px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        overflow: hidden !important;
-        position: fixed !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        border-radius: 10px !important;
-        box-sizing: border-box !important;
-      }
-      .gridshot-modal-header {
-        padding: 8px 14px !important;
-        flex-shrink: 0 !important;
-      }
-      .gridshot-modal-title {
-        font-size: 13.5px !important;
-      }
-      .gridshot-modal-body {
-        flex: 1 !important;
-        overflow-y: auto !important;
-        touch-action: pan-y !important;
-        -webkit-overflow-scrolling: touch !important;
-        padding: 8px 14px !important;
-        gap: 6px !important;
-      }
-      .gridshot-intro-card {
-        padding: 4px 8px !important;
-        font-size: 10px !important;
-        line-height: 1.3 !important;
-        margin-bottom: 2px !important;
-      }
-      .gs-choice-pill {
-        padding: 5px 6px !important;
-        font-size: 10.5px !important;
-      }
-      .gridshot-modal-footer {
-        flex-shrink: 0 !important;
-        padding: 6px 14px !important;
-        background: rgba(0, 0, 0, 0.6) !important;
-        border-top: 1px solid rgba(0, 229, 255, 0.25) !important;
-      }
-      .gridshot-modal-footer .btn, .gridshot-modal-footer button {
-        padding: 7px 16px !important;
-        font-size: 12px !important;
-      }
-
-      /* -------------------------------------------------------------
-         設定モーダル（Settings Modal）のスマホゲームUI化
-         ------------------------------------------------------------- */
-      .settings-modal-window {
-        width: 95vw !important;
-        max-width: 740px !important;
-        height: 94vh !important;
-        height: 94dvh !important;
-        max-height: 380px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        overflow: hidden !important;
-        position: fixed !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        box-sizing: border-box !important;
-      }
-      .settings-header {
-        padding: 6px 14px !important;
-        flex-shrink: 0 !important;
-      }
-      .settings-title {
-        font-size: 14px !important;
-      }
-      .settings-tabs {
-        flex-shrink: 0 !important;
-        gap: 4px !important;
-        padding: 0 14px 4px !important;
-      }
-      .tab-btn {
-        padding: 4px 10px !important;
-        font-size: 10.5px !important;
-      }
-      .settings-body {
-        flex: 1 !important;
-        overflow-y: auto !important;
-        touch-action: pan-y !important;
-        -webkit-overflow-scrolling: touch !important;
-        padding: 8px 14px !important;
-      }
-      .settings-footer {
-        flex-shrink: 0 !important;
-        padding: 6px 14px !important;
-      }
-
-      /* HUDエディタのツールバー */
-      .he-toolbar {
-        bottom: 4px !important;
-        padding: 4px 10px !important;
-        gap: 8px !important;
-      }
-      .he-tool-group {
-        font-size: 10px !important;
-      }
-      .he-btn {
-        padding: 4px 10px !important;
-        font-size: 10.5px !important;
-      }
-
-      /* 1人用練習（グリッドショットHUD）のモバイル横画面最適化 */
-      #gridshot-hud {
-        top: 4px !important;
-        padding: 3px 8px !important;
-        gap: 6px !important;
-        max-width: 96vw !important;
-        border-radius: 6px !important;
-        box-shadow: 0 0 10px rgba(0, 229, 255, 0.25) !important;
-      }
-      .gs-stat {
-        gap: 0px !important;
-      }
-      .gs-label {
-        font-size: 8px !important;
-      }
-      .gs-val {
-        font-size: 12px !important;
-      }
-      .gs-btn {
-        padding: 3px 7px !important;
-        font-size: 9.5px !important;
-        white-space: nowrap !important;
-      }
-
-      /* 戦闘中右上ステータスパネルのモバイル最適化 */
-      #top-right-panel {
-        top: 6px !important;
-        right: max(8px, env(safe-area-inset-right)) !important;
-        max-width: 160px !important;
-      }
-      #hud-net-status {
-        padding: 3px 6px !important;
-        font-size: 9.5px !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-      }
+      background: rgba(0, 0, 0, 0.3);
     }
 
   </style>
 </head>
 <body>
-
-  <!-- 縦画面（Portrait）強制回転ガード -->
-  <div id="orientation-guard">
-    <div class="og-icon-box">
-      <span class="og-icon">📱</span>
-    </div>
-    <div class="og-title">画面を横向きにしてください</div>
-    <div class="og-desc">本格マルチプレイFPSを快適にプレイするため、スマートフォンの自動回転をONにして横画面（Landscape）にしてプレイしてください。</div>
-  </div>
-
-  <!-- HUD配置エディタ (Customize Touch Controls Overlay) -->
-  <div id="hud-editor-overlay">
-    <div class="he-grid-bg"></div>
-    <div class="he-header">📱 タッチHUD配置エディタ（ドラッグで移動 / タップで選択してサイズ・透明度調整）</div>
-
-    <!-- プレビュー／編集用コンテナ -->
-    <div id="he-container" style="position:absolute; inset:0; pointer-events:none;"></div>
-
-    <!-- フローティング調整ツールバー -->
-    <div class="he-toolbar">
-      <div id="he-selected-name" style="font-weight:900; color:#ffd600; font-size:12px;">未選択（ボタンをタップ）</div>
-      <div class="he-tool-group">
-        <span>サイズ:</span>
-        <input type="range" id="he-scale-slider" min="0.5" max="1.8" step="0.05" value="1.0">
-        <span id="he-scale-val">100%</span>
-      </div>
-      <div class="he-tool-group">
-        <span>不透明度:</span>
-        <input type="range" id="he-opacity-slider" min="0.2" max="1.0" step="0.05" value="0.8">
-        <span id="he-opacity-val">80%</span>
-      </div>
-      <button id="he-save-btn" class="he-btn he-btn-primary" type="button">💾 保存して適用</button>
-      <button id="he-reset-btn" class="he-btn he-btn-danger" type="button">🔄 初期配置</button>
-      <button id="he-cancel-btn" class="he-btn he-btn-secondary" type="button">閉じる</button>
-    </div>
-  </div>
 
   <div id="canvas-container"></div>
   <div id="world-ui"></div>
@@ -3873,140 +2932,14 @@
   <!-- Custom Room & Modular Modern FPS Overlay System (#overlay) -->
   <div id="overlay">
 
-    <!-- 0. TITLE MENU (メインメニュー / タイトル画面) -->
-    <div id="view-title" class="ui-view">
-      <!-- Title Header -->
-      <header class="title-topbar">
-        <div class="title-brand">
-          <span class="title-brand-icon">⚡</span>
-          <div>
-            <h1 class="title-brand-text">CYBERSTRIKE 3D</h1>
-            <div class="title-brand-sub">CUSTOM TACTICAL ARENA</div>
-          </div>
-        </div>
-        <div class="title-top-actions">
-          <button id="btn-title-gridshot" class="btn-lobby-action" type="button" title="1人用エイム練習場へ">
-            <span class="icon">🎯</span>
-            <span>1人用練習</span>
-          </button>
-          <button id="btn-title-settings" class="btn-fps-ghost" type="button" title="個人設定を開く">
-            <span class="icon">⚙️</span>
-            <span>SETTINGS</span>
-          </button>
-        </div>
-      </header>
-
-      <!-- Title Main Content (左右2分割 / iPhone 15最適化) -->
-      <main class="title-main-card">
-        <!-- プレイヤー名入力バー -->
-        <div class="title-player-bar">
-          <span class="title-label">👤 プレイヤー名:</span>
-          <input type="text" id="title-player-name" class="text-input" maxlength="18" placeholder="Player_1">
-        </div>
-
-        <!-- 2大モード選択ナビゲーションタブ -->
-        <div class="title-mode-tabs">
-          <button type="button" id="tab-btn-create-room" class="title-mode-tab active" data-tab="create">
-            <span class="tab-icon">👑</span>
-            <div class="tab-text">
-              <span class="tab-main-title">CREATE ROOM</span>
-              <span class="tab-sub-title">部屋を立てる（ホスト）</span>
-            </div>
-          </button>
-          <button type="button" id="tab-btn-join-room" class="title-mode-tab" data-tab="join">
-            <span class="tab-icon">🚪</span>
-            <div class="tab-text">
-              <span class="tab-main-title">JOIN ROOM</span>
-              <span class="tab-sub-title">部屋に入る（パスワード対応）</span>
-            </div>
-          </button>
-        </div>
-
-        <!-- パネルA: CREATE ROOM (部屋を立てる) -->
-        <div id="title-panel-create" class="title-tab-panel">
-          <div class="title-form-grid">
-            <div class="title-field">
-              <label class="title-field-label">
-                <span>ROOM ID (部屋ID・半角英数字)</span>
-                <button type="button" id="btn-random-room-id" class="btn-mini-rnd">🎲 ランダム生成</button>
-              </label>
-              <input type="text" id="create-room-id" class="text-input" maxlength="20" placeholder="例: alpha">
-            </div>
-            <div class="title-field">
-              <label class="title-field-label">
-                <span>PASSWORD (パスワード・空欄可)</span>
-                <span class="title-field-sub">友達と合言葉を決めて対戦</span>
-              </label>
-              <input type="password" id="create-room-pw" class="text-input" maxlength="20" placeholder="パスワード（空欄なら誰でも参加可）">
-            </div>
-            <div class="title-field">
-              <label class="title-field-label">
-                <span>対戦ルール</span>
-              </label>
-              <div class="title-choice-row">
-                <button type="button" id="title-mode-ffa" class="title-choice-btn active" data-mode="ffa">⚔️ 個人戦 (FFA)</button>
-                <button type="button" id="title-mode-tdm" class="title-choice-btn" data-mode="tdm">🛡️ チーム戦 (TDM)</button>
-              </div>
-            </div>
-            <div class="title-field">
-              <label class="title-field-label">
-                <span>目標キル数</span>
-              </label>
-              <div class="title-choice-row title-score-row">
-                <button type="button" class="title-score-btn" data-score="10">10</button>
-                <button type="button" class="title-score-btn active" data-score="20">20</button>
-                <button type="button" class="title-score-btn" data-score="30">30</button>
-                <button type="button" class="title-score-btn" data-score="50">50</button>
-              </div>
-            </div>
-          </div>
-          <button type="button" id="btn-title-host-game" class="btn-title-action create">
-            <span class="action-icon">👑</span>
-            <span class="action-text">HOST GAME (部屋を作成してロビーへ)</span>
-          </button>
-        </div>
-
-        <!-- パネルB: JOIN ROOM (部屋に入る) -->
-        <div id="title-panel-join" class="title-tab-panel" style="display:none;">
-          <div class="title-form-grid">
-            <div class="title-field">
-              <label class="title-field-label">
-                <span>JOIN ROOM ID (入りたい部屋ID)</span>
-                <span class="title-field-sub">ホストの部屋IDを入力</span>
-              </label>
-              <input type="text" id="join-room-id" class="text-input" maxlength="20" placeholder="例: alpha">
-            </div>
-            <div class="title-field">
-              <label class="title-field-label">
-                <span>ROOM PASSWORD (パスワード)</span>
-                <span class="title-field-sub">設定されていない場合は空欄でOK</span>
-              </label>
-              <input type="password" id="join-room-pw" class="text-input" maxlength="20" placeholder="パスワード（ない場合は空欄）">
-            </div>
-          </div>
-          <div id="title-join-error" class="title-error-box" style="display:none;">
-            <span class="error-icon">⚠️</span>
-            <span id="title-join-error-text">パスワードが一致しません</span>
-          </div>
-          <button type="button" id="btn-title-join-game" class="btn-title-action join">
-            <span class="action-icon">⚔️</span>
-            <span class="action-text">JOIN GAME (部屋に参加する)</span>
-          </button>
-        </div>
-      </main>
-    </div>
-
     <!-- A. CUSTOM ROOM LOBBY (メイン待機ロビー画面) -->
-    <div id="view-lobby" class="ui-view hidden">
+    <div id="view-lobby" class="ui-view">
       <!-- Top Bar -->
       <header class="lobby-topbar">
         <div class="lobby-top-left">
           <div id="lobby-role-badge" class="badge-role host">👑 HOST</div>
           <span class="badge-version">v2.4.0 (Custom Room)</span>
           <div id="device-mode-badge" class="badge-device">💻 PCモード</div>
-          <div id="pwa-install-banner" class="pwa-banner" style="display:none;">
-            <span>📱 <strong>PWA全画面対応:</strong> 「ホーム画面に追加」で全画面プレイ可能</span>
-          </div>
         </div>
 
         <div class="lobby-top-center">
@@ -4031,9 +2964,6 @@
           <button id="btn-open-settings" class="btn-fps-ghost" type="button" title="個人設定を開く">
             <span class="icon">⚙️</span>
             <span>SETTINGS</span>
-          </button>
-          <button id="btn-leave-lobby" class="btn-fps-ghost" style="border-color:rgba(255,23,68,0.4); color:#ff5252;" type="button" title="部屋を退出してタイトル画面へ戻る">
-            <span>🚪 退出</span>
           </button>
         </div>
       </header>
@@ -4270,9 +3200,6 @@
                 <span class="start-icon">▶</span>
                 <span class="start-text">START MATCH (全員で試合開始)</span>
               </button>
-              <div style="font-size:10px; color:#94a3b8; text-align:center; margin-top:4px;">
-                💡 1人でも即座に試合開始可能（友達が後から来ても自動で途中合流できます）
-              </div>
             </div>
 
             <!-- Guest Waiting / Join In-Progress Banner -->
@@ -4362,17 +3289,9 @@
             <span class="icon">⚙️</span>
             <span class="label">SETTINGS (個人設定)</span>
           </button>
-          <button id="pause-reset-hud-btn" class="btn-fps-pause btn-pause-secondary" type="button">
-            <span class="icon">📱</span>
-            <span class="label">RESET TOUCH HUD (ボタン配置初期化)</span>
-          </button>
           <button id="pause-leave-btn" class="btn-fps-pause btn-pause-danger" type="button">
             <span class="icon">🚪</span>
             <span class="label">RETURN TO LOBBY (ロビーへ戻る)</span>
-          </button>
-          <button id="pause-quit-title-btn" class="btn-fps-pause" style="background:rgba(255,23,68,0.18); border:1px solid rgba(255,23,68,0.45); color:#ff8a80; padding:6px 12px; font-size:11px;" type="button">
-            <span class="icon">🏠</span>
-            <span class="label">QUIT TO MAIN MENU (タイトルへ戻る)</span>
           </button>
         </div>
       </div>
@@ -4394,7 +3313,8 @@
 
         <div class="gridshot-modal-body">
           <div class="gridshot-intro-card">
-            🎯 5×5の的を素早く撃ち抜くエイム練習です。スコアと命中率をリアルタイム計測します。
+            5×5の的が連続出現するエイム向上トレーニングです。<br>
+            スコア・命中率・破壊ペースをリアルタイム計測します。練習設定を選んで開始してください。
           </div>
 
           <!-- Target Count -->
@@ -4637,24 +3557,6 @@
                     <span>スコープ (右クリック常時可)</span>
                     <button id="kb-scope" class="kb-btn" data-action="scope" type="button">MouseRight</button>
                   </div>
-                </div>
-              </div>
-
-              <!-- Mobile HUD Layout Section -->
-              <div class="panel-section" style="margin-top:14px; border:1px solid rgba(0,229,255,0.25); background:rgba(0,229,255,0.03); border-radius:8px; padding:12px;">
-                <div class="section-title">
-                  <span>📱 モバイル用タッチHUDカスタマイズ (Touch Controls)</span>
-                </div>
-                <p style="font-size:11px; color:var(--text-dim); margin-bottom:10px; line-height:1.5;">
-                  スマートフォン・タブレット操作時の射撃・ジャンプ・しゃがみ・ジョイスティック等のボタン配置、各ボタンのサイズ（50%〜180%）、不透明度を自由にドラッグして直感的にカスタマイズできます。
-                </p>
-                <div style="display:flex; gap:8px; margin-top:8px;">
-                  <button id="btn-open-hud-editor" class="btn btn-primary" type="button" style="flex:1; padding:10px; font-weight:800; font-size:12px; letter-spacing:0.5px;">
-                    📱 ボタン配置エディタを開く (Customize HUD)
-                  </button>
-                  <button id="btn-quick-reset-hud" class="btn btn-secondary" type="button" style="padding:10px 14px; font-size:12px; font-weight:700;">
-                    🔄 初期配置に戻す
-                  </button>
                 </div>
               </div>
             </div>
@@ -5574,7 +4476,7 @@
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.0));
     container.appendChild(renderer.domElement);
 
     window.addEventListener('resize', () => {
@@ -5621,23 +4523,6 @@
       }
     }
 
-    function cleanupGridshot() {
-      if (gridTimerInterval) {
-        clearInterval(gridTimerInterval);
-        gridTimerInterval = null;
-      }
-      gridTargets.length = 0;
-      gridActiveIndices.clear();
-      const gsHud = document.getElementById('gridshot-hud');
-      if (gsHud) {
-        gsHud.classList.remove('active');
-        gsHud.style.display = 'none';
-      }
-      const mobTopBar = document.getElementById('mob-top-bar');
-      if (mobTopBar) mobTopBar.style.display = 'flex';
-      config.gameMode = 'arena';
-    }
-
     function startGridshotTraining() {
       closeGridshotModal();
 
@@ -5653,25 +4538,6 @@
       roomState = 'IN_MATCH';
       overlay.classList.add('hidden');
       isGameActive = true;
-
-      // モバイルコントロールを確実に有効化
-      if (isMobile) {
-        mobileControlsEl.classList.add('active');
-        // グリッドショットHUDと被らないよう上部ロビー/スコアバーを非表示
-        const mobTopBar = document.getElementById('mob-top-bar');
-        if (mobTopBar) mobTopBar.style.display = 'none';
-      }
-
-      // グリッドHUDを表示
-      const gsHud = document.getElementById('gridshot-hud');
-      if (gsHud) {
-        gsHud.classList.add('active');
-        gsHud.style.display = 'flex';
-      }
-      resetGridshotStats();
-
-      // 練習中は戦闘用ネットHUDを非表示
-      if (hudNetStatus) hudNetStatus.style.display = 'none';
 
       localPlayer.yaw = 0;
       localPlayer.pitch = 0;
@@ -5696,7 +4562,8 @@
           }
           gridTimeRemaining--;
           if (gridTimeRemaining <= 0) {
-            cleanupGridshot();
+            clearInterval(gridTimerInterval);
+            gridTimerInterval = null;
             playSound('elim');
             alert('🎯 練習時間終了！\n\nスコア: ' + gridStats.score + '点\n命中率: ' + document.getElementById('gs-val-acc').textContent + '\n秒間破壊数: ' + document.getElementById('gs-val-tps').textContent);
             openLobby();
@@ -6073,7 +4940,7 @@
     const CROUCH_EYE = 1.0;
 
     const BASE_SPEED = 9.0;
-    const CROUCH_SPEED_MULT = 0.55;
+    const CROUCH_SPEED_MULT = 0.62;
     const MAX_BHOP_MULT = 2.22; // Krunker.io風・最大上限速度 20.0 u/s (9.0 * 2.22)
     const GRAVITY = 26.0;
     const JUMP_VELOCITY = 9.6;
@@ -6159,23 +5026,6 @@
       }
       updateCameraFovAndScope();
     }
-
-    // 画面下部の武器スロット（AR / SR / DMR）直接タップ切替
-    ['ar', 'sr', 'dmr'].forEach(wId => {
-      const slotEl = document.getElementById('slot-' + wId);
-      if (slotEl) {
-        slotEl.style.cursor = 'pointer';
-        slotEl.style.pointerEvents = 'auto';
-        slotEl.addEventListener('click', (e) => {
-          e.stopPropagation();
-          switchWeapon(wId);
-        });
-        slotEl.addEventListener('touchstart', (e) => {
-          e.stopPropagation();
-          switchWeapon(wId);
-        }, { passive: true });
-      }
-    });
 
     function updateCameraFovAndScope() {
       const holdScopeKey = Boolean(
@@ -6288,15 +5138,6 @@
         if (p && p.id) allPlayers.push(p);
       });
 
-      const getPlayerPingLabel = (p, isSelf, isPlayerHost) => {
-        if (isSelf) {
-          if (isHost) return 'HOST (0ms)';
-          return (connected && localPlayer.ping > 0) ? `${localPlayer.ping}ms` : (connected ? '計測中...' : '未接続');
-        }
-        if (isPlayerHost) return 'HOST (0ms)';
-        return (p.ping > 0) ? `${p.ping}ms` : '接続中...';
-      };
-
       if (matchConfig.mode === 'ffa') {
         const ffaList = document.getElementById('ffa-player-list');
         const countBadge = document.getElementById('ffa-count-badge');
@@ -6304,7 +5145,7 @@
         if (ffaList) {
           ffaList.innerHTML = allPlayers.map(p => {
             const isSelf = (p.id === localPlayer.id);
-            const isPlayerHost = isSelf ? isHost : Boolean(p.isHost || (hostConn && p.id === hostConn.peer) || p.id.startsWith('vsa-room-') || (currentRoomCleanId && p.id.includes(currentRoomCleanId)));
+            const isPlayerHost = isSelf ? isHost : Boolean(p.isHost || (typeof currentRoomId === 'string' && currentRoomId && p.id === currentRoomId));
             return `
               <div class="roster-player-row ${isSelf ? 'self' : ''}">
                 <div class="player-row-left">
@@ -6312,7 +5153,7 @@
                   <span>${escapeHtml(p.name || 'Player')} ${isSelf ? '(YOU)' : ''}</span>
                 </div>
                 <div class="player-row-right">
-                  <span>${getPlayerPingLabel(p, isSelf, isPlayerHost)}</span>
+                  <span>${isSelf ? (isHost ? 'HOST (0ms)' : (connected && localPlayer.ping > 0 ? localPlayer.ping + 'ms' : '計測中')) : (p.isHost ? 'HOST' : (p.ping > 0 ? p.ping + 'ms' : '接続中'))}</span>
                 </div>
               </div>
             `;
@@ -6325,31 +5166,23 @@
         const redBadge = document.getElementById('red-count-badge');
         const blueBadge = document.getElementById('blue-count-badge');
 
-        const redPlayers = allPlayers.filter(p => {
-          if (p.team === 'red') return true;
-          if (p.team === 'blue') return false;
-          return (localPlayer.team === 'red') ? (p.id === localPlayer.id) : (p.id !== localPlayer.id);
-        });
-        const bluePlayers = allPlayers.filter(p => {
-          if (p.team === 'blue') return true;
-          if (p.team === 'red') return false;
-          return (localPlayer.team === 'blue') ? (p.id === localPlayer.id) : (p.id !== localPlayer.id);
-        });
+        const redPlayers = allPlayers.filter(p => p.team === 'red');
+        const bluePlayers = allPlayers.filter(p => p.team === 'blue');
 
         if (redBadge) redBadge.textContent = redPlayers.length + '人';
         if (blueBadge) blueBadge.textContent = bluePlayers.length + '人';
 
         const renderTeamRows = (arr) => arr.map(p => {
           const isSelf = (p.id === localPlayer.id);
-          const isPlayerHost = isSelf ? isHost : Boolean(p.isHost || (hostConn && p.id === hostConn.peer) || p.id.startsWith('vsa-room-') || (currentRoomCleanId && p.id.includes(currentRoomCleanId)));
+          const isPlayerHost = isSelf ? isHost : Boolean(p.isHost || (typeof currentRoomId === 'string' && currentRoomId && p.id === currentRoomId));
           return `
             <div class="roster-player-row ${isSelf ? 'self' : ''}">
               <div class="player-row-left">
-                <span>${isPlayerHost ? '👑' : '🎮'}</span>
+                <span>${isPlayerHost ? '👑' : '•'}</span>
                 <span>${escapeHtml(p.name || 'Player')} ${isSelf ? '(YOU)' : ''}</span>
               </div>
               <div class="player-row-right">
-                <span>${getPlayerPingLabel(p, isSelf, isPlayerHost)}</span>
+                <span>${isSelf ? (isHost ? 0 : localPlayer.ping) : (p.ping || 0)}ms</span>
               </div>
             </div>
           `;
@@ -6361,215 +5194,16 @@
     }
 
     function switchView(viewName) {
-      const vTitle = document.getElementById('view-title');
       const vLobby = document.getElementById('view-lobby');
       const vResult = document.getElementById('view-result');
       const vPause = document.getElementById('view-pause-menu');
 
-      const views = [
-        { el: vTitle, name: 'title' },
-        { el: vLobby, name: 'lobby' },
-        { el: vResult, name: 'result' },
-        { el: vPause, name: 'pause' }
-      ];
-
-      views.forEach(({ el, name }) => {
-        if (!el) return;
-        const active = (viewName === name);
-        el.classList.toggle('hidden', !active);
-        el.style.display = active ? 'flex' : 'none';
-      });
-    }
-
-    function openTitleMenu(tab = 'create') {
-      cleanupGridshot();
-      roomState = 'TITLE';
-      isGameActive = false;
-      isMouseDown = false;
-      Object.keys(pressedCodes).forEach(k => pressedCodes[k] = false);
-      updateCameraFovAndScope();
-      tabBoard.classList.remove('show');
-      mobileControlsEl.classList.remove('active');
-      const tdmBar = document.getElementById('tdm-hud-bar');
-      if (tdmBar) tdmBar.style.display = 'none';
-
-      switchView('title');
-      overlay.classList.remove('hidden');
-
-      if (tab === 'join') {
-        switchTitleTab('join');
-      } else {
-        switchTitleTab('create');
-      }
-
-      try {
-        if (document.pointerLockElement && document.exitPointerLock) {
-          document.exitPointerLock();
-        }
-      } catch (e) {}
-    }
-
-    let titleCreateMode = 'ffa';
-    let titleCreateScore = 20;
-
-    function switchTitleTab(tabName) {
-      const tabCreate = document.getElementById('tab-btn-create-room');
-      const tabJoin = document.getElementById('tab-btn-join-room');
-      const panelCreate = document.getElementById('title-panel-create');
-      const panelJoin = document.getElementById('title-panel-join');
-
-      if (tabName === 'join') {
-        if (tabCreate) tabCreate.classList.remove('active');
-        if (tabJoin) tabJoin.classList.add('active');
-        if (panelCreate) panelCreate.style.display = 'none';
-        if (panelJoin) panelJoin.style.display = 'flex';
-      } else {
-        if (tabCreate) tabCreate.classList.add('active');
-        if (tabJoin) tabJoin.classList.remove('active');
-        if (panelCreate) panelCreate.style.display = 'flex';
-        if (panelJoin) panelJoin.style.display = 'none';
-      }
-    }
-
-    function showJoinError(msg) {
-      const errBox = document.getElementById('title-join-error');
-      const errText = document.getElementById('title-join-error-text');
-      if (errBox && errText) {
-        errText.textContent = msg;
-        errBox.style.display = 'flex';
-      }
-    }
-
-    function hideJoinError() {
-      const errBox = document.getElementById('title-join-error');
-      if (errBox) errBox.style.display = 'none';
-    }
-
-    function initTitleMenu() {
-      const nameInput = document.getElementById('title-player-name');
-      const lobbyNameInput = document.getElementById('opt-name');
-      const tabCreate = document.getElementById('tab-btn-create-room');
-      const tabJoin = document.getElementById('tab-btn-join-room');
-      const btnRndRoom = document.getElementById('btn-random-room-id');
-      const createRoomInput = document.getElementById('create-room-id');
-      const createPwInput = document.getElementById('create-room-pw');
-      const joinRoomInput = document.getElementById('join-room-id');
-      const joinPwInput = document.getElementById('join-room-pw');
-      const btnHostGame = document.getElementById('btn-title-host-game');
-      const btnJoinGame = document.getElementById('btn-title-join-game');
-      const btnTitleGrid = document.getElementById('btn-title-gridshot');
-      const btnTitleSettings = document.getElementById('btn-title-settings');
-      const btnLeaveLobby = document.getElementById('btn-leave-lobby');
-
-      // プレイヤー名の同期
-      const savedName = localStorage.getItem('cyberstrike_player_name') || localPlayer.name;
-      if (nameInput) {
-        nameInput.value = savedName;
-        nameInput.addEventListener('input', (e) => {
-          const val = e.target.value.trim() || 'Player_1';
-          localPlayer.name = val;
-          if (lobbyNameInput) lobbyNameInput.value = val;
-          try { localStorage.setItem('cyberstrike_player_name', val); } catch(e){}
-        });
-      }
-      if (lobbyNameInput) {
-        lobbyNameInput.addEventListener('input', (e) => {
-          const val = e.target.value.trim() || 'Player_1';
-          localPlayer.name = val;
-          if (nameInput) nameInput.value = val;
-          try { localStorage.setItem('cyberstrike_player_name', val); } catch(e){}
-        });
-      }
-
-      function generateRandomRoomName() {
-        const adjectives = ['alpha', 'bravo', 'cyber', 'neon', 'apex', 'strike', 'delta', 'ghost', 'shadow', 'blaze'];
-        const num = Math.floor(100 + Math.random() * 900);
-        return adjectives[Math.floor(Math.random() * adjectives.length)] + num;
-      }
-
-      if (createRoomInput && !createRoomInput.value) {
-        createRoomInput.value = generateRandomRoomName();
-      }
-      if (btnRndRoom && createRoomInput) {
-        btnRndRoom.addEventListener('click', () => {
-          createRoomInput.value = generateRandomRoomName();
-        });
-      }
-
-      if (tabCreate) tabCreate.addEventListener('click', () => switchTitleTab('create'));
-      if (tabJoin) tabJoin.addEventListener('click', () => switchTitleTab('join'));
-
-      const btnFfa = document.getElementById('title-mode-ffa');
-      const btnTdm = document.getElementById('title-mode-tdm');
-      if (btnFfa && btnTdm) {
-        btnFfa.addEventListener('click', () => {
-          titleCreateMode = 'ffa';
-          btnFfa.classList.add('active');
-          btnTdm.classList.remove('active');
-        });
-        btnTdm.addEventListener('click', () => {
-          titleCreateMode = 'tdm';
-          btnTdm.classList.add('active');
-          btnFfa.classList.remove('active');
-        });
-      }
-
-      const scoreBtns = document.querySelectorAll('.title-score-btn');
-      scoreBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          scoreBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          titleCreateScore = parseInt(btn.dataset.score, 10) || 20;
-        });
-      });
-
-      if (btnHostGame) {
-        btnHostGame.addEventListener('click', () => {
-          const rawId = createRoomInput ? createRoomInput.value : '';
-          const rawPw = createPwInput ? createPwInput.value : '';
-          const cleanId = sanitizeRoomId(rawId);
-          isHost = true;
-          matchConfig.mode = titleCreateMode;
-          matchConfig.scoreLimit = titleCreateScore;
-          updateRoomConfigUI();
-          startHostRoom(cleanId, rawPw);
-          openLobby();
-        });
-      }
-
-      if (btnJoinGame) {
-        btnJoinGame.addEventListener('click', () => {
-          hideJoinError();
-          const rawId = joinRoomInput ? joinRoomInput.value : '';
-          const rawPw = joinPwInput ? joinPwInput.value : '';
-          const cleanId = sanitizeRoomId(rawId);
-          if (!cleanId) {
-            showJoinError('⚠️ Room ID を入力してください');
-            return;
-          }
-          isHost = false;
-          updateRoomConfigUI();
-          startGuestRoom(cleanId, rawPw);
-          openLobby();
-        });
-      }
-
-      if (btnTitleGrid) btnTitleGrid.addEventListener('click', openGridshotModal);
-      if (btnTitleSettings) btnTitleSettings.addEventListener('click', openSettingsModal);
-
-      if (btnLeaveLobby) {
-        btnLeaveLobby.addEventListener('click', () => {
-          if (confirm('部屋を退出してメインメニューへ戻りますか？')) {
-            teardownNetwork(() => {
-              openTitleMenu('create');
-            });
-          }
-        });
-      }
+      if (vLobby) vLobby.classList.toggle('hidden', viewName !== 'lobby');
+      if (vResult) vResult.classList.toggle('hidden', viewName !== 'result');
+      if (vPause) vPause.classList.toggle('hidden', viewName !== 'pause');
     }
 
     function openLobby() {
-      cleanupGridshot();
       roomState = 'LOBBY';
       isGameActive = false;
       isMouseDown = false;
@@ -6579,9 +5213,6 @@
       mobileControlsEl.classList.remove('active');
       const tdmBar = document.getElementById('tdm-hud-bar');
       if (tdmBar) tdmBar.style.display = 'none';
-
-      // ネットステータスをロビー用に復帰
-      if (hudNetStatus) hudNetStatus.style.display = '';
 
       switchView('lobby');
       overlay.classList.remove('hidden');
@@ -6700,7 +5331,6 @@
     }
 
     function executeMatchStart() {
-      cleanupGridshot();
       roomState = 'IN_MATCH';
       overlay.classList.add('hidden');
       isGameActive = true;
@@ -6727,19 +5357,6 @@
       if (tdmBar) {
         tdmBar.style.display = (matchConfig.mode === 'tdm') ? 'flex' : 'none';
         updateTdmScoreHud();
-      }
-
-      // 上部バー表示
-      const mobTopBar = document.getElementById('mob-top-bar');
-      if (mobTopBar) mobTopBar.style.display = 'flex';
-
-      // 戦闘中の右上のネットステータスをコンパクト化（または非表示）
-      if (hudNetStatus) {
-        if (isMobile) {
-          hudNetStatus.style.display = 'none'; // モバイルではボタン被りを防ぐため非表示
-        } else {
-          hudNetStatus.style.display = '';
-        }
       }
 
       if (isMobile) {
@@ -7047,29 +5664,11 @@
     const pauseSettings = document.getElementById('pause-settings-btn');
     if (pauseSettings) pauseSettings.addEventListener('click', openSettingsModal);
 
-    const pauseResetHud = document.getElementById('pause-reset-hud-btn');
-    if (pauseResetHud) pauseResetHud.addEventListener('click', () => {
-      if (confirm('タッチHUDの配置を初期位置にリセットしますか？')) {
-        try { localStorage.removeItem('cyberstrike_touch_hud_v1'); } catch (e) {}
-        applyTouchHudLayout(DEFAULT_HUD_LAYOUT);
-        showKillfeedMessage('📱 タッチHUDを初期配置にリセットしました', '#00e5ff');
-      }
-    });
-
     // Pause Return to Lobby
     const pauseLeave = document.getElementById('pause-leave-btn');
     if (pauseLeave) pauseLeave.addEventListener('click', () => {
       if (isHost) hostReturnToLobby();
       else openLobby();
-    });
-
-    const pauseQuitTitle = document.getElementById('pause-quit-title-btn');
-    if (pauseQuitTitle) pauseQuitTitle.addEventListener('click', () => {
-      if (confirm('試合を抜けてメインメニューへ戻りますか？')) {
-        teardownNetwork(() => {
-          openTitleMenu('create');
-        });
-      }
     });
 
     // Settings Modal Open / Close
@@ -7409,293 +6008,8 @@
     });
 
     /*************************************************************************
-     * 10. モバイル専用タッチコントロール ＆ HUD配置エディタ
+     * 10. モバイル専用タッチコントロール
      *************************************************************************/
-    const DEFAULT_HUD_LAYOUT = {
-      'joystick-base': { leftPct: 8, topPct: 56, scale: 1.0, opacity: 0.85, name: '移動ジョイスティック' },
-      'mob-fire-top': { leftPct: 8, topPct: 15, scale: 0.95, opacity: 0.85, name: '射撃ボタン (人差し指/左上)' },
-      'mob-fire-bottom': { leftPct: 75, topPct: 62, scale: 1.05, opacity: 0.90, name: '射撃ボタン (親指/右下)' },
-      'mob-jump-btn': { leftPct: 87, topPct: 54, scale: 1.0, opacity: 0.85, name: 'ジャンプ' },
-      'mob-crouch-btn': { leftPct: 87, topPct: 76, scale: 1.0, opacity: 0.85, name: 'しゃがみ' },
-      'mob-weapon-btn': { leftPct: 75, topPct: 80, scale: 0.95, opacity: 0.85, name: '武器切替' },
-      'mob-scope-btn': { leftPct: 75, topPct: 40, scale: 0.95, opacity: 0.85, name: 'スナイパースコープ' },
-      'mob-top-bar': { leftPct: 50, topPct: 2, scale: 1.0, opacity: 0.95, name: '上部バー (ロビー/スコア)' }
-    };
-
-    function loadSavedHudLayout() {
-      try {
-        const raw = localStorage.getItem('cyberstrike_touch_hud_v1');
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && typeof parsed === 'object') {
-            return Object.assign({}, DEFAULT_HUD_LAYOUT, parsed);
-          }
-        }
-      } catch (e) {}
-      return JSON.parse(JSON.stringify(DEFAULT_HUD_LAYOUT));
-    }
-
-    function applyTouchHudLayout(customLayout) {
-      const layout = customLayout || loadSavedHudLayout();
-      for (const id in layout) {
-        const el = document.getElementById(id);
-        if (!el) continue;
-        const item = layout[id];
-        el.style.position = 'absolute';
-        if (item.leftPct !== undefined) {
-          el.style.left = item.leftPct + '%';
-          el.style.top = item.topPct + '%';
-          el.style.right = 'auto';
-          el.style.bottom = 'auto';
-        }
-        const scale = item.scale !== undefined ? item.scale : 1.0;
-        const opacity = item.opacity !== undefined ? item.opacity : 0.85;
-        if (id === 'mob-top-bar' && item.leftPct === 50) {
-          el.style.transform = `translateX(-50%) scale(${scale})`;
-        } else {
-          el.style.transform = `scale(${scale})`;
-        }
-        el.style.opacity = opacity;
-      }
-    }
-
-    // 初期ロード時にHUD適用
-    applyTouchHudLayout();
-
-    // PWA ホーム画面追加バナーの表示チェック
-    try {
-      const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-      const pwaBanner = document.getElementById('pwa-install-banner');
-      if (pwaBanner && isMobile && !isStandalone) {
-        pwaBanner.style.display = 'inline-flex';
-      }
-    } catch (e) {}
-
-    function initHudEditor() {
-      const overlay = document.getElementById('hud-editor-overlay');
-      const container = document.getElementById('he-container');
-      const openBtn = document.getElementById('btn-open-hud-editor');
-      const saveBtn = document.getElementById('he-save-btn');
-      const resetBtn = document.getElementById('he-reset-btn');
-      const cancelBtn = document.getElementById('he-cancel-btn');
-      const selectedNameEl = document.getElementById('he-selected-name');
-      const scaleSlider = document.getElementById('he-scale-slider');
-      const scaleVal = document.getElementById('he-scale-val');
-      const opacitySlider = document.getElementById('he-opacity-slider');
-      const opacityVal = document.getElementById('he-opacity-val');
-
-      if (!overlay || !openBtn) return;
-
-      let currentLayout = null;
-      let selectedId = null;
-
-      function renderEditorItems() {
-        container.innerHTML = '';
-        for (const id in currentLayout) {
-          const item = currentLayout[id];
-          const el = document.createElement('div');
-          el.className = 'he-item' + (id === selectedId ? ' selected' : '');
-          el.id = 'he-item-' + id;
-          el.dataset.targetId = id;
-          el.style.left = item.leftPct + '%';
-          el.style.top = item.topPct + '%';
-          el.style.opacity = item.opacity;
-          el.style.transform = (id === 'mob-top-bar' && item.leftPct === 50) ? `translateX(-50%) scale(${item.scale})` : `scale(${item.scale})`;
-          el.style.pointerEvents = 'auto';
-
-          const originEl = document.getElementById(id);
-          if (originEl) {
-            const rect = originEl.getBoundingClientRect();
-            if (rect.width > 0 && rect.height > 0) {
-              el.style.width = Math.max(52, Math.round(rect.width)) + 'px';
-              el.style.height = Math.max(52, Math.round(rect.height)) + 'px';
-              el.style.borderRadius = window.getComputedStyle(originEl).borderRadius || '12px';
-              el.style.background = window.getComputedStyle(originEl).backgroundColor || 'rgba(0,229,255,0.2)';
-            } else {
-              el.style.width = '70px';
-              el.style.height = '70px';
-              el.style.borderRadius = '50%';
-              el.style.background = 'rgba(0,229,255,0.25)';
-            }
-          } else {
-            el.style.width = '70px';
-            el.style.height = '70px';
-            el.style.borderRadius = '50%';
-            el.style.background = 'rgba(0,229,255,0.25)';
-          }
-
-          el.innerHTML = `
-            <div class="he-item-tag">${item.name}</div>
-            <div style="font-size:10px; font-weight:800; color:#fff; text-align:center; padding:4px; pointer-events:none; word-break:break-all;">${item.name}</div>
-          `;
-
-          setupDraggable(el, id);
-          container.appendChild(el);
-        }
-      }
-
-      function selectItem(id) {
-        selectedId = id;
-        const item = currentLayout[id];
-        if (!item) return;
-
-        selectedNameEl.textContent = '選択中: ' + item.name;
-        scaleSlider.value = item.scale;
-        scaleVal.textContent = Math.round(item.scale * 100) + '%';
-        opacitySlider.value = item.opacity;
-        opacityVal.textContent = Math.round(item.opacity * 100) + '%';
-
-        const allItems = container.querySelectorAll('.he-item');
-        allItems.forEach(it => {
-          it.classList.toggle('selected', it.dataset.targetId === id);
-        });
-      }
-
-      function setupDraggable(el, id) {
-        let isDragging = false;
-        let startX = 0, startY = 0;
-        let origLeftPct = 0, origTopPct = 0;
-        let dragTouchId = null;
-
-        function onStart(cx, cy) {
-          isDragging = true;
-          selectItem(id);
-          startX = cx;
-          startY = cy;
-          origLeftPct = currentLayout[id].leftPct;
-          origTopPct = currentLayout[id].topPct;
-        }
-
-        function onMove(cx, cy) {
-          if (!isDragging) return;
-          const dx = cx - startX;
-          const dy = cy - startY;
-          const dxPct = (dx / window.innerWidth) * 100;
-          const dyPct = (dy / window.innerHeight) * 100;
-
-          let newLeftPct = Math.max(0, Math.min(95, origLeftPct + dxPct));
-          let newTopPct = Math.max(0, Math.min(92, origTopPct + dyPct));
-
-          currentLayout[id].leftPct = Math.round(newLeftPct * 10) / 10;
-          currentLayout[id].topPct = Math.round(newTopPct * 10) / 10;
-
-          el.style.left = currentLayout[id].leftPct + '%';
-          el.style.top = currentLayout[id].topPct + '%';
-        }
-
-        function onEnd() {
-          isDragging = false;
-          dragTouchId = null;
-        }
-
-        el.addEventListener('mousedown', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onStart(e.clientX, e.clientY);
-          const moveHandler = (ev) => onMove(ev.clientX, ev.clientY);
-          const upHandler = () => {
-            onEnd();
-            window.removeEventListener('mousemove', moveHandler);
-            window.removeEventListener('mouseup', upHandler);
-          };
-          window.addEventListener('mousemove', moveHandler);
-          window.addEventListener('mouseup', upHandler);
-        });
-
-        el.addEventListener('touchstart', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const t = e.changedTouches[0];
-          dragTouchId = t.identifier;
-          onStart(t.clientX, t.clientY);
-        }, { passive: false });
-
-        el.addEventListener('touchmove', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          for (let i = 0; i < e.changedTouches.length; i++) {
-            const t = e.changedTouches[i];
-            if (t.identifier === dragTouchId) {
-              onMove(t.clientX, t.clientY);
-            }
-          }
-        }, { passive: false });
-
-        const touchEndHandler = (e) => {
-          for (let i = 0; i < e.changedTouches.length; i++) {
-            if (e.changedTouches[i].identifier === dragTouchId) {
-              onEnd();
-            }
-          }
-        };
-        el.addEventListener('touchend', touchEndHandler, { passive: false });
-        el.addEventListener('touchcancel', touchEndHandler, { passive: false });
-      }
-
-      scaleSlider.addEventListener('input', (e) => {
-        if (!selectedId || !currentLayout[selectedId]) return;
-        const val = parseFloat(e.target.value);
-        currentLayout[selectedId].scale = val;
-        scaleVal.textContent = Math.round(val * 100) + '%';
-        const el = document.getElementById('he-item-' + selectedId);
-        if (el) {
-          el.style.transform = (selectedId === 'mob-top-bar' && currentLayout[selectedId].leftPct === 50) ? `translateX(-50%) scale(${val})` : `scale(${val})`;
-        }
-      });
-
-      opacitySlider.addEventListener('input', (e) => {
-        if (!selectedId || !currentLayout[selectedId]) return;
-        const val = parseFloat(e.target.value);
-        currentLayout[selectedId].opacity = val;
-        opacityVal.textContent = Math.round(val * 100) + '%';
-        const el = document.getElementById('he-item-' + selectedId);
-        if (el) el.style.opacity = val;
-      });
-
-      openBtn.addEventListener('click', () => {
-        currentLayout = loadSavedHudLayout();
-        overlay.classList.add('active');
-        renderEditorItems();
-        selectItem('mob-fire-bottom');
-      });
-
-      saveBtn.addEventListener('click', () => {
-        try {
-          localStorage.setItem('cyberstrike_touch_hud_v1', JSON.stringify(currentLayout));
-        } catch (e) {}
-        applyTouchHudLayout(currentLayout);
-        overlay.classList.remove('active');
-        showKillfeedMessage('📱 タッチHUD設定を保存・適用しました', '#00e5ff');
-      });
-
-      resetBtn.addEventListener('click', () => {
-        if (confirm('タッチHUDの配置を初期デフォルト値に戻しますか？')) {
-          currentLayout = JSON.parse(JSON.stringify(DEFAULT_HUD_LAYOUT));
-          renderEditorItems();
-          selectItem('mob-fire-bottom');
-        }
-      });
-
-      cancelBtn.addEventListener('click', () => {
-        overlay.classList.remove('active');
-      });
-
-      const quickResetBtn = document.getElementById('btn-quick-reset-hud');
-      if (quickResetBtn) {
-        quickResetBtn.addEventListener('click', () => {
-          if (confirm('タッチHUDの配置を使いやすい初期デフォルト位置にリセットしますか？')) {
-            try {
-              localStorage.removeItem('cyberstrike_touch_hud_v1');
-            } catch (e) {}
-            applyTouchHudLayout(DEFAULT_HUD_LAYOUT);
-            showKillfeedMessage('📱 タッチHUDを初期配置にリセットしました', '#00e5ff');
-          }
-        });
-      }
-    }
-
-    initHudEditor();
-
     function setupMobileTouchControls() {
       const moveZone = document.getElementById('touch-move-zone');
       const joyBase = document.getElementById('joystick-base');
@@ -7710,7 +6024,6 @@
       const menuBtn = document.getElementById('mob-menu-btn');
       const scoreBtn = document.getElementById('mob-score-btn');
 
-      // マルチタッチ個別ID管理（3〜4本指クロー持ち完全両立）
       let moveTouchId = null;
       let moveOriginX = 0;
       let moveOriginY = 0;
@@ -7818,7 +6131,7 @@
         btnEl.addEventListener('touchstart', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          if (localPlayer.isDead || fireTouchId !== null) return;
+          if (localPlayer.isDead) return;
           const t = e.changedTouches[0];
           fireTouchId = t.identifier;
           lastFx = t.clientX;
@@ -7853,120 +6166,52 @@
 
         const releaseFire = (e) => {
           e.preventDefault();
-          e.stopPropagation();
-          for (let i = 0; i < e.changedTouches.length; i++) {
-            if (e.changedTouches[i].identifier === fireTouchId) {
-              btnEl.classList.remove('pressed');
-              touchState.firing = false;
-              fireTouchId = null;
-            }
-          }
-        };
-        btnEl.addEventListener('touchend', releaseFire, { passive: false });
-        btnEl.addEventListener('touchcancel', releaseFire, { passive: false });
-
-        // グローバル安全リセット（画面外リリースやタッチ割り込み時のロックを完全防止）
-        window.addEventListener('touchend', (e) => {
-          if (fireTouchId !== null) {
-            let active = false;
-            for (let i = 0; i < e.touches.length; i++) {
-              if (e.touches[i].identifier === fireTouchId) { active = true; break; }
-            }
-            if (!active) {
-              btnEl.classList.remove('pressed');
-              touchState.firing = false;
-              fireTouchId = null;
-            }
-          }
-        }, { passive: true });
-        window.addEventListener('touchcancel', () => {
           btnEl.classList.remove('pressed');
           touchState.firing = false;
           fireTouchId = null;
-        }, { passive: true });
+        };
+        btnEl.addEventListener('touchend', releaseFire, { passive: false });
+        btnEl.addEventListener('touchcancel', releaseFire, { passive: false });
       }
 
       bindFireButton(fireTopBtn);
       bindFireButton(fireBotBtn);
 
-      let jumpTouchId = null;
       jumpBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (localPlayer.isDead || jumpTouchId !== null) return;
-        const t = e.changedTouches[0];
-        jumpTouchId = t.identifier;
+        if (localPlayer.isDead) return;
         jumpBtn.classList.add('pressed');
         touchState.jumping = true;
       }, { passive: false });
 
       const releaseJump = (e) => {
         e.preventDefault();
-        e.stopPropagation();
-        for (let i = 0; i < e.changedTouches.length; i++) {
-          if (e.changedTouches[i].identifier === jumpTouchId) {
-            jumpTouchId = null;
-            jumpBtn.classList.remove('pressed');
-            touchState.jumping = false;
-          }
-        }
+        jumpBtn.classList.remove('pressed');
+        touchState.jumping = false;
       };
       jumpBtn.addEventListener('touchend', releaseJump, { passive: false });
       jumpBtn.addEventListener('touchcancel', releaseJump, { passive: false });
 
-      let crouchTouchId = null;
       crouchBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const t = e.changedTouches[0];
-        crouchTouchId = t.identifier;
-        touchState.crouching = true;
-        crouchBtn.classList.add('pressed');
+        touchState.crouching = !touchState.crouching;
+        crouchBtn.classList.toggle('active-toggle', touchState.crouching);
       }, { passive: false });
 
-      const releaseCrouch = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        for (let i = 0; i < e.changedTouches.length; i++) {
-          if (e.changedTouches[i].identifier === crouchTouchId) {
-            crouchTouchId = null;
-            touchState.crouching = false;
-            crouchBtn.classList.remove('pressed');
-          }
-        }
-      };
-      crouchBtn.addEventListener('touchend', releaseCrouch, { passive: false });
-      crouchBtn.addEventListener('touchcancel', releaseCrouch, { passive: false });
-
       // 武器循環切り替え (AR -> SR -> DMR -> AR)
-      let weaponTouchId = null;
       weaponBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const t = e.changedTouches[0];
-        weaponTouchId = t.identifier;
         if (localPlayer.weapon === 'ar') switchWeapon('sr');
         else if (localPlayer.weapon === 'sr') switchWeapon('dmr');
         else switchWeapon('ar');
       }, { passive: false });
-      const releaseWeapon = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        for (let i = 0; i < e.changedTouches.length; i++) {
-          if (e.changedTouches[i].identifier === weaponTouchId) {
-            weaponTouchId = null;
-          }
-        }
-      };
-      weaponBtn.addEventListener('touchend', releaseWeapon, { passive: false });
-      weaponBtn.addEventListener('touchcancel', releaseWeapon, { passive: false });
 
-      let scopeTouchId = null;
       scopeBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const t = e.changedTouches[0];
-        scopeTouchId = t.identifier;
         if (localPlayer.weapon !== 'sr') {
           switchWeapon('sr');
         }
@@ -7974,17 +6219,6 @@
         scopeBtn.classList.toggle('active-toggle', touchState.scoped);
         updateCameraFovAndScope();
       }, { passive: false });
-      const releaseScope = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        for (let i = 0; i < e.changedTouches.length; i++) {
-          if (e.changedTouches[i].identifier === scopeTouchId) {
-            scopeTouchId = null;
-          }
-        }
-      };
-      scopeBtn.addEventListener('touchend', releaseScope, { passive: false });
-      scopeBtn.addEventListener('touchcancel', releaseScope, { passive: false });
 
       menuBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
@@ -7993,12 +6227,9 @@
       }, { passive: false });
       menuBtn.addEventListener('click', openLobbyMenu);
 
-      let scoreTouchId = null;
       scoreBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const t = e.changedTouches[0];
-        scoreTouchId = t.identifier;
         if (config.gameMode === 'arena') {
           updateLeaderboardUI();
           tabBoard.classList.add('show');
@@ -8006,18 +6237,6 @@
       }, { passive: false });
       scoreBtn.addEventListener('touchend', (e) => {
         e.preventDefault();
-        e.stopPropagation();
-        for (let i = 0; i < e.changedTouches.length; i++) {
-          if (e.changedTouches[i].identifier === scoreTouchId) {
-            scoreTouchId = null;
-            tabBoard.classList.remove('show');
-          }
-        }
-      }, { passive: false });
-      scoreBtn.addEventListener('touchcancel', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        scoreTouchId = null;
         tabBoard.classList.remove('show');
       }, { passive: false });
     }
@@ -8036,13 +6255,7 @@
     }
 
     function isShielded(entity) {
-      if (!entity) return false;
-      const now = performance.now();
-      if ((entity.shieldUntil || 0) > now) {
-        return true;
-      }
-      entity.shielded = false;
-      return false;
+      return (entity.shieldUntil || 0) > performance.now();
     }
 
     function startDeathRespawnSequence() {
@@ -8108,8 +6321,8 @@
       if (isTryingSlide) {
         if (!localPlayer.isSliding) {
           localPlayer.isSliding = true;
-          localPlayer.slideTimeRemaining = 0.44; // 約440msのスライディング可能持続窓
-          localPlayer.bhopMult = Math.min(MAX_BHOP_MULT, localPlayer.bhopMult + 0.12); // スライド開始ブースト
+          localPlayer.slideTimeRemaining = 0.44; // 約440msのスライディング持続
+          localPlayer.bhopMult = Math.min(MAX_BHOP_MULT, localPlayer.bhopMult + 0.12); // スライド初速ブースト
         }
       } else if (!localPlayer.crouch) {
         localPlayer.isSliding = false;
@@ -8158,15 +6371,13 @@
           localPlayer.onGround = false;
           wheelJumpBufferUntil = 0;
           if (wishLen > 0.05) {
-            // スライドホップ時はより力強い加速ボーナスを付与！
             const hopBonus = localPlayer.isSliding ? 0.14 : 0.09;
             localPlayer.bhopMult = Math.min(MAX_BHOP_MULT, localPlayer.bhopMult + hopBonus);
           }
-          localPlayer.isSliding = false; // 空中へ離陸
+          localPlayer.isSliding = false;
         } else {
-          // 地上での減速：スライディング中は摩擦が激減（滑る）、通常静止しゃがみはブレーキ
           if (localPlayer.isSliding) {
-            localPlayer.bhopMult = Math.max(1.0, localPlayer.bhopMult - dt * 0.4); // スライディング中はほぼ減速しない！
+            localPlayer.bhopMult = Math.max(1.0, localPlayer.bhopMult - dt * 0.4);
           } else {
             localPlayer.bhopMult = Math.max(1.0, localPlayer.bhopMult - dt * 3.0);
           }
@@ -8181,7 +6392,6 @@
         localPlayer.vx += (wishX * targetSpeed - localPlayer.vx) * accelFactor;
         localPlayer.vz += (wishZ * targetSpeed - localPlayer.vz) * accelFactor;
       } else {
-        // 空中制御（Air Strafe）：空中で視点を振ると美しく曲がりながら加速を維持
         if (wishLen > 0.05) {
           const airTargetSpeed = BASE_SPEED * localPlayer.bhopMult * inputMagnitude;
           const airControl = Math.min(1.0, dt * 9.5);
@@ -8427,22 +6637,11 @@
     const remotePlayers = {};
     const enemyHitboxes = [];
 
-    // 見た目用モデル（スタイリッシュな細身直方体＋正面識別バイザー＋銃身）
+    // 競技FPS標準の当たり判定バッファ（体感遅延・すり抜けを防止する最適化サイズ）
     const bodyGeo = new THREE.BoxGeometry(0.92, 1.45, 0.92);
     const bodyEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(0.8, 1.4, 0.8));
     const headGeo = new THREE.BoxGeometry(0.52, 0.46, 0.52);
     const headEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(0.45, 0.4, 0.45));
-
-    // Krunker.io風・寛容ヒットボックス（見た目のモデルより適度に広く、高速移動・スマホでも気持ちよく当たる設計）
-    const hitboxBodyGeo = new THREE.BoxGeometry(1.38, 1.62, 1.38);
-    const hitboxHeadGeo = new THREE.BoxGeometry(0.82, 0.65, 0.82);
-    const invisibleHitboxMat = new THREE.MeshBasicMaterial({ visible: false });
-
-    // 敵正面識別パーツ（判定干渉・負荷ゼロ設計）
-    const enemyVisorGeo = new THREE.BoxGeometry(0.38, 0.12, 0.08);
-    const enemyVisorMat = new THREE.MeshBasicMaterial({ color: 0x090d16 });
-    const enemyGunGeo = new THREE.BoxGeometry(0.12, 0.14, 0.72);
-    const enemyGunMat = new THREE.MeshLambertMaterial({ color: 0x222634 });
 
     function getActivePalette() {
       return ENEMY_PALETTES[config.enemyColor] || ENEMY_PALETTES.cyan_magenta;
@@ -8472,6 +6671,11 @@
       if (config.gameMode === 'gridshot') return;
       if (!pData || !pData.id || pData.id === localPlayer.id || pData.id === 'local') return;
 
+      if (isHost) {
+        const conn = clientConns[pData.id];
+        if (!conn || !conn.open) return;
+      }
+
       let rp = remotePlayers[pData.id];
       const pal = getActivePalette();
 
@@ -8480,9 +6684,6 @@
       const safeZ = Number.isFinite(pData.z) ? pData.z : 0;
       const safeYaw = Number.isFinite(pData.yaw) ? pData.yaw : 0;
       const safePitch = Number.isFinite(pData.pitch) ? pData.pitch : 0;
-
-      const pTeam = pData.team || (rp ? rp.team : (localPlayer.team === 'red' ? 'blue' : 'red'));
-      const pIsHost = (typeof pData.isHost === 'boolean') ? pData.isHost : (rp ? rp.isHost : Boolean(pData.id.startsWith('vsa-room-')));
 
       if (!rp) {
         const group = new THREE.Group();
@@ -8499,37 +6700,12 @@
         headMesh.userData = { playerId: pData.id, isHead: true };
         headMesh.add(new THREE.LineSegments(headEdges, new THREE.LineBasicMaterial({ color: 0xffffff })));
 
-        // 正面識別バイザー（頭部ローカル -Z 面）
-        const visorMesh = new THREE.Mesh(enemyVisorGeo, enemyVisorMat);
-        visorMesh.position.set(0, 0.02, -0.27);
-        headMesh.add(visorMesh);
-
-        // 正面識別銃身（胴体右側から前方に突き出る）
-        const gunPivot = new THREE.Group();
-        gunPivot.position.set(0.32, 0.82, 0);
-        const gunMesh = new THREE.Mesh(enemyGunGeo, enemyGunMat);
-        gunMesh.position.set(0, 0, -0.36);
-        gunPivot.add(gunMesh);
-        group.add(gunPivot);
-
-        // Krunker.io風・不可視寛容ヒットボックス（交差判定専用・描画ゼロ）
-        const hitboxBody = new THREE.Mesh(hitboxBodyGeo, invisibleHitboxMat);
-        hitboxBody.position.y = 0.7;
-        hitboxBody.userData = { playerId: pData.id, isHead: false };
-        group.add(hitboxBody);
-
-        const hitboxHead = new THREE.Mesh(hitboxHeadGeo, invisibleHitboxMat);
-        hitboxHead.position.y = 1.6;
-        hitboxHead.userData = { playerId: pData.id, isHead: true };
-        group.add(hitboxHead);
-
         group.add(bodyMesh);
         group.add(headMesh);
         group.position.set(safeX, safeY, safeZ);
         scene.add(group);
 
-        // 当たり判定配列には不可視ヒットボックスを登録（見た目メッシュやバイザーは除外）
-        enemyHitboxes.push(hitboxBody, hitboxHead);
+        enemyHitboxes.push(bodyMesh, headMesh);
 
         const tagEl = document.createElement('div');
         tagEl.className = 'nametag';
@@ -8543,8 +6719,6 @@
         rp = {
           id: pData.id,
           name: pData.name || pData.id.slice(0, 8),
-          team: pTeam,
-          isHost: pIsHost,
           x: safeX,
           y: safeY,
           z: safeZ,
@@ -8567,7 +6741,7 @@
           hsKills: typeof pData.hsKills === 'number' ? pData.hsKills : 0,
           ping: typeof pData.ping === 'number' ? pData.ping : 0,
           shielded: Boolean(pData.shielded),
-          shieldUntil: 0,
+          shieldUntil: pData.shielded ? (performance.now() + 500) : 0,
           lastSeen: performance.now(),
           group,
           bodyMesh,
@@ -8589,7 +6763,6 @@
           lastHpPct: -1
         };
         remotePlayers[pData.id] = rp;
-        updateAllRemoteColors();
         refreshConnectionStatusBanner();
         renderRosterList();
         if (isHost) broadcastRoomSync();
@@ -8635,15 +6808,6 @@
           renderRosterList();
           if (isHost) broadcastRoomSync();
         }
-        if (pData.team && rp.team !== pData.team) {
-          rp.team = pData.team;
-          updateAllRemoteColors();
-          renderRosterList();
-          if (isHost) broadcastRoomSync();
-        }
-        if (typeof pData.isHost === 'boolean') {
-          rp.isHost = pData.isHost;
-        }
         rp.yaw = safeYaw;
         rp.pitch = safePitch;
         rp.crouch = Boolean(pData.crouch);
@@ -8657,10 +6821,7 @@
             if (roomState === 'LOBBY') renderRosterList();
           }
         }
-        if (typeof pData.shielded === 'boolean') {
-          rp.shielded = pData.shielded;
-          if (!pData.shielded) rp.shieldUntil = 0;
-        }
+        if (typeof pData.shielded === 'boolean') rp.shielded = pData.shielded;
         rp.lastSeen = now;
       }
     }
@@ -8750,19 +6911,17 @@
         rp.group.position.set(rp.x, rp.y, rp.z);
         rp.group.rotation.y = rp.yaw;
 
-        // 上下視点（Pitch）の連動（頭部と銃身をリアルタイム同期）
-        const enemyPitch = Number.isFinite(rp.pitch) ? rp.pitch : 0;
-        if (rp.headMesh) rp.headMesh.rotation.x = enemyPitch;
-        if (rp.gunPivot) {
-          rp.gunPivot.rotation.x = enemyPitch;
-        }
-
         const targetCrouch = rp.crouch ? 1.0 : 0.0;
         rp.crouchLerp += (targetCrouch - rp.crouchLerp) * Math.min(1.0, dt * 15.0);
 
         const bodyScaleY = 1.0 - rp.crouchLerp * 0.42;
         const bodyCenterY = (1.4 * bodyScaleY) * 0.5;
         const headCenterY = 1.4 * bodyScaleY + 0.2;
+
+        // 上下視点（Pitch）の連動（頭部と銃身をリアルタイム同期）
+        const enemyPitch = Number.isFinite(rp.pitch) ? rp.pitch : 0;
+        if (rp.headMesh) rp.headMesh.rotation.x = enemyPitch;
+        if (rp.gunPivot) rp.gunPivot.rotation.x = enemyPitch;
 
         rp.bodyMesh.scale.y = bodyScaleY;
         rp.bodyMesh.position.y = bodyCenterY;
@@ -8940,7 +7099,7 @@
     }
 
     function tryShoot() {
-      if (!isGameActive || localPlayer.isDead) return;
+      if (localPlayer.isDead) return;
       const wpn = WEAPONS[localPlayer.weapon] || WEAPONS.ar;
       const now = performance.now();
       if (now - lastShootTime < wpn.fireInterval) return;
@@ -9001,46 +7160,12 @@
           const targetId = hit.object.userData.playerId;
           const rp = remotePlayers[targetId];
           // TDM時：味方プレイヤーへの着弾はスキップ (同士討ち無効 & 貫通)
-          if (matchConfig.mode === 'tdm' && rp && rp.team && localPlayer.team && rp.team === localPlayer.team) {
+          if (matchConfig.mode === 'tdm' && rp && rp.team === localPlayer.team) {
             continue;
           }
         }
         validHit = hit;
         break;
-      }
-
-      // モバイル・エイムアシスト（レティクル周囲の微小近接補正・Bullet Magnetism）
-      // 画面中央で直接当たらなかった場合、照準の微小範囲内に敵の不可視ヒットボックスがいるかを探索
-      if (!validHit || !validHit.object || !validHit.object.userData || !validHit.object.userData.playerId) {
-        const aimAssistCoords = [
-          new THREE.Vector2(0.022, 0), new THREE.Vector2(-0.022, 0),
-          new THREE.Vector2(0, 0.022), new THREE.Vector2(0, -0.022),
-          new THREE.Vector2(0.016, 0.016), new THREE.Vector2(-0.016, -0.016),
-          new THREE.Vector2(-0.016, 0.016), new THREE.Vector2(0.016, -0.016)
-        ];
-        const assistRay = new THREE.Raycaster();
-        for (let i = 0; i < aimAssistCoords.length; i++) {
-          assistRay.setFromCamera(aimAssistCoords[i], camera);
-          const enemyHits = assistRay.intersectObjects(enemyHitboxes, false);
-          if (enemyHits.length > 0) {
-            const cand = enemyHits[0];
-            const candTargetId = cand.object.userData.playerId;
-            const candRp = remotePlayers[candTargetId];
-            if (matchConfig.mode === 'tdm' && candRp && candRp.team && localPlayer.team && candRp.team === localPlayer.team) {
-              continue;
-            }
-            // 壁遮蔽チェック（敵との間に障害物がないことを保証）
-            const camPos = camera.position;
-            const toEnemy = cand.point.clone().sub(camPos);
-            const dist = toEnemy.length();
-            const wallRay = new THREE.Raycaster(camPos, toEnemy.normalize());
-            const wallHits = wallRay.intersectObjects(mapMeshes, false);
-            if (wallHits.length === 0 || wallHits[0].distance >= dist - 0.2) {
-              validHit = cand;
-              break;
-            }
-          }
-        }
       }
 
       if (validHit) {
@@ -9050,7 +7175,7 @@
           const targetId = validHit.object.userData.playerId;
           const rp = remotePlayers[targetId];
 
-          if (rp && isShielded(rp)) {
+          if (rp && (rp.shielded || isShielded(rp))) {
             spawnDamagePopup(validHit.point, '🛡️ SHIELD', false);
           } else if (rp) {
             const isHead = Boolean(validHit.object.userData.isHead);
@@ -9290,51 +7415,23 @@
       if (connAlertBox) connAlertBox.classList.remove('show');
     }
 
-    function sanitizeRoomId(raw) {
-      const s = String(raw || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
-      return s || ('room' + Math.floor(100 + Math.random() * 900));
-    }
-
-    function normalizeCleanRoomCode(raw) {
-      // ユーザー入力・招待リンク問わず "vsa-room-" や "vsa-" などの重複プレフィックスを除去
-      const s = sanitizeRoomId(raw).replace(/^vsa-room-/, '').replace(/^vsa-/, '');
-      return s || ('room' + Math.floor(100 + Math.random() * 900));
-    }
-
-    function formatRoomPeerId(roomId) {
-      // PeerJS で使用する一意のホストPeerIDを生成（プレフィックス二重化を完全防止）
-      return 'vsa-room-' + normalizeCleanRoomCode(roomId);
-    }
-
     function generateRoomId() {
       const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-      let code = '';
+      let code = 'vsa-';
       for (let i = 0; i < 6; i++) {
         code += chars.charAt(Math.floor(Math.random() * chars.length));
       }
-      return 'vsa-' + code;
+      return code;
     }
 
-    let currentRoomPassword = '';
-    let currentRoomCleanId = '';
-
-    function updateUrlAndUi(roomId, password = '') {
-      currentRoomCleanId = roomId;
-      currentRoomPassword = String(password || '').trim();
+    function updateUrlAndUi(roomId) {
       currentRoomId = roomId;
-
-      let newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + '?room=' + encodeURIComponent(roomId);
-      if (currentRoomPassword) {
-        newUrl += '&pw=' + encodeURIComponent(currentRoomPassword);
-      }
-      try {
-        window.history.replaceState({ path: newUrl }, '', newUrl);
-      } catch (e) {}
-
+      const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + '?room=' + roomId;
+      window.history.replaceState({ path: newUrl }, '', newUrl);
       const urlInput = document.getElementById('invite-url-input');
       if (urlInput) urlInput.value = newUrl;
       const roomLabel = document.getElementById('sb-room-label');
-      if (roomLabel) roomLabel.textContent = 'Room ID: ' + roomId + (currentRoomPassword ? ' 🔒[PWあり]' : '');
+      if (roomLabel) roomLabel.textContent = 'Room ID: ' + roomId;
       if (guestTargetRoomLabel) guestTargetRoomLabel.textContent = roomId;
     }
 
@@ -9389,27 +7486,19 @@
       }
     }
 
-    // 1. ホストとして部屋を開設（自分が主催者・パスワード対応）
-    function startHostRoom(roomId, password = '') {
-      isHost = true;
-      const cleanRoom = sanitizeRoomId(roomId);
-      currentRoomCleanId = cleanRoom;
-      currentRoomPassword = String(password || '').trim();
-
-      const hostPeerId = formatRoomPeerId(cleanRoom);
-
+    // 1. ホストとして部屋を開設（自分が主催者）
+    function startHostRoom(roomId) {
       teardownNetwork(() => {
         hideConnectionAlert();
-        updateUrlAndUi(cleanRoom, currentRoomPassword);
+        updateUrlAndUi(roomId);
         isHost = true;
-        updateRoleBanner('host', cleanRoom);
+        updateRoleBanner('host', roomId);
         updateHostUiPermissions();
-        updateRoomConfigUI();
-        setVisualStatus('🟡 ホスト部屋を開設中... (Room: ' + cleanRoom + ')', '#ffca28');
-        appendNetLog(`👑 ホスト部屋開設開始... (Room: ${cleanRoom}${currentRoomPassword ? ' [パスワード保護]' : ''})`, 'info');
+        setVisualStatus('🟡 ホスト部屋を開設中...（シグナリングサーバー接続）', '#ffca28');
+        appendNetLog(`👑 ホスト部屋開設開始... (Room: ${roomId})`, 'info');
 
         try {
-          peer = new Peer(hostPeerId, PEER_CONFIG);
+          peer = new Peer(roomId, PEER_CONFIG);
         } catch (e) {
           appendNetLog(`Peer初期化例外: ${e.message}`, 'err');
         }
@@ -9431,16 +7520,14 @@
           startHeartbeat();
           localPlayer.id = id;
           localPlayer.ping = 0;
-          isHost = true;
-          appendNetLog(`👑 ホスト開設完了！ 待機中... (Room ID: ${cleanRoom})`, 'ok');
-          appendNetLog('💡 友達にRoom IDや招待URLを送り、このブラウザを開いたまま待機してください', 'info');
+          appendNetLog(`👑 ホスト開設完了！ 待機中... (あなたのPeer ID: ${id})`, 'ok');
+          appendNetLog('💡 友達に招待URLを送り、このブラウザを開いたまま待機してください', 'info');
           if (config.gameMode === 'gridshot') {
             buildGridshotRoom();
           } else {
             buildArenaMap(config.mapId, config.mapTheme);
           }
           respawnLocalPlayer();
-          updateRoomConfigUI();
           refreshConnectionStatusBanner();
           updateLeaderboardUI();
         });
@@ -9449,21 +7536,6 @@
           appendNetLog(`ゲストからの接続要求を受信: ${conn.peer}`, 'info');
           conn.serialization = 'json';
 
-          // パスワード照合
-          const clientPw = (conn.metadata && conn.metadata.password) ? String(conn.metadata.password).trim() : '';
-          if (currentRoomPassword && clientPw !== currentRoomPassword) {
-            appendNetLog(`⚠️ ゲスト (${conn.peer}) がパスワード不一致のため接続を拒否しました`, 'err');
-            const rejectAuth = () => {
-              try {
-                conn.send({ type: 'auth_error', reason: 'パスワードが違います' });
-              } catch (e) {}
-              setTimeout(() => { try { conn.close(); } catch(e){} }, 300);
-            };
-            if (conn.open) rejectAuth();
-            else conn.on('open', rejectAuth);
-            return;
-          }
-
           let isSetup = false;
           const setupConnection = () => {
             if (isSetup) return;
@@ -9471,15 +7543,12 @@
             clientConns[conn.peer] = conn;
             appendNetLog(`✅ ゲスト (${conn.peer}) とP2P接続確立！ 対戦可能`, 'ok');
 
-            const guestName = (conn.metadata && conn.metadata.name) ? conn.metadata.name : ('Player_' + conn.peer.slice(-4));
-            // TDM時はホストと異なるチームを初期割り当て
-            const assignedTeam = (localPlayer.team === 'red') ? 'blue' : 'red';
+            // ゲストをロスターに即時仮登録（パケット到着前でも画面に即座に出す）
             if (!remotePlayers[conn.peer]) {
               createOrUpdateRemotePlayer({
                 id: conn.peer,
-                name: guestName,
-                team: assignedTeam,
-                isHost: false,
+                name: 'Player_' + conn.peer.slice(-4),
+                team: 'red',
                 ping: 0
               });
             }
@@ -9487,26 +7556,16 @@
             renderRosterList();
             broadcastRoomSync();
 
+            // 新規参加者へ即時welcome ACKおよび現在のマップ設定を送信
             try {
               const validMapId = MAP_DEFINITIONS[currentArenaMapId] ? currentArenaMapId : 'standard';
               const validThemeId = MAP_THEMES[currentArenaThemeId] ? currentArenaThemeId : 'cyber';
-              const existingList = [
-                { id: localPlayer.id, name: localPlayer.name, team: localPlayer.team, isHost: true, ping: 0 }
-              ];
-              Object.values(remotePlayers).forEach(p => {
-                if (p && p.id && p.id !== conn.peer) {
-                  existingList.push({ id: p.id, name: p.name, team: p.team, isHost: Boolean(p.isHost), ping: p.ping || 0 });
-                }
-              });
               conn.send({
                 type: 'welcome',
                 hostId: localPlayer.id,
-                hostName: localPlayer.name,
-                hostTeam: localPlayer.team,
-                team: assignedTeam,
                 mapId: validMapId,
                 mapTheme: validThemeId,
-                players: existingList
+                players: []
               });
             } catch (e) {
               appendNetLog(`初期ウェルカム送信エラー: ${e.message}`, 'warn');
@@ -9546,11 +7605,9 @@
           appendNetLog(`ホストエラー: ${err.type} - ${err.message || ''}`, 'err');
           console.warn('Host peer error:', err);
           if (err.type === 'unavailable-id') {
-            appendNetLog('部屋IDが重複しています。別のRoom IDで部屋を作成してください', 'err');
-            showConnectionAlert(
-              '⚠️ Room IDの重複',
-              `「${cleanRoom}」という部屋IDは現在既に使用されています。別のRoom IDを指定してください。`
-            );
+            appendNetLog('部屋IDが重複しました。新しいIDで自動再開設します...', 'warn');
+            const retryRoom = generateRoomId();
+            startHostRoom(retryRoom);
           } else {
             setVisualStatus('🔴 通信エラー (' + err.type + ')', '#ff1744');
             showConnectionAlert(
@@ -9562,31 +7619,24 @@
       });
     }
 
-    // 2. ゲストとしてホストへ直接参加（パスワード認証付き）
+    // 2. ゲストとしてホストへ直接参加（招待URLを踏んだ人）
     let connected = false;
-    function startGuestRoom(roomId, password = '') {
-      isHost = false;
-      const cleanRoom = sanitizeRoomId(roomId);
-      currentRoomCleanId = cleanRoom;
-      currentRoomPassword = String(password || '').trim();
-
-      const targetHostPeerId = formatRoomPeerId(cleanRoom);
-
+    function startGuestRoom(roomId) {
       teardownNetwork(() => {
         hideConnectionAlert();
-        updateUrlAndUi(cleanRoom, currentRoomPassword);
+        updateUrlAndUi(roomId);
         isHost = false;
         connected = false;
-        updateRoleBanner('guest', cleanRoom);
+        updateRoleBanner('guest', roomId);
         updateHostUiPermissions();
-        updateRoomConfigUI();
-        setVisualStatus('🟡 ホストに接続中... (' + cleanRoom + ' を探索)', '#ffca28');
+        setVisualStatus('🟡 ホストに接続中...（' + roomId + ' を探索）', '#ffca28');
 
         let retryCount = 0;
-        const MAX_RETRIES = 10;
+        const MAX_RETRIES = 10; // 最大10回（計約35秒間）粘り強く探索
 
+        // ゲストはユニークなランダムIDを生成して即時起動
         const guestId = 'vsa-g-' + Math.random().toString(36).substring(2, 8);
-        appendNetLog(`🎮 ゲスト起動 (My ID: ${guestId}) -> ホスト [${cleanRoom}] へ接続中...`, 'info');
+        appendNetLog(`🎮 ゲスト起動 (My ID: ${guestId}) -> ホスト (${roomId}) 探索準備`, 'info');
 
         try {
           peer = new Peer(guestId, PEER_CONFIG);
@@ -9600,30 +7650,26 @@
             try { if (hostConn) hostConn.close(); } catch (e) {}
             try { if (peer) peer.destroy(); } catch (e) {}
             setVisualStatus('🔴 ホストが見つかりませんでした（タイムアウト）', '#ff1744');
-            appendNetLog('ホスト探索タイムアウト。ホストが部屋を立てていないか、Room IDが誤っています', 'err');
+            appendNetLog('ホスト探索タイムアウト。ホストが画面を開いていないか、通信が遮断されています', 'err');
             showConnectionAlert(
               '⚠️ ホストが見つかりませんでした',
-              `部屋 [${cleanRoom}] が見つかりませんでした。ホストが部屋を開設しているか、正しいRoom IDをご確認ください。`
+              'ホスト（友達）がまだゲーム画面を開いていないか、LINE等の別アプリを開いたまま待機している可能性があります。友達に「ゲーム画面（ブラウザ）を開いて待ってて！」と伝えて、下の【🔄 もう一度接続を試す】を押してください。'
             );
           }
-        }, 36000);
+        }, 36000); // 36秒のゆとりを持ったタイムアウト
 
         const connectToHost = () => {
           if (connected) return;
           retryCount++;
           setVisualStatus(`🟡 ホスト接続試行中... (${retryCount}/${MAX_RETRIES})`, '#ffca28');
-          appendNetLog(`[${retryCount}/${MAX_RETRIES}] ホスト (${cleanRoom}) へ認証接続要求を送信中...`, 'info');
+          appendNetLog(`[${retryCount}/${MAX_RETRIES}] ホスト (${roomId}) へP2P接続要求を送信中...`, 'info');
 
           try {
             if (hostConn) {
               try { hostConn.close(); } catch (e) {}
               hostConn = null;
             }
-            hostConn = peer.connect(targetHostPeerId, {
-              metadata: {
-                password: currentRoomPassword,
-                name: localPlayer.name
-              },
+            hostConn = peer.connect(roomId, {
               reliable: true,
               serialization: 'json'
             });
@@ -9632,9 +7678,10 @@
             return;
           }
 
+          // 一定時間内に接続が開かなければ自動で次のリトライへ
           const handshakeTimer = setTimeout(() => {
             if (!connected && retryCount < MAX_RETRIES && peer && !peer.destroyed) {
-              appendNetLog(`相手の待機を確認中... (${retryCount}/${MAX_RETRIES})`, 'warn');
+              appendNetLog(`相手の待機を確認中... 友達が画面を開いていれば自動で繋がります (${retryCount}/${MAX_RETRIES})`, 'warn');
               connectToHost();
             }
           }, 3500);
@@ -9645,18 +7692,17 @@
             clearConnTimeout();
             hideConnectionAlert();
             startHeartbeat();
-            appendNetLog(`🎉 ホスト (${cleanRoom}) とP2P接続が確立しました！ 対戦可能です`, 'ok');
+            appendNetLog(`🎉 ホスト (${roomId}) とP2P接続が確立しました！ 対戦可能です`, 'ok');
             refreshConnectionStatusBanner();
             updateLeaderboardUI();
+            // ホストへ自己紹介ステートを即時送信
             try {
-              lastPingSendTime = performance.now();
               hostConn.send({
                 type: 'state',
                 ts: performance.now(),
                 player: {
                   id: localPlayer.id,
                   name: localPlayer.name,
-                  team: localPlayer.team,
                   x: Number(localPlayer.x.toFixed(3)),
                   y: Number(localPlayer.y.toFixed(3)),
                   z: Number(localPlayer.z.toFixed(3)),
@@ -9678,18 +7724,8 @@
           }
 
           hostConn.on('data', (data) => {
-            if (data && data.type === 'auth_error') {
-              clearTimeout(handshakeTimer);
-              clearConnTimeout();
-              appendNetLog(`❌ 認証エラー: ${data.reason}`, 'err');
-              showJoinError('❌ ' + (data.reason || 'パスワードが違います'));
-              teardownNetwork(() => {
-                openTitleMenu('join');
-              });
-              return;
-            }
             onHostOpen();
-            handleIncomingData(data, cleanRoom);
+            handleIncomingData(data, roomId);
           });
 
           const onHostLost = () => {
@@ -9741,7 +7777,7 @@
             setVisualStatus('🔴 接続先が見つかりません (' + err.type + ')', '#ff1744');
             showConnectionAlert(
               '⚠️ ホストが見つかりませんでした',
-              `部屋 [${cleanRoom}] が見つかりませんでした。ホストが部屋を開設しているか、Room ID をご確認ください。`
+              'ホスト（友達）がまだゲーム画面を開いていないか、LINE等の別アプリを開いたまま待機している可能性があります。友達に「ゲーム画面（ブラウザ）を開いて待ってて！」と伝えて、下の【🔄 もう一度接続を試す】を押してください。'
             );
           }
         });
@@ -9841,30 +7877,42 @@
       localPlayer.hsKills = 0;
       isHost = true;
 
-      currentRoomCleanId = freshRoom;
-      currentRoomPassword = '';
+      // ブラウザURLを新しいホストURLに更新
+      const cleanUrl = window.location.origin + window.location.pathname + '?room=' + freshRoom;
+      try {
+        window.history.replaceState(null, '', cleanUrl);
+      } catch (e) {}
+
+      const inviteInput = document.getElementById('invite-url-input');
+      if (inviteInput) inviteInput.value = cleanUrl;
 
       hideConnectionAlert();
-      appendNetLog(`👑 新しい部屋を開設しました (Room ID: ${freshRoom})`, 'ok');
-      startHostRoom(freshRoom, '');
+      appendNetLog(`👑 新しい部屋を開設しました (Host ID: ${freshRoom})`, 'ok');
+      startHostRoom(freshRoom);
       updateRoleBanner('host', freshRoom);
       updateRoomConfigUI();
     }
 
+    const newRoomBtn = document.getElementById('new-room-btn');
+    if (newRoomBtn) newRoomBtn.addEventListener('click', createFreshHostRoom);
+
+    const guestBecomeHostBtn = document.getElementById('guest-become-host-btn');
+    if (guestBecomeHostBtn) guestBecomeHostBtn.addEventListener('click', createFreshHostRoom);
+
+    const becomeHostBtn = document.getElementById('become-host-btn');
+    if (becomeHostBtn) becomeHostBtn.addEventListener('click', createFreshHostRoom);
+
     function retryCurrentRoom() {
       appendNetLog('再接続を試行中...', 'info');
       if (isHost) {
-        startHostRoom(currentRoomCleanId || currentRoomId || generateRoomId(), currentRoomPassword);
+        startHostRoom(currentRoomId || generateRoomId());
       } else {
-        startGuestRoom(currentRoomCleanId || currentRoomId || generateRoomId(), currentRoomPassword);
+        startGuestRoom(currentRoomId || generateRoomId());
       }
     }
 
     const manualReconnectBtn = document.getElementById('manual-reconnect-btn');
     if (manualReconnectBtn) manualReconnectBtn.addEventListener('click', retryCurrentRoom);
-
-    const newRoomBtn = document.getElementById('new-room-btn');
-    if (newRoomBtn) newRoomBtn.addEventListener('click', createFreshHostRoom);
 
     const guestRetryBtn = document.getElementById('guest-retry-btn');
     if (guestRetryBtn) guestRetryBtn.addEventListener('click', retryCurrentRoom);
@@ -9996,22 +8044,9 @@
           if (data.team) {
             localPlayer.team = data.team;
           }
-          if (data.hostId) {
-            createOrUpdateRemotePlayer({
-              id: data.hostId,
-              name: data.hostName || ('Host_' + data.hostId.slice(-4)),
-              team: data.hostTeam || (localPlayer.team === 'red' ? 'blue' : 'red'),
-              isHost: true
-            });
+          if (data.hostId && !remotePlayers[data.hostId]) {
+            createOrUpdateRemotePlayer({ id: data.hostId, name: 'Host_' + data.hostId.slice(-4), isHost: true });
           }
-          if (Array.isArray(data.players)) {
-            data.players.forEach(p => {
-              if (p && p.id && p.id !== localPlayer.id) {
-                createOrUpdateRemotePlayer(p);
-              }
-            });
-          }
-          updateAllRemoteColors();
           updateRoomConfigUI();
           renderRosterList();
         }
@@ -10093,13 +8128,11 @@
         if (isHost && senderId && remotePlayers[senderId]) {
           if (data.name) remotePlayers[senderId].name = data.name;
           if (data.team) remotePlayers[senderId].team = data.team;
-          updateAllRemoteColors();
-          renderRosterList();
           broadcastRoomSync();
         }
       } else if (data.type === 'laser') {
         if (senderId !== localPlayer.id) {
-          if (remotePlayers[senderId]) {
+          if (isHost && remotePlayers[senderId]) {
             remotePlayers[senderId].shieldUntil = 0;
             remotePlayers[senderId].shielded = false;
           }
@@ -10119,11 +8152,6 @@
       if (attackerObj) {
         attackerObj.shieldUntil = 0;
         attackerObj.shielded = false;
-      }
-
-      // TDM時：味方へのダメージは無効
-      if (matchConfig.mode === 'tdm' && targetObj.team && attackerObj && attackerObj.team && targetObj.team === attackerObj.team) {
-        return;
       }
 
       // 無敵シールド中、または死亡中・リスポーン待機中の場合はダメージ無効
@@ -10196,19 +8224,19 @@
         if (targetId === localPlayer.id) {
           updateHpHud();
           triggerDamageFeedback();
+        } else if (clientConns[targetId] && clientConns[targetId].open) {
+          clientConns[targetId].send({
+            type: 'hurt',
+            targetId: targetId,
+            hp: targetObj.hp
+          });
         }
-        broadcastFromHost({
-          type: 'hurt',
-          targetId: targetId,
-          hp: targetObj.hp
-        });
       }
       updateLeaderboardUI();
     }
 
     // 45Hz 超低遅延状態同期ループ（タイマースロットリング＆座標NaN保護）
     let lastNetworkTickTime = 0;
-    let lastPingSendTime = 0;
     setInterval(() => {
       if (config.gameMode === 'gridshot') return;
       const now = performance.now();
@@ -10225,8 +8253,6 @@
         const allPlayers = [{
           id: localPlayer.id,
           name: localPlayer.name,
-          team: localPlayer.team,
-          isHost: true,
           x: myX,
           y: myY,
           z: myZ,
@@ -10255,8 +8281,6 @@
           allPlayers.push({
             id: rp.id,
             name: rp.name,
-            team: rp.team || 'red',
-            isHost: rp.isHost || false,
             x: rX,
             y: rY,
             z: rZ,
@@ -10287,16 +8311,12 @@
         const myYaw = Number.isFinite(localPlayer.yaw) ? Number(localPlayer.yaw.toFixed(3)) : 0;
         const myPitch = Number.isFinite(localPlayer.pitch) ? Number(localPlayer.pitch.toFixed(3)) : 0;
 
-        const pingInterval = (localPlayer.ping === 0) ? 350 : 1000;
-        const shouldSendPing = (now - lastPingSendTime > pingInterval);
-        if (shouldSendPing) lastPingSendTime = now;
-
-        const statePayload = {
+        hostConn.send({
           type: 'state',
+          ts: now,
           player: {
             id: localPlayer.id,
             name: localPlayer.name,
-            team: localPlayer.team,
             x: myX,
             y: myY,
             z: myZ,
@@ -10305,12 +8325,7 @@
             crouch: Boolean(localPlayer.crouch),
             ping: localPlayer.ping
           }
-        };
-        if (shouldSendPing) {
-          statePayload.ts = now;
-        }
-
-        hostConn.send(statePayload);
+        });
       }
     }, 1000 / 45);
 
@@ -10436,7 +8451,7 @@
         tryShoot();
       }
 
-      if (!isGameActive && (roomState === 'LOBBY' || roomState === 'TITLE')) {
+      if (!isGameActive && roomState === 'LOBBY') {
         lobbyCamAngle += dt * 0.12;
         const radius = 34;
         camera.position.set(Math.cos(lobbyCamAngle) * radius, 18, Math.sin(lobbyCamAngle) * radius);
@@ -10453,34 +8468,22 @@
     // 起動処理
     loadSettings();
     updateHpHud();
-    initTitleMenu();
 
     const urlParams = new URLSearchParams(window.location.search);
     const targetRoom = urlParams.get('room');
-    const targetPw = urlParams.get('pw') || '';
-
     if (targetRoom && targetRoom.trim() !== '') {
-      const cleanTarget = sanitizeRoomId(targetRoom);
-      const joinRoomInput = document.getElementById('join-room-id');
-      const joinPwInput = document.getElementById('join-room-pw');
-      if (joinRoomInput) joinRoomInput.value = cleanTarget;
-      if (joinPwInput) joinPwInput.value = targetPw;
-
-      openTitleMenu('join');
-      appendNetLog(`招待リンクを検知: Room [${cleanTarget}]。自動でホストへ合流します...`, 'info');
-
-      // 招待URLクリック時は、タイトル画面で待たされず自動で即座に合流！
-      setTimeout(() => {
-        isHost = false;
-        updateRoomConfigUI();
-        startGuestRoom(cleanTarget, targetPw);
-        openLobby();
-      }, 350);
+      // 招待URLを踏んだ人 -> 最初から同期的にゲストとして初期化！
+      isHost = false;
+      startGuestRoom(targetRoom.trim());
     } else {
-      openTitleMenu('create');
+      // 部屋指定なし -> 最初から同期的にホストとして初期化！
+      isHost = true;
+      const freshRoom = generateRoomId();
+      startHostRoom(freshRoom);
     }
 
     updateLeaderboardUI();
+    openLobby();
     animate();
   </script>
 </body>
