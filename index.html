@@ -5432,20 +5432,23 @@
           osc.start(now);
           osc.stop(now + 0.095);
         } else if (type === 'hit_body') {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(800, now);
-          gain.gain.setValueAtTime(0.30 * volScale, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
+          // Krunker.io風・硬質でクリスプな小気味よいクリックヒット音
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(980, now);
+          osc.frequency.exponentialRampToValueAtTime(320, now + 0.055);
+          gain.gain.setValueAtTime(0.38 * volScale, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
           osc.start(now);
-          osc.stop(now + 0.08);
+          osc.stop(now + 0.065);
         } else if (type === 'hit_head') {
+          // Krunker.io風・高音の爽快なベル音ヘッドショット
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(1400, now);
-          osc.frequency.setValueAtTime(1850, now + 0.03);
-          gain.gain.setValueAtTime(0.40 * volScale, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
+          osc.frequency.setValueAtTime(1760, now);
+          osc.frequency.setValueAtTime(2349, now + 0.025);
+          gain.gain.setValueAtTime(0.48 * volScale, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
           osc.start(now);
-          osc.stop(now + 0.135);
+          osc.stop(now + 0.145);
         } else if (type === 'hurt') {
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(110, now);
@@ -6070,8 +6073,8 @@
     const CROUCH_EYE = 1.0;
 
     const BASE_SPEED = 9.0;
-    const CROUCH_SPEED_MULT = 0.62;
-    const MAX_BHOP_MULT = 1.66667; // 最大上限速度 15.0 u/s (9.0 * 1.66667)
+    const CROUCH_SPEED_MULT = 0.55;
+    const MAX_BHOP_MULT = 2.22; // Krunker.io風・最大上限速度 20.0 u/s (9.0 * 2.22)
     const GRAVITY = 26.0;
     const JUMP_VELOCITY = 9.6;
 
@@ -6087,6 +6090,8 @@
       yaw: 0,
       pitch: 0,
       crouch: false,
+      isSliding: false,
+      slideTimeRemaining: 0,
       currentEyeH: STAND_EYE,
       team: 'red',
       weapon: 'ar',
@@ -7850,6 +7855,26 @@
         };
         btnEl.addEventListener('touchend', releaseFire, { passive: false });
         btnEl.addEventListener('touchcancel', releaseFire, { passive: false });
+
+        // グローバル安全リセット（画面外リリースやタッチ割り込み時のロックを完全防止）
+        window.addEventListener('touchend', (e) => {
+          if (fireTouchId !== null) {
+            let active = false;
+            for (let i = 0; i < e.touches.length; i++) {
+              if (e.touches[i].identifier === fireTouchId) { active = true; break; }
+            }
+            if (!active) {
+              btnEl.classList.remove('pressed');
+              touchState.firing = false;
+              fireTouchId = null;
+            }
+          }
+        }, { passive: true });
+        window.addEventListener('touchcancel', () => {
+          btnEl.classList.remove('pressed');
+          touchState.firing = false;
+          fireTouchId = null;
+        }, { passive: true });
       }
 
       bindFireButton(fireTopBtn);
@@ -7886,8 +7911,8 @@
         e.stopPropagation();
         const t = e.changedTouches[0];
         crouchTouchId = t.identifier;
-        touchState.crouching = !touchState.crouching;
-        crouchBtn.classList.toggle('active-toggle', touchState.crouching);
+        touchState.crouching = true;
+        crouchBtn.classList.add('pressed');
       }, { passive: false });
 
       const releaseCrouch = (e) => {
@@ -7896,6 +7921,8 @@
         for (let i = 0; i < e.changedTouches.length; i++) {
           if (e.changedTouches[i].identifier === crouchTouchId) {
             crouchTouchId = null;
+            touchState.crouching = false;
+            crouchBtn.classList.remove('pressed');
           }
         }
       };
@@ -8065,8 +8092,30 @@
         pressedCodes['KeyC'] || customCrouch || touchState.crouching
       );
 
-      const targetEye = localPlayer.crouch ? CROUCH_EYE : STAND_EYE;
-      localPlayer.currentEyeH += (targetEye - localPlayer.currentEyeH) * Math.min(1.0, dt * 16.0);
+      // Krunker.io風・スライディング（Slide）およびスライドホップ（Slide Hop）の判定
+      const curHorizSpeed = Math.hypot(localPlayer.vx, localPlayer.vz);
+      const isTryingSlide = localPlayer.crouch && (curHorizSpeed > 3.8 || localPlayer.bhopMult > 1.05 || !localPlayer.onGround);
+
+      if (isTryingSlide) {
+        if (!localPlayer.isSliding) {
+          localPlayer.isSliding = true;
+          localPlayer.slideTimeRemaining = 0.44; // 約440msのスライディング可能持続窓
+          localPlayer.bhopMult = Math.min(MAX_BHOP_MULT, localPlayer.bhopMult + 0.12); // スライド開始ブースト
+        }
+      } else if (!localPlayer.crouch) {
+        localPlayer.isSliding = false;
+        localPlayer.slideTimeRemaining = 0;
+      }
+
+      if (localPlayer.isSliding) {
+        localPlayer.slideTimeRemaining = Math.max(0, (localPlayer.slideTimeRemaining || 0) - dt);
+        if (localPlayer.slideTimeRemaining <= 0 && localPlayer.onGround) {
+          localPlayer.isSliding = false;
+        }
+      }
+
+      const targetEye = localPlayer.crouch ? (localPlayer.isSliding ? 0.85 : CROUCH_EYE) : STAND_EYE;
+      localPlayer.currentEyeH += (targetEye - localPlayer.currentEyeH) * Math.min(1.0, dt * 18.0);
       const playerHeight = localPlayer.crouch ? CROUCH_HEIGHT : STAND_HEIGHT;
 
       const forwardX = -Math.sin(localPlayer.yaw);
@@ -8093,29 +8142,40 @@
       lastWantJump = wantJump;
 
       if (localPlayer.onGround) {
-        if (wantJump && !localPlayer.crouch) {
+        // 通常ジャンプ または スライディング中のスライドホップ（Slide Hop）
+        const canJumpOnGround = wantJump && (!localPlayer.crouch || localPlayer.isSliding);
+        if (canJumpOnGround) {
           localPlayer.vy = JUMP_VELOCITY;
           localPlayer.onGround = false;
           wheelJumpBufferUntil = 0;
-          if (wishLen > 0.1) {
-            localPlayer.bhopMult = Math.min(MAX_BHOP_MULT, localPlayer.bhopMult + 0.08);
+          if (wishLen > 0.05) {
+            // スライドホップ時はより力強い加速ボーナスを付与！
+            const hopBonus = localPlayer.isSliding ? 0.14 : 0.09;
+            localPlayer.bhopMult = Math.min(MAX_BHOP_MULT, localPlayer.bhopMult + hopBonus);
           }
+          localPlayer.isSliding = false; // 空中へ離陸
         } else {
-          localPlayer.bhopMult = Math.max(1.0, localPlayer.bhopMult - dt * 3.5);
-          if (wishLen < 0.05) localPlayer.bhopMult = 1.0;
+          // 地上での減速：スライディング中は摩擦が激減（滑る）、通常静止しゃがみはブレーキ
+          if (localPlayer.isSliding) {
+            localPlayer.bhopMult = Math.max(1.0, localPlayer.bhopMult - dt * 0.4); // スライディング中はほぼ減速しない！
+          } else {
+            localPlayer.bhopMult = Math.max(1.0, localPlayer.bhopMult - dt * 3.0);
+          }
+          if (wishLen < 0.05 && !localPlayer.isSliding) localPlayer.bhopMult = 1.0;
           localPlayer.wallJumpCount = 0;
           localPlayer.wallJumpCooldownUntil = 0;
         }
 
-        const postureMult = localPlayer.crouch ? CROUCH_SPEED_MULT : 1.0;
+        const postureMult = (localPlayer.crouch && !localPlayer.isSliding) ? CROUCH_SPEED_MULT : 1.0;
         const targetSpeed = BASE_SPEED * localPlayer.bhopMult * postureMult * inputMagnitude;
-        const accelFactor = Math.min(1.0, dt * 22.0);
+        const accelFactor = localPlayer.isSliding ? Math.min(1.0, dt * 7.0) : Math.min(1.0, dt * 22.0);
         localPlayer.vx += (wishX * targetSpeed - localPlayer.vx) * accelFactor;
         localPlayer.vz += (wishZ * targetSpeed - localPlayer.vz) * accelFactor;
       } else {
+        // 空中制御（Air Strafe）：空中で視点を振ると美しく曲がりながら加速を維持
         if (wishLen > 0.05) {
           const airTargetSpeed = BASE_SPEED * localPlayer.bhopMult * inputMagnitude;
-          const airControl = Math.min(1.0, dt * 7.5);
+          const airControl = Math.min(1.0, dt * 9.5);
           localPlayer.vx += (wishX * airTargetSpeed - localPlayer.vx) * airControl;
           localPlayer.vz += (wishZ * airTargetSpeed - localPlayer.vz) * airControl;
         }
@@ -8358,11 +8418,16 @@
     const remotePlayers = {};
     const enemyHitboxes = [];
 
-    // 競技FPS標準の当たり判定バッファ（体感遅延・すり抜けを防止する最適化サイズ）
+    // 見た目用モデル（スタイリッシュな細身直方体＋正面識別バイザー＋銃身）
     const bodyGeo = new THREE.BoxGeometry(0.92, 1.45, 0.92);
     const bodyEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(0.8, 1.4, 0.8));
     const headGeo = new THREE.BoxGeometry(0.52, 0.46, 0.52);
     const headEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(0.45, 0.4, 0.45));
+
+    // Krunker.io風・寛容ヒットボックス（見た目のモデルより適度に広く、高速移動・スマホでも気持ちよく当たる設計）
+    const hitboxBodyGeo = new THREE.BoxGeometry(1.38, 1.62, 1.38);
+    const hitboxHeadGeo = new THREE.BoxGeometry(0.82, 0.65, 0.82);
+    const invisibleHitboxMat = new THREE.MeshBasicMaterial({ visible: false });
 
     // 敵正面識別パーツ（判定干渉・負荷ゼロ設計）
     const enemyVisorGeo = new THREE.BoxGeometry(0.38, 0.12, 0.08);
@@ -8438,13 +8503,24 @@
         gunPivot.add(gunMesh);
         group.add(gunPivot);
 
+        // Krunker.io風・不可視寛容ヒットボックス（交差判定専用・描画ゼロ）
+        const hitboxBody = new THREE.Mesh(hitboxBodyGeo, invisibleHitboxMat);
+        hitboxBody.position.y = 0.7;
+        hitboxBody.userData = { playerId: pData.id, isHead: false };
+        group.add(hitboxBody);
+
+        const hitboxHead = new THREE.Mesh(hitboxHeadGeo, invisibleHitboxMat);
+        hitboxHead.position.y = 1.6;
+        hitboxHead.userData = { playerId: pData.id, isHead: true };
+        group.add(hitboxHead);
+
         group.add(bodyMesh);
         group.add(headMesh);
         group.position.set(safeX, safeY, safeZ);
         scene.add(group);
 
-        // 【厳守】当たり判定は胴体と頭部のみ！visorやgunは交差判定配列に絶対に含めない
-        enemyHitboxes.push(bodyMesh, headMesh);
+        // 当たり判定配列には不可視ヒットボックスを登録（見た目メッシュやバイザーは除外）
+        enemyHitboxes.push(hitboxBody, hitboxHead);
 
         const tagEl = document.createElement('div');
         tagEl.className = 'nametag';
@@ -8487,6 +8563,8 @@
           group,
           bodyMesh,
           headMesh,
+          hitboxBody,
+          hitboxHead,
           visorMesh,
           gunPivot,
           gunMesh,
@@ -8585,9 +8663,9 @@
       if (rp.tagEl && rp.tagEl.parentNode) {
         rp.tagEl.parentNode.removeChild(rp.tagEl);
       }
-      const bIdx = enemyHitboxes.indexOf(rp.bodyMesh);
+      const bIdx = enemyHitboxes.indexOf(rp.hitboxBody || rp.bodyMesh);
       if (bIdx !== -1) enemyHitboxes.splice(bIdx, 1);
-      const hIdx = enemyHitboxes.indexOf(rp.headMesh);
+      const hIdx = enemyHitboxes.indexOf(rp.hitboxHead || rp.headMesh);
       if (hIdx !== -1) enemyHitboxes.splice(hIdx, 1);
       delete remotePlayers[id];
       refreshConnectionStatusBanner();
@@ -8680,6 +8758,13 @@
         rp.bodyMesh.scale.y = bodyScaleY;
         rp.bodyMesh.position.y = bodyCenterY;
         rp.headMesh.position.y = headCenterY;
+        if (rp.hitboxBody) {
+          rp.hitboxBody.scale.y = bodyScaleY;
+          rp.hitboxBody.position.y = bodyCenterY;
+        }
+        if (rp.hitboxHead) {
+          rp.hitboxHead.position.y = headCenterY;
+        }
         if (rp.gunPivot) {
           rp.gunPivot.position.y = 0.82 * bodyScaleY;
         }
@@ -8846,7 +8931,7 @@
     }
 
     function tryShoot() {
-      if (localPlayer.isDead) return;
+      if (!isGameActive || localPlayer.isDead) return;
       const wpn = WEAPONS[localPlayer.weapon] || WEAPONS.ar;
       const now = performance.now();
       if (now - lastShootTime < wpn.fireInterval) return;
@@ -8913,6 +8998,40 @@
         }
         validHit = hit;
         break;
+      }
+
+      // モバイル・エイムアシスト（レティクル周囲の微小近接補正・Bullet Magnetism）
+      // 画面中央で直接当たらなかった場合、照準の微小範囲内に敵の不可視ヒットボックスがいるかを探索
+      if (!validHit || !validHit.object || !validHit.object.userData || !validHit.object.userData.playerId) {
+        const aimAssistCoords = [
+          new THREE.Vector2(0.022, 0), new THREE.Vector2(-0.022, 0),
+          new THREE.Vector2(0, 0.022), new THREE.Vector2(0, -0.022),
+          new THREE.Vector2(0.016, 0.016), new THREE.Vector2(-0.016, -0.016),
+          new THREE.Vector2(-0.016, 0.016), new THREE.Vector2(0.016, -0.016)
+        ];
+        const assistRay = new THREE.Raycaster();
+        for (let i = 0; i < aimAssistCoords.length; i++) {
+          assistRay.setFromCamera(aimAssistCoords[i], camera);
+          const enemyHits = assistRay.intersectObjects(enemyHitboxes, false);
+          if (enemyHits.length > 0) {
+            const cand = enemyHits[0];
+            const candTargetId = cand.object.userData.playerId;
+            const candRp = remotePlayers[candTargetId];
+            if (matchConfig.mode === 'tdm' && candRp && candRp.team && localPlayer.team && candRp.team === localPlayer.team) {
+              continue;
+            }
+            // 壁遮蔽チェック（敵との間に障害物がないことを保証）
+            const camPos = camera.position;
+            const toEnemy = cand.point.clone().sub(camPos);
+            const dist = toEnemy.length();
+            const wallRay = new THREE.Raycaster(camPos, toEnemy.normalize());
+            const wallHits = wallRay.intersectObjects(mapMeshes, false);
+            if (wallHits.length === 0 || wallHits[0].distance >= dist - 0.2) {
+              validHit = cand;
+              break;
+            }
+          }
+        }
       }
 
       if (validHit) {
@@ -9485,7 +9604,7 @@
                 password: currentRoomPassword,
                 name: localPlayer.name
               },
-              reliable: true,
+              reliable: false,
               serialization: 'json'
             });
           } catch (e) {
