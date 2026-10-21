@@ -1155,6 +1155,10 @@
       animation: viewFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
+    #view-title.hidden,
+    #view-lobby.hidden,
+    #view-result.hidden,
+    #view-pause-menu.hidden,
     .ui-view.hidden {
       display: none !important;
       pointer-events: none !important;
@@ -3963,15 +3967,6 @@
           </button>
         </div>
       </header>
-            <span class="icon">🎯</span>
-            <span>1人用練習</span>
-          </button>
-          <button id="btn-open-settings" class="btn-fps-ghost" type="button" title="個人設定を開く">
-            <span class="icon">⚙️</span>
-            <span>SETTINGS</span>
-          </button>
-        </div>
-      </header>
 
       <!-- Main Split Content (Left: Match Settings / Right: Player Roster) -->
       <main class="lobby-main-grid">
@@ -6215,10 +6210,19 @@
       const vResult = document.getElementById('view-result');
       const vPause = document.getElementById('view-pause-menu');
 
-      if (vTitle) vTitle.classList.toggle('hidden', viewName !== 'title');
-      if (vLobby) vLobby.classList.toggle('hidden', viewName !== 'lobby');
-      if (vResult) vResult.classList.toggle('hidden', viewName !== 'result');
-      if (vPause) vPause.classList.toggle('hidden', viewName !== 'pause');
+      const views = [
+        { el: vTitle, name: 'title' },
+        { el: vLobby, name: 'lobby' },
+        { el: vResult, name: 'result' },
+        { el: vPause, name: 'pause' }
+      ];
+
+      views.forEach(({ el, name }) => {
+        if (!el) return;
+        const active = (viewName === name);
+        el.classList.toggle('hidden', !active);
+        el.style.display = active ? 'flex' : 'none';
+      });
     }
 
     function openTitleMenu(tab = 'create') {
