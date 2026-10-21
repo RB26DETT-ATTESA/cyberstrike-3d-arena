@@ -9281,22 +9281,33 @@
       if (connAlertBox) connAlertBox.classList.remove('show');
     }
 
-    function generateRoomId() {
-      const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-      let code = 'vsa-';
-      for (let i = 0; i < 6; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return code;
-    }
-
-    let currentRoomPassword = '';
-    let currentRoomCleanId = '';
-
     function sanitizeRoomId(raw) {
       const s = String(raw || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
       return s || ('room' + Math.floor(100 + Math.random() * 900));
     }
+
+    function normalizeCleanRoomCode(raw) {
+      // ユーザー入力・招待リンク問わず "vsa-room-" や "vsa-" などの重複プレフィックスを除去
+      const s = sanitizeRoomId(raw).replace(/^vsa-room-/, '').replace(/^vsa-/, '');
+      return s || ('room' + Math.floor(100 + Math.random() * 900));
+    }
+
+    function formatRoomPeerId(roomId) {
+      // PeerJS で使用する一意のホストPeerIDを生成（プレフィックス二重化を完全防止）
+      return 'vsa-room-' + normalizeCleanRoomCode(roomId);
+    }
+
+    function generateRoomId() {
+      const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+      let code = '';
+      for (let i = 0; i < 6; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return 'vsa-' + code;
+    }
+
+    let currentRoomPassword = '';
+    let currentRoomCleanId = '';
 
     function updateUrlAndUi(roomId, password = '') {
       currentRoomCleanId = roomId;
@@ -9376,7 +9387,7 @@
       currentRoomCleanId = cleanRoom;
       currentRoomPassword = String(password || '').trim();
 
-      const hostPeerId = 'vsa-room-' + cleanRoom;
+      const hostPeerId = formatRoomPeerId(cleanRoom);
 
       teardownNetwork(() => {
         hideConnectionAlert();
@@ -9550,7 +9561,7 @@
       currentRoomCleanId = cleanRoom;
       currentRoomPassword = String(password || '').trim();
 
-      const targetHostPeerId = 'vsa-room-' + cleanRoom;
+      const targetHostPeerId = formatRoomPeerId(cleanRoom);
 
       teardownNetwork(() => {
         hideConnectionAlert();
@@ -9604,7 +9615,7 @@
                 password: currentRoomPassword,
                 name: localPlayer.name
               },
-              reliable: false,
+              reliable: true,
               serialization: 'json'
             });
           } catch (e) {
@@ -9629,6 +9640,7 @@
             refreshConnectionStatusBanner();
             updateLeaderboardUI();
             try {
+              lastPingSendTime = performance.now();
               hostConn.send({
                 type: 'state',
                 ts: performance.now(),
@@ -9997,7 +10009,10 @@
       } else if (data.type === 'pong') {
         if (typeof data.ts === 'number') {
           const rtt = Math.max(1, Math.round(performance.now() - data.ts));
-          localPlayer.ping = Math.round(localPlayer.ping * 0.6 + rtt * 0.4);
+          localPlayer.ping = (localPlayer.ping === 0) ? rtt : Math.round(localPlayer.ping * 0.6 + rtt * 0.4);
+          const hudPing = document.getElementById('hud-ping');
+          if (hudPing) hudPing.textContent = localPlayer.ping + ' ms';
+          if (roomState === 'LOBBY') renderRosterList();
         }
       } else if (data.type === 'hit') {
         if (isHost) {
@@ -10434,7 +10449,15 @@
       if (joinPwInput) joinPwInput.value = targetPw;
 
       openTitleMenu('join');
-      appendNetLog(`招待リンクを検知: Room [${cleanTarget}]。プレイヤー名を確認して「JOIN GAME」を押してください`, 'info');
+      appendNetLog(`招待リンクを検知: Room [${cleanTarget}]。自動でホストへ合流します...`, 'info');
+
+      // 招待URLクリック時は、タイトル画面で待たされず自動で即座に合流！
+      setTimeout(() => {
+        isHost = false;
+        updateRoomConfigUI();
+        startGuestRoom(cleanTarget, targetPw);
+        openLobby();
+      }, 350);
     } else {
       openTitleMenu('create');
     }
