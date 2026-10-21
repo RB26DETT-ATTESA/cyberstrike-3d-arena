@@ -3853,7 +3853,10 @@
   <div id="tab-scoreboard">
     <div class="sb-header">
       <h2>リアルタイム対戦スコアボード（アクティブ接続のみ）</h2>
-      <div id="sb-room-label" class="sb-room-info">Room: ---</div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div id="sb-room-label" class="sb-room-info">Room: ---</div>
+        <button id="sb-close-btn" type="button" style="background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); color:#fff; border-radius:6px; padding:3px 10px; cursor:pointer; font-size:12px; pointer-events:auto; font-weight:600;">✕ 閉じる (Tab)</button>
+      </div>
     </div>
     <table class="sb-table">
       <thead>
@@ -6134,6 +6137,32 @@
     const overlay = document.getElementById('overlay');
     const resumeBtn = document.getElementById('resume-btn');
     const tabBoard = document.getElementById('tab-scoreboard');
+    const sbCloseBtn = document.getElementById('sb-close-btn');
+
+    function closeScoreboard() {
+      if (tabBoard) tabBoard.classList.remove('show');
+    }
+    function openScoreboard() {
+      if (!isGameActive || config.gameMode !== 'arena') return;
+      updateLeaderboardUI();
+      if (tabBoard) tabBoard.classList.add('show');
+    }
+    function toggleScoreboard() {
+      if (tabBoard && tabBoard.classList.contains('show')) {
+        closeScoreboard();
+      } else {
+        openScoreboard();
+      }
+    }
+    if (sbCloseBtn) sbCloseBtn.addEventListener('click', closeScoreboard);
+    window.addEventListener('blur', closeScoreboard);
+    window.addEventListener('mousedown', (e) => {
+      if (tabBoard && tabBoard.classList.contains('show')) {
+        if (!e.target.closest('#tab-scoreboard')) {
+          closeScoreboard();
+        }
+      }
+    });
     const mobileControlsEl = document.getElementById('mobile-controls');
     const sniperScopeEl = document.getElementById('sniper-scope');
     const crosshairEl = document.getElementById('crosshair');
@@ -7190,6 +7219,7 @@
 
     document.addEventListener('pointerlockchange', () => {
       isPointerLocked = (document.pointerLockElement === renderer.domElement);
+      closeScoreboard();
       const promptEl = document.getElementById('match-click-prompt');
       if (isPointerLocked) {
         if (promptEl) promptEl.style.display = 'none';
@@ -7248,6 +7278,10 @@
       }
 
       if (e.code === 'Escape') {
+        if (tabBoard && tabBoard.classList.contains('show')) {
+          closeScoreboard();
+          return;
+        }
         const modal = document.getElementById('modal-settings');
         if (modal && !modal.classList.contains('hidden')) {
           closeSettingsModal();
@@ -7272,10 +7306,8 @@
 
       if (e.code === 'Tab') {
         e.preventDefault();
-        if (isGameActive && config.gameMode === 'arena') {
-          updateLeaderboardUI();
-          tabBoard.classList.add('show');
-        }
+        if (e.repeat) return;
+        toggleScoreboard();
         return;
       }
 
@@ -7314,7 +7346,7 @@
     document.addEventListener('keyup', (e) => {
       if (e.code === 'Tab') {
         e.preventDefault();
-        tabBoard.classList.remove('show');
+        closeScoreboard();
         return;
       }
       if (isGameActive && (e.ctrlKey || e.code === 'ControlLeft' || e.code === 'ControlRight')) {
@@ -9474,6 +9506,8 @@
                 team: assignedTeam,
                 mapId: validMapId,
                 mapTheme: validThemeId,
+                roomState: roomState,
+                matchConfig: matchConfig,
                 players: existingList
               });
             } catch (e) {
@@ -9954,6 +9988,12 @@
           startHeartbeat();
           appendNetLog(`🎉 ホスト (${senderId}) からWelcomeパケットを受信！ 接続完了`, 'ok');
           refreshConnectionStatusBanner();
+          if (data.roomState) {
+            roomState = data.roomState;
+          }
+          if (data.matchConfig) {
+            Object.assign(matchConfig, data.matchConfig);
+          }
           if (data.mapId) {
             const hostMap = MAP_DEFINITIONS[data.mapId] ? data.mapId : 'standard';
             const hostTheme = MAP_THEMES[data.mapTheme] ? data.mapTheme : 'cyber';
