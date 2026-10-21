@@ -2,7 +2,12 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CyberStrike">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#070a12">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -2717,9 +2722,266 @@
       background: rgba(0, 0, 0, 0.3);
     }
 
+    /* =========================================================================
+       14. 縦画面強制ガード & HUDエディタ & モバイル横画面スタイル
+       ========================================================================= */
+    #orientation-guard {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999999;
+      background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
+      color: #ffffff;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 30px;
+    }
+    @media (orientation: portrait) and (max-width: 960px) {
+      #orientation-guard {
+        display: flex;
+      }
+    }
+    .og-icon-box {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      background: rgba(0, 229, 255, 0.1);
+      border: 2px solid rgba(0, 229, 255, 0.4);
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+    }
+    .og-icon {
+      font-size: 38px;
+      display: inline-block;
+      animation: rotatePhone 2.2s ease-in-out infinite;
+    }
+    @keyframes rotatePhone {
+      0%, 10% { transform: rotate(0deg); }
+      45%, 65% { transform: rotate(-90deg); }
+      90%, 100% { transform: rotate(0deg); }
+    }
+    .og-title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      color: #00e5ff;
+      margin-bottom: 10px;
+      text-shadow: 0 0 16px rgba(0, 229, 255, 0.5);
+    }
+    .og-desc {
+      font-size: 13px;
+      color: #94a3b8;
+      max-width: 340px;
+      line-height: 1.6;
+    }
+
+    /* PWA Banner */
+    .pwa-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 229, 255, 0.08);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      color: #cbd5e1;
+      margin-top: 8px;
+    }
+
+    /* HUD Editor Overlay */
+    #hud-editor-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999990;
+      background: rgba(5, 8, 15, 0.88);
+      backdrop-filter: blur(6px);
+      user-select: none;
+      touch-action: none;
+    }
+    #hud-editor-overlay.active {
+      display: block;
+    }
+    .he-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+      pointer-events: none;
+    }
+    .he-header {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(13, 19, 32, 0.95);
+      border: 1px solid rgba(0, 229, 255, 0.4);
+      padding: 8px 24px;
+      border-radius: 30px;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      pointer-events: none;
+      z-index: 10;
+    }
+    .he-item {
+      position: absolute;
+      cursor: grab;
+      touch-action: none;
+      border: 2px dashed rgba(255, 255, 255, 0.35);
+      border-radius: 8px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      transform-origin: center center;
+    }
+    .he-item:active {
+      cursor: grabbing;
+    }
+    .he-item.selected {
+      border: 2px solid #ffd600 !important;
+      box-shadow: 0 0 18px rgba(255, 214, 0, 0.7) !important;
+    }
+    .he-item-tag {
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffd600;
+      color: #05080f;
+      font-size: 9px;
+      font-weight: 900;
+      padding: 1px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+      display: none;
+    }
+    .he-item.selected .he-item-tag {
+      display: block;
+    }
+    .he-toolbar {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(13, 19, 32, 0.96);
+      border: 1px solid rgba(0, 229, 255, 0.5);
+      border-radius: 14px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+      z-index: 10;
+      max-width: 95vw;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .he-tool-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+    .he-tool-group input[type="range"] {
+      width: 90px;
+      cursor: pointer;
+    }
+    .he-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.1s, filter 0.15s;
+    }
+    .he-btn:active { transform: scale(0.95); }
+    .he-btn-primary { background: var(--accent); color: #05080f; }
+    .he-btn-secondary { background: rgba(255,255,255,0.12); color: #ffffff; }
+    .he-btn-danger { background: rgba(255, 23, 68, 0.25); color: #ff5252; border: 1px solid rgba(255, 23, 68, 0.4); }
+
+    /* 横画面スマホ最適化 (高さ520px以下) */
+    @media (max-height: 520px) {
+      .lobby-layout {
+        gap: 12px;
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
+      }
+      .lobby-col-left, .lobby-col-right {
+        padding: 10px 14px;
+      }
+      .lobby-topbar {
+        padding: 6px 14px;
+      }
+      .panel-section {
+        padding: 8px 10px;
+        margin-bottom: 8px;
+      }
+      .settings-modal-dialog {
+        max-height: 92vh;
+        overflow-y: auto;
+      }
+      .he-toolbar {
+        bottom: 6px;
+        padding: 6px 12px;
+        gap: 10px;
+      }
+      .he-tool-group {
+        font-size: 11px;
+      }
+    }
+
   </style>
 </head>
 <body>
+
+  <!-- 縦画面（Portrait）強制回転ガード -->
+  <div id="orientation-guard">
+    <div class="og-icon-box">
+      <span class="og-icon">📱</span>
+    </div>
+    <div class="og-title">画面を横向きにしてください</div>
+    <div class="og-desc">本格マルチプレイFPSを快適にプレイするため、スマートフォンの自動回転をONにして横画面（Landscape）にしてプレイしてください。</div>
+  </div>
+
+  <!-- HUD配置エディタ (Customize Touch Controls Overlay) -->
+  <div id="hud-editor-overlay">
+    <div class="he-grid-bg"></div>
+    <div class="he-header">📱 タッチHUD配置エディタ（ドラッグで移動 / タップで選択してサイズ・透明度調整）</div>
+
+    <!-- プレビュー／編集用コンテナ -->
+    <div id="he-container" style="position:absolute; inset:0; pointer-events:none;"></div>
+
+    <!-- フローティング調整ツールバー -->
+    <div class="he-toolbar">
+      <div id="he-selected-name" style="font-weight:900; color:#ffd600; font-size:12px;">未選択（ボタンをタップ）</div>
+      <div class="he-tool-group">
+        <span>サイズ:</span>
+        <input type="range" id="he-scale-slider" min="0.5" max="1.8" step="0.05" value="1.0">
+        <span id="he-scale-val">100%</span>
+      </div>
+      <div class="he-tool-group">
+        <span>不透明度:</span>
+        <input type="range" id="he-opacity-slider" min="0.2" max="1.0" step="0.05" value="0.8">
+        <span id="he-opacity-val">80%</span>
+      </div>
+      <button id="he-save-btn" class="he-btn he-btn-primary" type="button">💾 保存して適用</button>
+      <button id="he-reset-btn" class="he-btn he-btn-danger" type="button">🔄 初期配置</button>
+      <button id="he-cancel-btn" class="he-btn he-btn-secondary" type="button">閉じる</button>
+    </div>
+  </div>
 
   <div id="canvas-container"></div>
   <div id="world-ui"></div>
@@ -2940,6 +3202,9 @@
           <div id="lobby-role-badge" class="badge-role host">👑 HOST</div>
           <span class="badge-version">v2.4.0 (Custom Room)</span>
           <div id="device-mode-badge" class="badge-device">💻 PCモード</div>
+          <div id="pwa-install-banner" class="pwa-banner" style="display:none;">
+            <span>📱 <strong>PWA全画面対応:</strong> 「ホーム画面に追加」で全画面プレイ可能</span>
+          </div>
         </div>
 
         <div class="lobby-top-center">
@@ -3558,6 +3823,19 @@
                     <button id="kb-scope" class="kb-btn" data-action="scope" type="button">MouseRight</button>
                   </div>
                 </div>
+              </div>
+
+              <!-- Mobile HUD Layout Section -->
+              <div class="panel-section" style="margin-top:14px; border:1px solid rgba(0,229,255,0.25); background:rgba(0,229,255,0.03); border-radius:8px; padding:12px;">
+                <div class="section-title">
+                  <span>📱 モバイル用タッチHUDカスタマイズ (Touch Controls)</span>
+                </div>
+                <p style="font-size:11px; color:var(--text-dim); margin-bottom:10px; line-height:1.5;">
+                  スマートフォン・タブレット操作時の射撃・ジャンプ・しゃがみ・ジョイスティック等のボタン配置、各ボタンのサイズ（50%〜180%）、不透明度を自由にドラッグして直感的にカスタマイズできます。
+                </p>
+                <button id="btn-open-hud-editor" class="btn btn-primary" type="button" style="width:100%; padding:10px; font-weight:800; font-size:13px; letter-spacing:1px;">
+                  📱 ボタン配置エディタを開く (Customize HUD)
+                </button>
               </div>
             </div>
           </div>
@@ -6003,8 +6281,280 @@
     });
 
     /*************************************************************************
-     * 10. モバイル専用タッチコントロール
+     * 10. モバイル専用タッチコントロール ＆ HUD配置エディタ
      *************************************************************************/
+    const DEFAULT_HUD_LAYOUT = {
+      'joystick-base': { leftPct: 6, topPct: 68, scale: 1.0, opacity: 0.85, name: '移動ジョイスティック' },
+      'mob-fire-top': { leftPct: 86, topPct: 14, scale: 1.0, opacity: 0.90, name: '射撃ボタン (人差し指/上)' },
+      'mob-fire-bottom': { leftPct: 74, topPct: 68, scale: 1.0, opacity: 0.85, name: '射撃ボタン (親指/下)' },
+      'mob-jump-btn': { leftPct: 88, topPct: 64, scale: 1.0, opacity: 0.85, name: 'ジャンプ' },
+      'mob-crouch-btn': { leftPct: 88, topPct: 82, scale: 1.0, opacity: 0.85, name: 'しゃがみ' },
+      'mob-weapon-btn': { leftPct: 75, topPct: 82, scale: 1.0, opacity: 0.85, name: '武器切替' },
+      'mob-scope-btn': { leftPct: 75, topPct: 48, scale: 1.0, opacity: 0.85, name: 'スナイパースコープ' },
+      'mob-top-bar': { leftPct: 50, topPct: 2, scale: 1.0, opacity: 0.95, name: '上部バー (ロビー/スコア)' }
+    };
+
+    function loadSavedHudLayout() {
+      try {
+        const raw = localStorage.getItem('cyberstrike_touch_hud_v1');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            return Object.assign({}, DEFAULT_HUD_LAYOUT, parsed);
+          }
+        }
+      } catch (e) {}
+      return JSON.parse(JSON.stringify(DEFAULT_HUD_LAYOUT));
+    }
+
+    function applyTouchHudLayout(customLayout) {
+      const layout = customLayout || loadSavedHudLayout();
+      for (const id in layout) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const item = layout[id];
+        el.style.position = 'absolute';
+        if (item.leftPct !== undefined) {
+          el.style.left = item.leftPct + '%';
+          el.style.top = item.topPct + '%';
+          el.style.right = 'auto';
+          el.style.bottom = 'auto';
+        }
+        const scale = item.scale !== undefined ? item.scale : 1.0;
+        const opacity = item.opacity !== undefined ? item.opacity : 0.85;
+        if (id === 'mob-top-bar' && item.leftPct === 50) {
+          el.style.transform = `translateX(-50%) scale(${scale})`;
+        } else {
+          el.style.transform = `scale(${scale})`;
+        }
+        el.style.opacity = opacity;
+      }
+    }
+
+    // 初期ロード時にHUD適用
+    applyTouchHudLayout();
+
+    // PWA ホーム画面追加バナーの表示チェック
+    try {
+      const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+      const pwaBanner = document.getElementById('pwa-install-banner');
+      if (pwaBanner && isMobile && !isStandalone) {
+        pwaBanner.style.display = 'inline-flex';
+      }
+    } catch (e) {}
+
+    function initHudEditor() {
+      const overlay = document.getElementById('hud-editor-overlay');
+      const container = document.getElementById('he-container');
+      const openBtn = document.getElementById('btn-open-hud-editor');
+      const saveBtn = document.getElementById('he-save-btn');
+      const resetBtn = document.getElementById('he-reset-btn');
+      const cancelBtn = document.getElementById('he-cancel-btn');
+      const selectedNameEl = document.getElementById('he-selected-name');
+      const scaleSlider = document.getElementById('he-scale-slider');
+      const scaleVal = document.getElementById('he-scale-val');
+      const opacitySlider = document.getElementById('he-opacity-slider');
+      const opacityVal = document.getElementById('he-opacity-val');
+
+      if (!overlay || !openBtn) return;
+
+      let currentLayout = null;
+      let selectedId = null;
+
+      function renderEditorItems() {
+        container.innerHTML = '';
+        for (const id in currentLayout) {
+          const item = currentLayout[id];
+          const el = document.createElement('div');
+          el.className = 'he-item' + (id === selectedId ? ' selected' : '');
+          el.id = 'he-item-' + id;
+          el.dataset.targetId = id;
+          el.style.left = item.leftPct + '%';
+          el.style.top = item.topPct + '%';
+          el.style.opacity = item.opacity;
+          el.style.transform = (id === 'mob-top-bar' && item.leftPct === 50) ? `translateX(-50%) scale(${item.scale})` : `scale(${item.scale})`;
+          el.style.pointerEvents = 'auto';
+
+          const originEl = document.getElementById(id);
+          if (originEl) {
+            const rect = originEl.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+              el.style.width = Math.max(52, Math.round(rect.width)) + 'px';
+              el.style.height = Math.max(52, Math.round(rect.height)) + 'px';
+              el.style.borderRadius = window.getComputedStyle(originEl).borderRadius || '12px';
+              el.style.background = window.getComputedStyle(originEl).backgroundColor || 'rgba(0,229,255,0.2)';
+            } else {
+              el.style.width = '70px';
+              el.style.height = '70px';
+              el.style.borderRadius = '50%';
+              el.style.background = 'rgba(0,229,255,0.25)';
+            }
+          } else {
+            el.style.width = '70px';
+            el.style.height = '70px';
+            el.style.borderRadius = '50%';
+            el.style.background = 'rgba(0,229,255,0.25)';
+          }
+
+          el.innerHTML = `
+            <div class="he-item-tag">${item.name}</div>
+            <div style="font-size:10px; font-weight:800; color:#fff; text-align:center; padding:4px; pointer-events:none; word-break:break-all;">${item.name}</div>
+          `;
+
+          setupDraggable(el, id);
+          container.appendChild(el);
+        }
+      }
+
+      function selectItem(id) {
+        selectedId = id;
+        const item = currentLayout[id];
+        if (!item) return;
+
+        selectedNameEl.textContent = '選択中: ' + item.name;
+        scaleSlider.value = item.scale;
+        scaleVal.textContent = Math.round(item.scale * 100) + '%';
+        opacitySlider.value = item.opacity;
+        opacityVal.textContent = Math.round(item.opacity * 100) + '%';
+
+        const allItems = container.querySelectorAll('.he-item');
+        allItems.forEach(it => {
+          it.classList.toggle('selected', it.dataset.targetId === id);
+        });
+      }
+
+      function setupDraggable(el, id) {
+        let isDragging = false;
+        let startX = 0, startY = 0;
+        let origLeftPct = 0, origTopPct = 0;
+        let dragTouchId = null;
+
+        function onStart(cx, cy) {
+          isDragging = true;
+          selectItem(id);
+          startX = cx;
+          startY = cy;
+          origLeftPct = currentLayout[id].leftPct;
+          origTopPct = currentLayout[id].topPct;
+        }
+
+        function onMove(cx, cy) {
+          if (!isDragging) return;
+          const dx = cx - startX;
+          const dy = cy - startY;
+          const dxPct = (dx / window.innerWidth) * 100;
+          const dyPct = (dy / window.innerHeight) * 100;
+
+          let newLeftPct = Math.max(0, Math.min(95, origLeftPct + dxPct));
+          let newTopPct = Math.max(0, Math.min(92, origTopPct + dyPct));
+
+          currentLayout[id].leftPct = Math.round(newLeftPct * 10) / 10;
+          currentLayout[id].topPct = Math.round(newTopPct * 10) / 10;
+
+          el.style.left = currentLayout[id].leftPct + '%';
+          el.style.top = currentLayout[id].topPct + '%';
+        }
+
+        function onEnd() {
+          isDragging = false;
+          dragTouchId = null;
+        }
+
+        el.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onStart(e.clientX, e.clientY);
+          const moveHandler = (ev) => onMove(ev.clientX, ev.clientY);
+          const upHandler = () => {
+            onEnd();
+            window.removeEventListener('mousemove', moveHandler);
+            window.removeEventListener('mouseup', upHandler);
+          };
+          window.addEventListener('mousemove', moveHandler);
+          window.addEventListener('mouseup', upHandler);
+        });
+
+        el.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const t = e.changedTouches[0];
+          dragTouchId = t.identifier;
+          onStart(t.clientX, t.clientY);
+        }, { passive: false });
+
+        el.addEventListener('touchmove', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          for (let i = 0; i < e.changedTouches.length; i++) {
+            const t = e.changedTouches[i];
+            if (t.identifier === dragTouchId) {
+              onMove(t.clientX, t.clientY);
+            }
+          }
+        }, { passive: false });
+
+        const touchEndHandler = (e) => {
+          for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === dragTouchId) {
+              onEnd();
+            }
+          }
+        };
+        el.addEventListener('touchend', touchEndHandler, { passive: false });
+        el.addEventListener('touchcancel', touchEndHandler, { passive: false });
+      }
+
+      scaleSlider.addEventListener('input', (e) => {
+        if (!selectedId || !currentLayout[selectedId]) return;
+        const val = parseFloat(e.target.value);
+        currentLayout[selectedId].scale = val;
+        scaleVal.textContent = Math.round(val * 100) + '%';
+        const el = document.getElementById('he-item-' + selectedId);
+        if (el) {
+          el.style.transform = (selectedId === 'mob-top-bar' && currentLayout[selectedId].leftPct === 50) ? `translateX(-50%) scale(${val})` : `scale(${val})`;
+        }
+      });
+
+      opacitySlider.addEventListener('input', (e) => {
+        if (!selectedId || !currentLayout[selectedId]) return;
+        const val = parseFloat(e.target.value);
+        currentLayout[selectedId].opacity = val;
+        opacityVal.textContent = Math.round(val * 100) + '%';
+        const el = document.getElementById('he-item-' + selectedId);
+        if (el) el.style.opacity = val;
+      });
+
+      openBtn.addEventListener('click', () => {
+        currentLayout = loadSavedHudLayout();
+        overlay.classList.add('active');
+        renderEditorItems();
+        selectItem('mob-fire-bottom');
+      });
+
+      saveBtn.addEventListener('click', () => {
+        try {
+          localStorage.setItem('cyberstrike_touch_hud_v1', JSON.stringify(currentLayout));
+        } catch (e) {}
+        applyTouchHudLayout(currentLayout);
+        overlay.classList.remove('active');
+        showKillfeedMessage('📱 タッチHUD設定を保存・適用しました', '#00e5ff');
+      });
+
+      resetBtn.addEventListener('click', () => {
+        if (confirm('タッチHUDの配置を初期デフォルト値に戻しますか？')) {
+          currentLayout = JSON.parse(JSON.stringify(DEFAULT_HUD_LAYOUT));
+          renderEditorItems();
+          selectItem('mob-fire-bottom');
+        }
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        overlay.classList.remove('active');
+      });
+    }
+
+    initHudEditor();
+
     function setupMobileTouchControls() {
       const moveZone = document.getElementById('touch-move-zone');
       const joyBase = document.getElementById('joystick-base');
@@ -6019,6 +6569,7 @@
       const menuBtn = document.getElementById('mob-menu-btn');
       const scoreBtn = document.getElementById('mob-score-btn');
 
+      // マルチタッチ個別ID管理（3〜4本指クロー持ち完全両立）
       let moveTouchId = null;
       let moveOriginX = 0;
       let moveOriginY = 0;
@@ -6126,7 +6677,7 @@
         btnEl.addEventListener('touchstart', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          if (localPlayer.isDead) return;
+          if (localPlayer.isDead || fireTouchId !== null) return;
           const t = e.changedTouches[0];
           fireTouchId = t.identifier;
           lastFx = t.clientX;
@@ -6161,9 +6712,14 @@
 
         const releaseFire = (e) => {
           e.preventDefault();
-          btnEl.classList.remove('pressed');
-          touchState.firing = false;
-          fireTouchId = null;
+          e.stopPropagation();
+          for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === fireTouchId) {
+              btnEl.classList.remove('pressed');
+              touchState.firing = false;
+              fireTouchId = null;
+            }
+          }
         };
         btnEl.addEventListener('touchend', releaseFire, { passive: false });
         btnEl.addEventListener('touchcancel', releaseFire, { passive: false });
@@ -6172,41 +6728,82 @@
       bindFireButton(fireTopBtn);
       bindFireButton(fireBotBtn);
 
+      let jumpTouchId = null;
       jumpBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (localPlayer.isDead) return;
+        if (localPlayer.isDead || jumpTouchId !== null) return;
+        const t = e.changedTouches[0];
+        jumpTouchId = t.identifier;
         jumpBtn.classList.add('pressed');
         touchState.jumping = true;
       }, { passive: false });
 
       const releaseJump = (e) => {
         e.preventDefault();
-        jumpBtn.classList.remove('pressed');
-        touchState.jumping = false;
+        e.stopPropagation();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === jumpTouchId) {
+            jumpTouchId = null;
+            jumpBtn.classList.remove('pressed');
+            touchState.jumping = false;
+          }
+        }
       };
       jumpBtn.addEventListener('touchend', releaseJump, { passive: false });
       jumpBtn.addEventListener('touchcancel', releaseJump, { passive: false });
 
+      let crouchTouchId = null;
       crouchBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        const t = e.changedTouches[0];
+        crouchTouchId = t.identifier;
         touchState.crouching = !touchState.crouching;
         crouchBtn.classList.toggle('active-toggle', touchState.crouching);
       }, { passive: false });
 
+      const releaseCrouch = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === crouchTouchId) {
+            crouchTouchId = null;
+          }
+        }
+      };
+      crouchBtn.addEventListener('touchend', releaseCrouch, { passive: false });
+      crouchBtn.addEventListener('touchcancel', releaseCrouch, { passive: false });
+
       // 武器循環切り替え (AR -> SR -> DMR -> AR)
+      let weaponTouchId = null;
       weaponBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        const t = e.changedTouches[0];
+        weaponTouchId = t.identifier;
         if (localPlayer.weapon === 'ar') switchWeapon('sr');
         else if (localPlayer.weapon === 'sr') switchWeapon('dmr');
         else switchWeapon('ar');
       }, { passive: false });
+      const releaseWeapon = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === weaponTouchId) {
+            weaponTouchId = null;
+          }
+        }
+      };
+      weaponBtn.addEventListener('touchend', releaseWeapon, { passive: false });
+      weaponBtn.addEventListener('touchcancel', releaseWeapon, { passive: false });
 
+      let scopeTouchId = null;
       scopeBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        const t = e.changedTouches[0];
+        scopeTouchId = t.identifier;
         if (localPlayer.weapon !== 'sr') {
           switchWeapon('sr');
         }
@@ -6214,6 +6811,17 @@
         scopeBtn.classList.toggle('active-toggle', touchState.scoped);
         updateCameraFovAndScope();
       }, { passive: false });
+      const releaseScope = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === scopeTouchId) {
+            scopeTouchId = null;
+          }
+        }
+      };
+      scopeBtn.addEventListener('touchend', releaseScope, { passive: false });
+      scopeBtn.addEventListener('touchcancel', releaseScope, { passive: false });
 
       menuBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
@@ -6222,9 +6830,12 @@
       }, { passive: false });
       menuBtn.addEventListener('click', openLobbyMenu);
 
+      let scoreTouchId = null;
       scoreBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        const t = e.changedTouches[0];
+        scoreTouchId = t.identifier;
         if (config.gameMode === 'arena') {
           updateLeaderboardUI();
           tabBoard.classList.add('show');
@@ -6232,6 +6843,18 @@
       }, { passive: false });
       scoreBtn.addEventListener('touchend', (e) => {
         e.preventDefault();
+        e.stopPropagation();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === scoreTouchId) {
+            scoreTouchId = null;
+            tabBoard.classList.remove('show');
+          }
+        }
+      }, { passive: false });
+      scoreBtn.addEventListener('touchcancel', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        scoreTouchId = null;
         tabBoard.classList.remove('show');
       }, { passive: false });
     }
@@ -6608,6 +7231,12 @@
     const headGeo = new THREE.BoxGeometry(0.52, 0.46, 0.52);
     const headEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(0.45, 0.4, 0.45));
 
+    // 敵正面識別パーツ（判定干渉・負荷ゼロ設計）
+    const enemyVisorGeo = new THREE.BoxGeometry(0.38, 0.12, 0.08);
+    const enemyVisorMat = new THREE.MeshBasicMaterial({ color: 0x090d16 });
+    const enemyGunGeo = new THREE.BoxGeometry(0.12, 0.14, 0.72);
+    const enemyGunMat = new THREE.MeshLambertMaterial({ color: 0x222634 });
+
     function getActivePalette() {
       return ENEMY_PALETTES[config.enemyColor] || ENEMY_PALETTES.cyan_magenta;
     }
@@ -6665,11 +7294,25 @@
         headMesh.userData = { playerId: pData.id, isHead: true };
         headMesh.add(new THREE.LineSegments(headEdges, new THREE.LineBasicMaterial({ color: 0xffffff })));
 
+        // 正面識別バイザー（頭部ローカル -Z 面）
+        const visorMesh = new THREE.Mesh(enemyVisorGeo, enemyVisorMat);
+        visorMesh.position.set(0, 0.02, -0.27);
+        headMesh.add(visorMesh);
+
+        // 正面識別銃身（胴体右側から前方に突き出る）
+        const gunPivot = new THREE.Group();
+        gunPivot.position.set(0.32, 0.82, 0);
+        const gunMesh = new THREE.Mesh(enemyGunGeo, enemyGunMat);
+        gunMesh.position.set(0, 0, -0.36);
+        gunPivot.add(gunMesh);
+        group.add(gunPivot);
+
         group.add(bodyMesh);
         group.add(headMesh);
         group.position.set(safeX, safeY, safeZ);
         scene.add(group);
 
+        // 【厳守】当たり判定は胴体と頭部のみ！visorやgunは交差判定配列に絶対に含めない
         enemyHitboxes.push(bodyMesh, headMesh);
 
         const tagEl = document.createElement('div');
@@ -6711,6 +7354,9 @@
           group,
           bodyMesh,
           headMesh,
+          visorMesh,
+          gunPivot,
+          gunMesh,
           bodyMat,
           headMat,
           tagEl,
@@ -6871,6 +7517,13 @@
         rp.group.position.set(rp.x, rp.y, rp.z);
         rp.group.rotation.y = rp.yaw;
 
+        // 上下視点（Pitch）の連動（頭部と銃身をリアルタイム同期）
+        const enemyPitch = Number.isFinite(rp.pitch) ? rp.pitch : 0;
+        if (rp.headMesh) rp.headMesh.rotation.x = enemyPitch;
+        if (rp.gunPivot) {
+          rp.gunPivot.rotation.x = enemyPitch;
+        }
+
         const targetCrouch = rp.crouch ? 1.0 : 0.0;
         rp.crouchLerp += (targetCrouch - rp.crouchLerp) * Math.min(1.0, dt * 15.0);
 
@@ -6881,6 +7534,9 @@
         rp.bodyMesh.scale.y = bodyScaleY;
         rp.bodyMesh.position.y = bodyCenterY;
         rp.headMesh.position.y = headCenterY;
+        if (rp.gunPivot) {
+          rp.gunPivot.position.y = 0.82 * bodyScaleY;
+        }
 
         const activeShield = rp.shielded || isShielded(rp);
         const targetOpacity = activeShield ? 0.45 : 1.0;
