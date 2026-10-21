@@ -9108,38 +9108,13 @@
       debug: 1,
       config: {
         iceServers: [
-          // 高速ダイレクトSTUN (Google & Cloudflare)
+          // 最速・高信頼ダイレクトSTUN (Google & Cloudflare)
           { urls: 'stun:stun.l.google.com:19302' },
           { urls: 'stun:stun1.l.google.com:19302' },
-          { urls: 'stun:stun2.l.google.com:19302' },
-          { urls: 'stun:stun3.l.google.com:19302' },
-          { urls: 'stun:stun4.l.google.com:19302' },
           { urls: 'stun:stun.cloudflare.com:3478' },
-          { urls: 'stun:openrelay.metered.ca:80' },
-          // TURNS (TLS暗号化 443ポート TCP/UDP: 携帯キャリアSymmetric NAT・CGNAT・厳格ファイアウォール完全突破)
+          // 厳格NAT・ファイアウォール用フォールバックTURN (TLS 443 TCP/UDP)
           {
             urls: 'turns:openrelay.metered.ca:443?transport=tcp',
-            username: 'openrelayproject',
-            credential: 'openrelayproject'
-          },
-          {
-            urls: 'turns:openrelay.metered.ca:443',
-            username: 'openrelayproject',
-            credential: 'openrelayproject'
-          },
-          {
-            urls: 'turns:openrelay.metered.ca:5349',
-            username: 'openrelayproject',
-            credential: 'openrelayproject'
-          },
-          // TURN (標準ポート 80, 443 TCP/UDP)
-          {
-            urls: 'turn:openrelay.metered.ca:80',
-            username: 'openrelayproject',
-            credential: 'openrelayproject'
-          },
-          {
-            urls: 'turn:openrelay.metered.ca:80?transport=tcp',
             username: 'openrelayproject',
             credential: 'openrelayproject'
           },
@@ -9147,14 +9122,9 @@
             urls: 'turn:openrelay.metered.ca:443',
             username: 'openrelayproject',
             credential: 'openrelayproject'
-          },
-          {
-            urls: 'turn:openrelay.metered.ca:443?transport=tcp',
-            username: 'openrelayproject',
-            credential: 'openrelayproject'
           }
         ],
-        iceCandidatePoolSize: 10
+        iceCandidatePoolSize: 2
       }
     };
 
@@ -9585,7 +9555,22 @@
         setVisualStatus('🟡 ホストに接続中... (' + cleanRoom + ' を探索)', '#ffca28');
 
         let retryCount = 0;
-        const MAX_RETRIES = 10;
+        const MAX_RETRIES = 12;
+        let isConnecting = false;
+        let activeHandshakeTimer = null;
+        let activeReconnectTimer = null;
+        let hostOpened = false;
+
+        const clearGuestTimers = () => {
+          if (activeHandshakeTimer) {
+            clearTimeout(activeHandshakeTimer);
+            activeHandshakeTimer = null;
+          }
+          if (activeReconnectTimer) {
+            clearTimeout(activeReconnectTimer);
+            activeReconnectTimer = null;
+          }
+        };
 
         const guestId = 'vsa-g-' + Math.random().toString(36).substring(2, 8);
         appendNetLog(`🎮 ゲスト起動 (My ID: ${guestId}) -> ホスト [${cleanRoom}] へ接続中...`, 'info');
@@ -9599,6 +9584,7 @@
         clearConnTimeout();
         connectionTimeoutTimer = setTimeout(() => {
           if (!connected) {
+            clearGuestTimers();
             try { if (hostConn) hostConn.close(); } catch (e) {}
             try { if (peer) peer.destroy(); } catch (e) {}
             setVisualStatus('🔴 ホストが見つかりませんでした（タイムアウト）', '#ff1744');
@@ -9608,11 +9594,13 @@
               `部屋 [${cleanRoom}] が見つかりませんでした。ホストが部屋を開設しているか、正しいRoom IDをご確認ください。`
             );
           }
-        }, 36000);
+        }, 45000);
 
         const connectToHost = () => {
           if (connected) return;
+          clearGuestTimers();
           retryCount++;
+          isConnecting = true;
           setVisualStatus(`🟡 ホスト接続試行中... (${retryCount}/${MAX_RETRIES})`, '#ffca28');
           appendNetLog(`[${retryCount}/${MAX_RETRIES}] ホスト (${cleanRoom}) へ認証接続要求を送信中...`, 'info');
 
@@ -9631,19 +9619,24 @@
             });
           } catch (e) {
             appendNetLog(`peer.connect例外: ${e.message}`, 'err');
+            isConnecting = false;
             return;
           }
 
-          const handshakeTimer = setTimeout(() => {
+          // WebRTC ネゴシエーション待機時間を 8.0 秒に設定（接続確立を邪魔しない）
+          activeHandshakeTimer = setTimeout(() => {
             if (!connected && retryCount < MAX_RETRIES && peer && !peer.destroyed) {
-              appendNetLog(`相手の待機を確認中... (${retryCount}/${MAX_RETRIES})`, 'warn');
+              appendNetLog(`接続確立待機中... 再試行 (${retryCount}/${MAX_RETRIES})`, 'warn');
               connectToHost();
             }
-          }, 3500);
+          }, 8000);
 
           const onHostOpen = () => {
-            clearTimeout(handshakeTimer);
+            if (hostOpened) return;
+            hostOpened = true;
+            clearGuestTimers();
             connected = true;
+            isConnecting = false;
             clearConnTimeout();
             hideConnectionAlert();
             startHeartbeat();
@@ -9681,7 +9674,7 @@
 
           hostConn.on('data', (data) => {
             if (data && data.type === 'auth_error') {
-              clearTimeout(handshakeTimer);
+              clearGuestTimers();
               clearConnTimeout();
               appendNetLog(`❌ 認証エラー: ${data.reason}`, 'err');
               showJoinError('❌ ' + (data.reason || 'パスワードが違います'));
@@ -9690,13 +9683,15 @@
               });
               return;
             }
-            onHostOpen();
+            if (!connected) onHostOpen();
             handleIncomingData(data, cleanRoom);
           });
 
           const onHostLost = () => {
             if (!connected) return;
             connected = false;
+            hostOpened = false;
+            clearGuestTimers();
             clearConnTimeout();
             appendNetLog('ホストとの通信が切断されました', 'err');
             for (const rid in remotePlayers) {
@@ -9730,15 +9725,18 @@
           console.warn('Guest peer error:', err);
           if (!connected) {
             if (err.type === 'peer-unavailable' && retryCount < MAX_RETRIES) {
-              appendNetLog(`ホストが待機中または準備中です... 友達が画面を開くのを待機中 (${retryCount}/${MAX_RETRIES})`, 'warn');
-              guestReconnectTimer = setTimeout(() => {
+              clearGuestTimers();
+              setVisualStatus(`🟡 友達の待機を確認中... (${retryCount}/${MAX_RETRIES})`, '#ffca28');
+              appendNetLog(`ホストが準備中です。友達が画面を開くのを待機中 (${retryCount}/${MAX_RETRIES})...`, 'warn');
+              activeReconnectTimer = setTimeout(() => {
                 if (!connected && peer && !peer.destroyed) {
                   connectToHost();
                 }
-              }, 2000);
+              }, 2500);
               return;
             }
 
+            clearGuestTimers();
             clearConnTimeout();
             setVisualStatus('🔴 接続先が見つかりません (' + err.type + ')', '#ff1744');
             showConnectionAlert(
