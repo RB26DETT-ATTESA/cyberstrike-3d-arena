@@ -6740,6 +6740,10 @@
       localPlayer.kills = 0;
       localPlayer.deaths = 0;
       localPlayer.hsKills = 0;
+      localPlayer.isDead = false;
+      localPlayer.isRespawning = false; // ★無敵バグ解消
+      localPlayer.shieldUntil = 0;
+      localPlayer.shielded = false;
       Object.values(remotePlayers).forEach(p => {
         if (p) {
           p.kills = 0;
@@ -8099,6 +8103,7 @@
           clearInterval(interval);
           modal.classList.remove('active');
           localPlayer.isDead = false;
+          localPlayer.isRespawning = false; // ★無敵バグ解消
           respawnLocalPlayer();
         }
       }, 50);
@@ -8447,9 +8452,11 @@
       localPlayer.vz = 0;
       localPlayer.hp = MAX_HP;
       localPlayer.isDead = false;
+      localPlayer.isRespawning = false; // ★無敵バグ解消: リスポーン完了で即解除
       localPlayer.regenPool = 0;
       localPlayer.bhopMult = 1.0;
       localPlayer.shieldUntil = performance.now() + 1500;
+      localPlayer.shielded = true;
       updateHpHud();
       updateCameraFovAndScope();
     }
@@ -9917,6 +9924,9 @@
               p.deaths = existing.deaths;
               p.hsKills = existing.hsKills;
               p.shielded = isShielded(existing);
+              if (matchConfig.mode === 'tdm' && existing.team) {
+                p.team = existing.team; // ホストが決定したTDMチーム権威を保護
+              }
             } else {
               p.hp = MAX_HP;
               p.kills = 0;
@@ -10130,6 +10140,11 @@
       // TDM時：味方へのダメージは無効
       if (matchConfig.mode === 'tdm' && targetObj.team && attackerObj && attackerObj.team && targetObj.team === attackerObj.team) {
         return;
+      }
+
+      // ホスト自身のフラグ整合性を安全保証（生存中ならリスポーン中フラグを強制クリア）
+      if (targetObj === localPlayer && !localPlayer.isDead && localPlayer.hp > 0) {
+        localPlayer.isRespawning = false;
       }
 
       // 無敵シールド中、または死亡中・リスポーン待機中の場合はダメージ無効
