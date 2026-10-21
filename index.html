@@ -380,6 +380,7 @@
       border-radius: 5px;
       font-size: 11px;
       font-weight: 800;
+      white-space: nowrap;
       cursor: pointer;
       transition: all 0.12s ease;
     }
@@ -3550,6 +3551,44 @@
         padding: 4px 10px !important;
         font-size: 10.5px !important;
       }
+
+      /* 1人用練習（グリッドショットHUD）のモバイル横画面最適化 */
+      #gridshot-hud {
+        top: 4px !important;
+        padding: 3px 8px !important;
+        gap: 6px !important;
+        max-width: 96vw !important;
+        border-radius: 6px !important;
+        box-shadow: 0 0 10px rgba(0, 229, 255, 0.25) !important;
+      }
+      .gs-stat {
+        gap: 0px !important;
+      }
+      .gs-label {
+        font-size: 8px !important;
+      }
+      .gs-val {
+        font-size: 12px !important;
+      }
+      .gs-btn {
+        padding: 3px 7px !important;
+        font-size: 9.5px !important;
+        white-space: nowrap !important;
+      }
+
+      /* 戦闘中右上ステータスパネルのモバイル最適化 */
+      #top-right-panel {
+        top: 6px !important;
+        right: max(8px, env(safe-area-inset-right)) !important;
+        max-width: 160px !important;
+      }
+      #hud-net-status {
+        padding: 3px 6px !important;
+        font-size: 9.5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
     }
 
   </style>
@@ -4289,6 +4328,10 @@
             <span class="icon">⚙️</span>
             <span class="label">SETTINGS (個人設定)</span>
           </button>
+          <button id="pause-reset-hud-btn" class="btn-fps-pause btn-pause-secondary" type="button">
+            <span class="icon">📱</span>
+            <span class="label">RESET TOUCH HUD (ボタン配置初期化)</span>
+          </button>
           <button id="pause-leave-btn" class="btn-fps-pause btn-pause-danger" type="button">
             <span class="icon">🚪</span>
             <span class="label">RETURN TO LOBBY (ロビーへ戻る)</span>
@@ -4571,9 +4614,14 @@
                 <p style="font-size:11px; color:var(--text-dim); margin-bottom:10px; line-height:1.5;">
                   スマートフォン・タブレット操作時の射撃・ジャンプ・しゃがみ・ジョイスティック等のボタン配置、各ボタンのサイズ（50%〜180%）、不透明度を自由にドラッグして直感的にカスタマイズできます。
                 </p>
-                <button id="btn-open-hud-editor" class="btn btn-primary" type="button" style="width:100%; padding:10px; font-weight:800; font-size:13px; letter-spacing:1px;">
-                  📱 ボタン配置エディタを開く (Customize HUD)
-                </button>
+                <div style="display:flex; gap:8px; margin-top:8px;">
+                  <button id="btn-open-hud-editor" class="btn btn-primary" type="button" style="flex:1; padding:10px; font-weight:800; font-size:12px; letter-spacing:0.5px;">
+                    📱 ボタン配置エディタを開く (Customize HUD)
+                  </button>
+                  <button id="btn-quick-reset-hud" class="btn btn-secondary" type="button" style="padding:10px 14px; font-size:12px; font-weight:700;">
+                    🔄 初期配置に戻す
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -5536,6 +5584,23 @@
       }
     }
 
+    function cleanupGridshot() {
+      if (gridTimerInterval) {
+        clearInterval(gridTimerInterval);
+        gridTimerInterval = null;
+      }
+      gridTargets.length = 0;
+      gridActiveIndices.clear();
+      const gsHud = document.getElementById('gridshot-hud');
+      if (gsHud) {
+        gsHud.classList.remove('active');
+        gsHud.style.display = 'none';
+      }
+      const mobTopBar = document.getElementById('mob-top-bar');
+      if (mobTopBar) mobTopBar.style.display = 'flex';
+      config.gameMode = 'arena';
+    }
+
     function startGridshotTraining() {
       closeGridshotModal();
 
@@ -5551,6 +5616,25 @@
       roomState = 'IN_MATCH';
       overlay.classList.add('hidden');
       isGameActive = true;
+
+      // モバイルコントロールを確実に有効化
+      if (isMobile) {
+        mobileControlsEl.classList.add('active');
+        // グリッドショットHUDと被らないよう上部ロビー/スコアバーを非表示
+        const mobTopBar = document.getElementById('mob-top-bar');
+        if (mobTopBar) mobTopBar.style.display = 'none';
+      }
+
+      // グリッドHUDを表示
+      const gsHud = document.getElementById('gridshot-hud');
+      if (gsHud) {
+        gsHud.classList.add('active');
+        gsHud.style.display = 'flex';
+      }
+      resetGridshotStats();
+
+      // 練習中は戦闘用ネットHUDを非表示
+      if (hudNetStatus) hudNetStatus.style.display = 'none';
 
       localPlayer.yaw = 0;
       localPlayer.pitch = 0;
@@ -5575,8 +5659,7 @@
           }
           gridTimeRemaining--;
           if (gridTimeRemaining <= 0) {
-            clearInterval(gridTimerInterval);
-            gridTimerInterval = null;
+            cleanupGridshot();
             playSound('elim');
             alert('🎯 練習時間終了！\n\nスコア: ' + gridStats.score + '点\n命中率: ' + document.getElementById('gs-val-acc').textContent + '\n秒間破壊数: ' + document.getElementById('gs-val-tps').textContent);
             openLobby();
@@ -6038,6 +6121,23 @@
       updateCameraFovAndScope();
     }
 
+    // 画面下部の武器スロット（AR / SR / DMR）直接タップ切替
+    ['ar', 'sr', 'dmr'].forEach(wId => {
+      const slotEl = document.getElementById('slot-' + wId);
+      if (slotEl) {
+        slotEl.style.cursor = 'pointer';
+        slotEl.style.pointerEvents = 'auto';
+        slotEl.addEventListener('click', (e) => {
+          e.stopPropagation();
+          switchWeapon(wId);
+        });
+        slotEl.addEventListener('touchstart', (e) => {
+          e.stopPropagation();
+          switchWeapon(wId);
+        }, { passive: true });
+      }
+    });
+
     function updateCameraFovAndScope() {
       const holdScopeKey = Boolean(
         pressedCodes['MouseRight'] ||
@@ -6226,6 +6326,7 @@
     }
 
     function openTitleMenu(tab = 'create') {
+      cleanupGridshot();
       roomState = 'TITLE';
       isGameActive = false;
       isMouseDown = false;
@@ -6409,6 +6510,7 @@
     }
 
     function openLobby() {
+      cleanupGridshot();
       roomState = 'LOBBY';
       isGameActive = false;
       isMouseDown = false;
@@ -6418,6 +6520,9 @@
       mobileControlsEl.classList.remove('active');
       const tdmBar = document.getElementById('tdm-hud-bar');
       if (tdmBar) tdmBar.style.display = 'none';
+
+      // ネットステータスをロビー用に復帰
+      if (hudNetStatus) hudNetStatus.style.display = '';
 
       switchView('lobby');
       overlay.classList.remove('hidden');
@@ -6536,6 +6641,7 @@
     }
 
     function executeMatchStart() {
+      cleanupGridshot();
       roomState = 'IN_MATCH';
       overlay.classList.add('hidden');
       isGameActive = true;
@@ -6562,6 +6668,19 @@
       if (tdmBar) {
         tdmBar.style.display = (matchConfig.mode === 'tdm') ? 'flex' : 'none';
         updateTdmScoreHud();
+      }
+
+      // 上部バー表示
+      const mobTopBar = document.getElementById('mob-top-bar');
+      if (mobTopBar) mobTopBar.style.display = 'flex';
+
+      // 戦闘中の右上のネットステータスをコンパクト化（または非表示）
+      if (hudNetStatus) {
+        if (isMobile) {
+          hudNetStatus.style.display = 'none'; // モバイルではボタン被りを防ぐため非表示
+        } else {
+          hudNetStatus.style.display = '';
+        }
       }
 
       if (isMobile) {
@@ -6868,6 +6987,15 @@
     // Pause Settings
     const pauseSettings = document.getElementById('pause-settings-btn');
     if (pauseSettings) pauseSettings.addEventListener('click', openSettingsModal);
+
+    const pauseResetHud = document.getElementById('pause-reset-hud-btn');
+    if (pauseResetHud) pauseResetHud.addEventListener('click', () => {
+      if (confirm('タッチHUDの配置を初期位置にリセットしますか？')) {
+        try { localStorage.removeItem('cyberstrike_touch_hud_v1'); } catch (e) {}
+        applyTouchHudLayout(DEFAULT_HUD_LAYOUT);
+        showKillfeedMessage('📱 タッチHUDを初期配置にリセットしました', '#00e5ff');
+      }
+    });
 
     // Pause Return to Lobby
     const pauseLeave = document.getElementById('pause-leave-btn');
@@ -7225,13 +7353,13 @@
      * 10. モバイル専用タッチコントロール ＆ HUD配置エディタ
      *************************************************************************/
     const DEFAULT_HUD_LAYOUT = {
-      'joystick-base': { leftPct: 8, topPct: 60, scale: 1.0, opacity: 0.85, name: '移動ジョイスティック' },
-      'mob-fire-top': { leftPct: 85, topPct: 12, scale: 1.0, opacity: 0.90, name: '射撃ボタン (人差し指/上)' },
-      'mob-fire-bottom': { leftPct: 74, topPct: 62, scale: 1.0, opacity: 0.85, name: '射撃ボタン (親指/下)' },
-      'mob-jump-btn': { leftPct: 87, topPct: 58, scale: 1.0, opacity: 0.85, name: 'ジャンプ' },
-      'mob-crouch-btn': { leftPct: 87, topPct: 78, scale: 1.0, opacity: 0.85, name: 'しゃがみ' },
-      'mob-weapon-btn': { leftPct: 74, topPct: 80, scale: 1.0, opacity: 0.85, name: '武器切替' },
-      'mob-scope-btn': { leftPct: 74, topPct: 44, scale: 1.0, opacity: 0.85, name: 'スナイパースコープ' },
+      'joystick-base': { leftPct: 8, topPct: 56, scale: 1.0, opacity: 0.85, name: '移動ジョイスティック' },
+      'mob-fire-top': { leftPct: 8, topPct: 15, scale: 0.95, opacity: 0.85, name: '射撃ボタン (人差し指/左上)' },
+      'mob-fire-bottom': { leftPct: 75, topPct: 62, scale: 1.05, opacity: 0.90, name: '射撃ボタン (親指/右下)' },
+      'mob-jump-btn': { leftPct: 87, topPct: 54, scale: 1.0, opacity: 0.85, name: 'ジャンプ' },
+      'mob-crouch-btn': { leftPct: 87, topPct: 76, scale: 1.0, opacity: 0.85, name: 'しゃがみ' },
+      'mob-weapon-btn': { leftPct: 75, topPct: 80, scale: 0.95, opacity: 0.85, name: '武器切替' },
+      'mob-scope-btn': { leftPct: 75, topPct: 40, scale: 0.95, opacity: 0.85, name: 'スナイパースコープ' },
       'mob-top-bar': { leftPct: 50, topPct: 2, scale: 1.0, opacity: 0.95, name: '上部バー (ロビー/スコア)' }
     };
 
@@ -7492,6 +7620,19 @@
       cancelBtn.addEventListener('click', () => {
         overlay.classList.remove('active');
       });
+
+      const quickResetBtn = document.getElementById('btn-quick-reset-hud');
+      if (quickResetBtn) {
+        quickResetBtn.addEventListener('click', () => {
+          if (confirm('タッチHUDの配置を使いやすい初期デフォルト位置にリセットしますか？')) {
+            try {
+              localStorage.removeItem('cyberstrike_touch_hud_v1');
+            } catch (e) {}
+            applyTouchHudLayout(DEFAULT_HUD_LAYOUT);
+            showKillfeedMessage('📱 タッチHUDを初期配置にリセットしました', '#00e5ff');
+          }
+        });
+      }
     }
 
     initHudEditor();
