@@ -4239,6 +4239,9 @@
                 <span class="start-icon">▶</span>
                 <span class="start-text">START MATCH (全員で試合開始)</span>
               </button>
+              <div style="font-size:10px; color:#94a3b8; text-align:center; margin-top:4px;">
+                💡 1人でも即座に試合開始可能（友達が後から来ても自動で途中合流できます）
+              </div>
             </div>
 
             <!-- Guest Waiting / Join In-Progress Banner -->
@@ -6472,6 +6475,7 @@
           const rawId = createRoomInput ? createRoomInput.value : '';
           const rawPw = createPwInput ? createPwInput.value : '';
           const cleanId = sanitizeRoomId(rawId);
+          isHost = true;
           matchConfig.mode = titleCreateMode;
           matchConfig.scoreLimit = titleCreateScore;
           updateRoomConfigUI();
@@ -6490,6 +6494,8 @@
             showJoinError('⚠️ Room ID を入力してください');
             return;
           }
+          isHost = false;
+          updateRoomConfigUI();
           startGuestRoom(cleanId, rawPw);
           openLobby();
         });
@@ -9188,6 +9194,7 @@
 
     // 1. ホストとして部屋を開設（自分が主催者・パスワード対応）
     function startHostRoom(roomId, password = '') {
+      isHost = true;
       const cleanRoom = sanitizeRoomId(roomId);
       currentRoomCleanId = cleanRoom;
       currentRoomPassword = String(password || '').trim();
@@ -9200,6 +9207,7 @@
         isHost = true;
         updateRoleBanner('host', cleanRoom);
         updateHostUiPermissions();
+        updateRoomConfigUI();
         setVisualStatus('🟡 ホスト部屋を開設中... (Room: ' + cleanRoom + ')', '#ffca28');
         appendNetLog(`👑 ホスト部屋開設開始... (Room: ${cleanRoom}${currentRoomPassword ? ' [パスワード保護]' : ''})`, 'info');
 
@@ -9226,6 +9234,7 @@
           startHeartbeat();
           localPlayer.id = id;
           localPlayer.ping = 0;
+          isHost = true;
           appendNetLog(`👑 ホスト開設完了！ 待機中... (Room ID: ${cleanRoom})`, 'ok');
           appendNetLog('💡 友達にRoom IDや招待URLを送り、このブラウザを開いたまま待機してください', 'info');
           if (config.gameMode === 'gridshot') {
@@ -9234,6 +9243,7 @@
             buildArenaMap(config.mapId, config.mapTheme);
           }
           respawnLocalPlayer();
+          updateRoomConfigUI();
           refreshConnectionStatusBanner();
           updateLeaderboardUI();
         });
@@ -9344,6 +9354,7 @@
     // 2. ゲストとしてホストへ直接参加（パスワード認証付き）
     let connected = false;
     function startGuestRoom(roomId, password = '') {
+      isHost = false;
       const cleanRoom = sanitizeRoomId(roomId);
       currentRoomCleanId = cleanRoom;
       currentRoomPassword = String(password || '').trim();
@@ -9357,6 +9368,7 @@
         connected = false;
         updateRoleBanner('guest', cleanRoom);
         updateHostUiPermissions();
+        updateRoomConfigUI();
         setVisualStatus('🟡 ホストに接続中... (' + cleanRoom + ' を探索)', '#ffca28');
 
         let retryCount = 0;
@@ -9637,6 +9649,9 @@
 
     const manualReconnectBtn = document.getElementById('manual-reconnect-btn');
     if (manualReconnectBtn) manualReconnectBtn.addEventListener('click', retryCurrentRoom);
+
+    const newRoomBtn = document.getElementById('new-room-btn');
+    if (newRoomBtn) newRoomBtn.addEventListener('click', createFreshHostRoom);
 
     const guestRetryBtn = document.getElementById('guest-retry-btn');
     if (guestRetryBtn) guestRetryBtn.addEventListener('click', retryCurrentRoom);
