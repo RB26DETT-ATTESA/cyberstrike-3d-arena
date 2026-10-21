@@ -4704,10 +4704,13 @@
     /*************************************************************************
      * 0. デバイス判定（スマートフォン・タブレット vs PC）
      *************************************************************************/
-    const isMobile = ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    // Mac / Windows ノートPC（マルチタッチトラックパッドや液晶タブ等）のモバイル誤判定を完全根絶
+    const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isMacintosh = /Macintosh|MacIntel|MacPPC|Mac68K/i.test(navigator.userAgent) && !/iPad/i.test(navigator.userAgent);
+    const isMobile = isMobileUserAgent && !isMacintosh && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
     const deviceBadge = document.getElementById('device-mode-badge');
     if (deviceBadge) {
-      deviceBadge.textContent = isMobile ? '📱 スマホ・タッチ操作モード' : '💻 PCマウス＆キーボードモード';
+      deviceBadge.textContent = isMobile ? '📱 スマホ・タッチ操作モード' : (isMacintosh ? '💻 Mac PCモード (マウス/トラックパッド)' : '💻 PCマウス＆キーボードモード');
     }
 
     /*************************************************************************
@@ -6320,10 +6323,10 @@
 
       const getPlayerPingLabel = (p, isSelf, isPlayerHost) => {
         if (isSelf) {
-          if (isHost) return 'HOST (0ms)';
+          if (isHost) return 'HOST (主催者 0ms)';
           return (connected && localPlayer.ping > 0) ? `${localPlayer.ping}ms` : (connected ? '計測中...' : '未接続');
         }
-        if (isPlayerHost) return 'HOST (0ms)';
+        if (isPlayerHost) return 'HOST (主催者 0ms)';
         return (p.ping > 0) ? `${p.ping}ms` : '接続中...';
       };
 
@@ -7394,8 +7397,8 @@
       if (!isGameActive || (!isPointerLocked && !isMobile) || localPlayer.isDead) return;
       if (isPointerLocked) {
         // PointerLock 特有のOSポインタワープ異常スパイク（±280px以上の瞬間跳躍）を除外
-        let mx = e.movementX || 0;
-        let my = e.movementY || 0;
+        let mx = typeof e.movementX === 'number' ? e.movementX : (e.webkitMovementX || 0);
+        let my = typeof e.movementY === 'number' ? e.movementY : (e.webkitMovementY || 0);
         if (Math.abs(mx) > 280 || Math.abs(my) > 280) {
           mx = Math.max(-120, Math.min(120, mx));
           my = Math.max(-120, Math.min(120, my));
@@ -7421,14 +7424,16 @@
         return;
       }
 
-      if (e.button === 0) {
-        isMouseDown = true;
-        tryShoot();
-      } else if (e.button === 2) {
+      const isRightClick = (e.button === 2) || (e.button === 0 && e.ctrlKey);
+
+      if (isRightClick) {
         pressedCodes['MouseRight'] = true;
         if (localPlayer.weapon === 'sr') {
           updateCameraFovAndScope();
         }
+      } else if (e.button === 0) {
+        isMouseDown = true;
+        tryShoot();
       } else if (e.button === 1) {
         pressedCodes['MouseMiddle'] = true;
       }
@@ -7437,10 +7442,12 @@
     document.addEventListener('mouseup', (e) => {
       if (e.button === 0) {
         isMouseDown = false;
-      } else if (e.button === 2) {
+      }
+      if (e.button === 2 || (e.button === 0 && e.ctrlKey)) {
         pressedCodes['MouseRight'] = false;
         updateCameraFovAndScope();
-      } else if (e.button === 1) {
+      }
+      if (e.button === 1) {
         pressedCodes['MouseMiddle'] = false;
       }
     });
@@ -10380,7 +10387,7 @@
       sbTbody.innerHTML = list.map(item => {
         const kd = item.deaths === 0 ? item.kills.toFixed(2) : (item.kills / item.deaths).toFixed(2);
         const hsPct = item.kills === 0 ? '0%' : Math.round((item.hsKills / item.kills) * 100) + '%';
-        const pingStr = (isHost && item.self) ? 'HOST (0 ms)' : (item.ping + ' ms');
+        const pingStr = (isHost && item.self) ? 'HOST (主催者 0ms)' : (item.ping + ' ms');
         return `
           <tr class="${item.self ? 'self-row' : ''}">
             <td>${escapeHtml(item.name)}${item.self ? ' (自分)' : ''}</td>
@@ -10443,8 +10450,14 @@
         const hudPingEl = document.getElementById('hud-ping');
         if (hudPingEl) {
           if (isHost) {
-            const firstClient = Object.values(remotePlayers)[0];
-            hudPingEl.textContent = firstClient ? (firstClient.ping > 0 ? `相手: ${firstClient.ping} ms` : '相手接続中') : 'HOST (待機中)';
+            const clients = Object.values(remotePlayers);
+            if (clients.length > 0) {
+              const pings = clients.map(c => c.ping || 0).filter(p => p > 0);
+              const minPing = pings.length > 0 ? Math.min(...pings) : 0;
+              hudPingEl.textContent = minPing > 0 ? `相手最速: ${minPing} ms (${clients.length}人)` : `相手接続中 (${clients.length}人)`;
+            } else {
+              hudPingEl.textContent = 'HOST (待機中)';
+            }
           } else {
             hudPingEl.textContent = (connected && localPlayer.ping > 0) ? `${localPlayer.ping} ms` : (connected ? '計測中...' : '未接続');
           }
