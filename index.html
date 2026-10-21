@@ -3405,8 +3405,39 @@
         padding: 4px 8px !important;
         font-size: 11px !important;
       }
+      .tdm-roster-split {
+        gap: 4px !important;
+      }
+      .team-roster-col {
+        padding: 2px !important;
+        border-radius: 6px !important;
+        min-height: 80px !important;
+      }
+      .tdm-actions-bar {
+        margin-top: 4px !important;
+        gap: 6px !important;
+      }
+      .btn-team-act {
+        padding: 4px 8px !important;
+        font-size: 10px !important;
+      }
+      .team-header {
+        padding: 2px 6px !important;
+        min-height: 22px !important;
+      }
+      .team-header .team-icon {
+        font-size: 12px !important;
+      }
+      .team-header .team-title {
+        font-size: 10px !important;
+        font-weight: 800 !important;
+      }
+      .team-header .team-count {
+        font-size: 9px !important;
+      }
       .team-players-list {
         max-height: calc(100vh - 190px) !important;
+        max-height: calc(100dvh - 190px) !important;
       }
       .net-log-container {
         display: none !important; /* スマホ横画面では通信ログ枠を非表示にしてスッキリ */
@@ -6259,7 +6290,7 @@
         if (ffaList) {
           ffaList.innerHTML = allPlayers.map(p => {
             const isSelf = (p.id === localPlayer.id);
-            const isPlayerHost = isSelf ? isHost : Boolean(p.isHost || (typeof currentRoomId === 'string' && currentRoomId && p.id === currentRoomId));
+            const isPlayerHost = isSelf ? isHost : Boolean(p.isHost || (hostConn && p.id === hostConn.peer) || p.id.startsWith('vsa-room-') || (currentRoomCleanId && p.id.includes(currentRoomCleanId)));
             return `
               <div class="roster-player-row ${isSelf ? 'self' : ''}">
                 <div class="player-row-left">
@@ -6280,19 +6311,27 @@
         const redBadge = document.getElementById('red-count-badge');
         const blueBadge = document.getElementById('blue-count-badge');
 
-        const redPlayers = allPlayers.filter(p => p.team === 'red');
-        const bluePlayers = allPlayers.filter(p => p.team === 'blue');
+        const redPlayers = allPlayers.filter(p => {
+          if (p.team === 'red') return true;
+          if (p.team === 'blue') return false;
+          return (localPlayer.team === 'red') ? (p.id === localPlayer.id) : (p.id !== localPlayer.id);
+        });
+        const bluePlayers = allPlayers.filter(p => {
+          if (p.team === 'blue') return true;
+          if (p.team === 'red') return false;
+          return (localPlayer.team === 'blue') ? (p.id === localPlayer.id) : (p.id !== localPlayer.id);
+        });
 
         if (redBadge) redBadge.textContent = redPlayers.length + '人';
         if (blueBadge) blueBadge.textContent = bluePlayers.length + '人';
 
         const renderTeamRows = (arr) => arr.map(p => {
           const isSelf = (p.id === localPlayer.id);
-          const isPlayerHost = isSelf ? isHost : Boolean(p.isHost || (typeof currentRoomId === 'string' && currentRoomId && p.id === currentRoomId));
+          const isPlayerHost = isSelf ? isHost : Boolean(p.isHost || (hostConn && p.id === hostConn.peer) || p.id.startsWith('vsa-room-') || (currentRoomCleanId && p.id.includes(currentRoomCleanId)));
           return `
             <div class="roster-player-row ${isSelf ? 'self' : ''}">
               <div class="player-row-left">
-                <span>${isPlayerHost ? '👑' : '•'}</span>
+                <span>${isPlayerHost ? '👑' : '🎮'}</span>
                 <span>${escapeHtml(p.name || 'Player')} ${isSelf ? '(YOU)' : ''}</span>
               </div>
               <div class="player-row-right">
@@ -7961,7 +8000,13 @@
     }
 
     function isShielded(entity) {
-      return (entity.shieldUntil || 0) > performance.now();
+      if (!entity) return false;
+      const now = performance.now();
+      if ((entity.shieldUntil || 0) > now) {
+        return true;
+      }
+      entity.shielded = false;
+      return false;
     }
 
     function startDeathRespawnSequence() {
@@ -8353,11 +8398,6 @@
       if (config.gameMode === 'gridshot') return;
       if (!pData || !pData.id || pData.id === localPlayer.id || pData.id === 'local') return;
 
-      if (isHost) {
-        const conn = clientConns[pData.id];
-        if (!conn || !conn.open) return;
-      }
-
       let rp = remotePlayers[pData.id];
       const pal = getActivePalette();
 
@@ -8366,6 +8406,9 @@
       const safeZ = Number.isFinite(pData.z) ? pData.z : 0;
       const safeYaw = Number.isFinite(pData.yaw) ? pData.yaw : 0;
       const safePitch = Number.isFinite(pData.pitch) ? pData.pitch : 0;
+
+      const pTeam = pData.team || (rp ? rp.team : (localPlayer.team === 'red' ? 'blue' : 'red'));
+      const pIsHost = (typeof pData.isHost === 'boolean') ? pData.isHost : (rp ? rp.isHost : Boolean(pData.id.startsWith('vsa-room-')));
 
       if (!rp) {
         const group = new THREE.Group();
@@ -8415,6 +8458,8 @@
         rp = {
           id: pData.id,
           name: pData.name || pData.id.slice(0, 8),
+          team: pTeam,
+          isHost: pIsHost,
           x: safeX,
           y: safeY,
           z: safeZ,
@@ -8437,7 +8482,7 @@
           hsKills: typeof pData.hsKills === 'number' ? pData.hsKills : 0,
           ping: typeof pData.ping === 'number' ? pData.ping : 0,
           shielded: Boolean(pData.shielded),
-          shieldUntil: pData.shielded ? (performance.now() + 500) : 0,
+          shieldUntil: 0,
           lastSeen: performance.now(),
           group,
           bodyMesh,
@@ -8457,6 +8502,7 @@
           lastHpPct: -1
         };
         remotePlayers[pData.id] = rp;
+        updateAllRemoteColors();
         refreshConnectionStatusBanner();
         renderRosterList();
         if (isHost) broadcastRoomSync();
@@ -8502,6 +8548,15 @@
           renderRosterList();
           if (isHost) broadcastRoomSync();
         }
+        if (pData.team && rp.team !== pData.team) {
+          rp.team = pData.team;
+          updateAllRemoteColors();
+          renderRosterList();
+          if (isHost) broadcastRoomSync();
+        }
+        if (typeof pData.isHost === 'boolean') {
+          rp.isHost = pData.isHost;
+        }
         rp.yaw = safeYaw;
         rp.pitch = safePitch;
         rp.crouch = Boolean(pData.crouch);
@@ -8515,7 +8570,10 @@
             if (roomState === 'LOBBY') renderRosterList();
           }
         }
-        if (typeof pData.shielded === 'boolean') rp.shielded = pData.shielded;
+        if (typeof pData.shielded === 'boolean') {
+          rp.shielded = pData.shielded;
+          if (!pData.shielded) rp.shieldUntil = 0;
+        }
         rp.lastSeen = now;
       }
     }
@@ -8849,7 +8907,7 @@
           const targetId = hit.object.userData.playerId;
           const rp = remotePlayers[targetId];
           // TDM時：味方プレイヤーへの着弾はスキップ (同士討ち無効 & 貫通)
-          if (matchConfig.mode === 'tdm' && rp && rp.team === localPlayer.team) {
+          if (matchConfig.mode === 'tdm' && rp && rp.team && localPlayer.team && rp.team === localPlayer.team) {
             continue;
           }
         }
@@ -8864,7 +8922,7 @@
           const targetId = validHit.object.userData.playerId;
           const rp = remotePlayers[targetId];
 
-          if (rp && (rp.shielded || isShielded(rp))) {
+          if (rp && isShielded(rp)) {
             spawnDamagePopup(validHit.point, '🛡️ SHIELD', false);
           } else if (rp) {
             const isHead = Boolean(validHit.object.userData.isHead);
@@ -9275,11 +9333,14 @@
             appendNetLog(`✅ ゲスト (${conn.peer}) とP2P接続確立！ 対戦可能`, 'ok');
 
             const guestName = (conn.metadata && conn.metadata.name) ? conn.metadata.name : ('Player_' + conn.peer.slice(-4));
+            // TDM時はホストと異なるチームを初期割り当て
+            const assignedTeam = (localPlayer.team === 'red') ? 'blue' : 'red';
             if (!remotePlayers[conn.peer]) {
               createOrUpdateRemotePlayer({
                 id: conn.peer,
                 name: guestName,
-                team: 'red',
+                team: assignedTeam,
+                isHost: false,
                 ping: 0
               });
             }
@@ -9290,12 +9351,23 @@
             try {
               const validMapId = MAP_DEFINITIONS[currentArenaMapId] ? currentArenaMapId : 'standard';
               const validThemeId = MAP_THEMES[currentArenaThemeId] ? currentArenaThemeId : 'cyber';
+              const existingList = [
+                { id: localPlayer.id, name: localPlayer.name, team: localPlayer.team, isHost: true, ping: 0 }
+              ];
+              Object.values(remotePlayers).forEach(p => {
+                if (p && p.id && p.id !== conn.peer) {
+                  existingList.push({ id: p.id, name: p.name, team: p.team, isHost: Boolean(p.isHost), ping: p.ping || 0 });
+                }
+              });
               conn.send({
                 type: 'welcome',
                 hostId: localPlayer.id,
+                hostName: localPlayer.name,
+                hostTeam: localPlayer.team,
+                team: assignedTeam,
                 mapId: validMapId,
                 mapTheme: validThemeId,
-                players: []
+                players: existingList
               });
             } catch (e) {
               appendNetLog(`初期ウェルカム送信エラー: ${e.message}`, 'warn');
@@ -9444,6 +9516,7 @@
                 player: {
                   id: localPlayer.id,
                   name: localPlayer.name,
+                  team: localPlayer.team,
                   x: Number(localPlayer.x.toFixed(3)),
                   y: Number(localPlayer.y.toFixed(3)),
                   z: Number(localPlayer.z.toFixed(3)),
@@ -9783,9 +9856,22 @@
           if (data.team) {
             localPlayer.team = data.team;
           }
-          if (data.hostId && !remotePlayers[data.hostId]) {
-            createOrUpdateRemotePlayer({ id: data.hostId, name: 'Host_' + data.hostId.slice(-4), isHost: true });
+          if (data.hostId) {
+            createOrUpdateRemotePlayer({
+              id: data.hostId,
+              name: data.hostName || ('Host_' + data.hostId.slice(-4)),
+              team: data.hostTeam || (localPlayer.team === 'red' ? 'blue' : 'red'),
+              isHost: true
+            });
           }
+          if (Array.isArray(data.players)) {
+            data.players.forEach(p => {
+              if (p && p.id && p.id !== localPlayer.id) {
+                createOrUpdateRemotePlayer(p);
+              }
+            });
+          }
+          updateAllRemoteColors();
           updateRoomConfigUI();
           renderRosterList();
         }
@@ -9864,11 +9950,13 @@
         if (isHost && senderId && remotePlayers[senderId]) {
           if (data.name) remotePlayers[senderId].name = data.name;
           if (data.team) remotePlayers[senderId].team = data.team;
+          updateAllRemoteColors();
+          renderRosterList();
           broadcastRoomSync();
         }
       } else if (data.type === 'laser') {
         if (senderId !== localPlayer.id) {
-          if (isHost && remotePlayers[senderId]) {
+          if (remotePlayers[senderId]) {
             remotePlayers[senderId].shieldUntil = 0;
             remotePlayers[senderId].shielded = false;
           }
@@ -9888,6 +9976,11 @@
       if (attackerObj) {
         attackerObj.shieldUntil = 0;
         attackerObj.shielded = false;
+      }
+
+      // TDM時：味方へのダメージは無効
+      if (matchConfig.mode === 'tdm' && targetObj.team && attackerObj && attackerObj.team && targetObj.team === attackerObj.team) {
+        return;
       }
 
       // 無敵シールド中、または死亡中・リスポーン待機中の場合はダメージ無効
@@ -9960,19 +10053,19 @@
         if (targetId === localPlayer.id) {
           updateHpHud();
           triggerDamageFeedback();
-        } else if (clientConns[targetId] && clientConns[targetId].open) {
-          clientConns[targetId].send({
-            type: 'hurt',
-            targetId: targetId,
-            hp: targetObj.hp
-          });
         }
+        broadcastFromHost({
+          type: 'hurt',
+          targetId: targetId,
+          hp: targetObj.hp
+        });
       }
       updateLeaderboardUI();
     }
 
     // 45Hz 超低遅延状態同期ループ（タイマースロットリング＆座標NaN保護）
     let lastNetworkTickTime = 0;
+    let lastPingSendTime = 0;
     setInterval(() => {
       if (config.gameMode === 'gridshot') return;
       const now = performance.now();
@@ -9989,6 +10082,8 @@
         const allPlayers = [{
           id: localPlayer.id,
           name: localPlayer.name,
+          team: localPlayer.team,
+          isHost: true,
           x: myX,
           y: myY,
           z: myZ,
@@ -10017,6 +10112,8 @@
           allPlayers.push({
             id: rp.id,
             name: rp.name,
+            team: rp.team || 'red',
+            isHost: rp.isHost || false,
             x: rX,
             y: rY,
             z: rZ,
@@ -10047,12 +10144,15 @@
         const myYaw = Number.isFinite(localPlayer.yaw) ? Number(localPlayer.yaw.toFixed(3)) : 0;
         const myPitch = Number.isFinite(localPlayer.pitch) ? Number(localPlayer.pitch.toFixed(3)) : 0;
 
-        hostConn.send({
+        const shouldSendPing = (now - lastPingSendTime > 1000);
+        if (shouldSendPing) lastPingSendTime = now;
+
+        const statePayload = {
           type: 'state',
-          ts: now,
           player: {
             id: localPlayer.id,
             name: localPlayer.name,
+            team: localPlayer.team,
             x: myX,
             y: myY,
             z: myZ,
@@ -10061,7 +10161,12 @@
             crouch: Boolean(localPlayer.crouch),
             ping: localPlayer.ping
           }
-        });
+        };
+        if (shouldSendPing) {
+          statePayload.ts = now;
+        }
+
+        hostConn.send(statePayload);
       }
     }, 1000 / 45);
 
