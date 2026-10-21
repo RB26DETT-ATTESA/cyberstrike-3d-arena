@@ -6315,6 +6315,14 @@
       render2DMapPreview(matchConfig.mapId, matchConfig.mapTheme);
     }
 
+    function getHostRepresentativePing() {
+      const clients = Object.values(remotePlayers);
+      if (clients.length === 0) return 0;
+      const pings = clients.map(c => c.ping || 0).filter(p => p > 0);
+      if (pings.length === 0) return 0;
+      return Math.min(...pings);
+    }
+
     function renderRosterList() {
       const allPlayers = [localPlayer];
       Object.values(remotePlayers).forEach(p => {
@@ -6323,10 +6331,15 @@
 
       const getPlayerPingLabel = (p, isSelf, isPlayerHost) => {
         if (isSelf) {
-          if (isHost) return 'HOST (主催者 0ms)';
+          if (isHost) {
+            const hPing = getHostRepresentativePing();
+            return hPing > 0 ? `${hPing}ms` : '待機中';
+          }
           return (connected && localPlayer.ping > 0) ? `${localPlayer.ping}ms` : (connected ? '計測中...' : '未接続');
         }
-        if (isPlayerHost) return 'HOST (主催者 0ms)';
+        if (isPlayerHost) {
+          return (p.ping > 0) ? `${p.ping}ms` : '待機中';
+        }
         return (p.ping > 0) ? `${p.ping}ms` : '接続中...';
       };
 
@@ -10350,13 +10363,14 @@
 
     function updateLeaderboardUI() {
       if (config.gameMode === 'gridshot') return;
+      const hPing = isHost ? (typeof getHostRepresentativePing === 'function' ? getHostRepresentativePing() : 0) : localPlayer.ping;
       const list = [{
         id: localPlayer.id,
         name: localPlayer.name,
         kills: localPlayer.kills,
         deaths: localPlayer.deaths,
         hsKills: localPlayer.hsKills,
-        ping: isHost ? 0 : localPlayer.ping,
+        ping: hPing,
         self: true
       }];
 
@@ -10387,7 +10401,7 @@
       sbTbody.innerHTML = list.map(item => {
         const kd = item.deaths === 0 ? item.kills.toFixed(2) : (item.kills / item.deaths).toFixed(2);
         const hsPct = item.kills === 0 ? '0%' : Math.round((item.hsKills / item.kills) * 100) + '%';
-        const pingStr = (isHost && item.self) ? 'HOST (主催者 0ms)' : (item.ping + ' ms');
+        const pingStr = item.ping > 0 ? `${item.ping} ms` : (item.self ? '待機中' : '接続中');
         return `
           <tr class="${item.self ? 'self-row' : ''}">
             <td>${escapeHtml(item.name)}${item.self ? ' (自分)' : ''}</td>
@@ -10450,14 +10464,8 @@
         const hudPingEl = document.getElementById('hud-ping');
         if (hudPingEl) {
           if (isHost) {
-            const clients = Object.values(remotePlayers);
-            if (clients.length > 0) {
-              const pings = clients.map(c => c.ping || 0).filter(p => p > 0);
-              const minPing = pings.length > 0 ? Math.min(...pings) : 0;
-              hudPingEl.textContent = minPing > 0 ? `相手最速: ${minPing} ms (${clients.length}人)` : `相手接続中 (${clients.length}人)`;
-            } else {
-              hudPingEl.textContent = 'HOST (待機中)';
-            }
+            const hPing = getHostRepresentativePing();
+            hudPingEl.textContent = hPing > 0 ? `${hPing} ms` : '待機中';
           } else {
             hudPingEl.textContent = (connected && localPlayer.ping > 0) ? `${localPlayer.ping} ms` : (connected ? '計測中...' : '未接続');
           }
