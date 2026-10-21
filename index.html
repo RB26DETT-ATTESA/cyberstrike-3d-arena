@@ -6288,6 +6288,15 @@
         if (p && p.id) allPlayers.push(p);
       });
 
+      const getPlayerPingLabel = (p, isSelf, isPlayerHost) => {
+        if (isSelf) {
+          if (isHost) return 'HOST (0ms)';
+          return (connected && localPlayer.ping > 0) ? `${localPlayer.ping}ms` : (connected ? '計測中...' : '未接続');
+        }
+        if (isPlayerHost) return 'HOST (0ms)';
+        return (p.ping > 0) ? `${p.ping}ms` : '接続中...';
+      };
+
       if (matchConfig.mode === 'ffa') {
         const ffaList = document.getElementById('ffa-player-list');
         const countBadge = document.getElementById('ffa-count-badge');
@@ -6303,7 +6312,7 @@
                   <span>${escapeHtml(p.name || 'Player')} ${isSelf ? '(YOU)' : ''}</span>
                 </div>
                 <div class="player-row-right">
-                  <span>Ping: ${isSelf ? (isHost ? 0 : localPlayer.ping) : (p.ping || 0)}ms</span>
+                  <span>${getPlayerPingLabel(p, isSelf, isPlayerHost)}</span>
                 </div>
               </div>
             `;
@@ -6340,7 +6349,7 @@
                 <span>${escapeHtml(p.name || 'Player')} ${isSelf ? '(YOU)' : ''}</span>
               </div>
               <div class="player-row-right">
-                <span>${isSelf ? (isHost ? 0 : localPlayer.ping) : (p.ping || 0)}ms</span>
+                <span>${getPlayerPingLabel(p, isSelf, isPlayerHost)}</span>
               </div>
             </div>
           `;
@@ -8643,7 +8652,7 @@
         if (typeof pData.deaths === 'number') rp.deaths = pData.deaths;
         if (typeof pData.hsKills === 'number') rp.hsKills = pData.hsKills;
         if (typeof pData.ping === 'number') {
-          if (Math.abs((rp.ping || 0) - pData.ping) > 5) {
+          if (rp.ping !== pData.ping) {
             rp.ping = pData.ping;
             if (roomState === 'LOBBY') renderRosterList();
           }
@@ -10278,7 +10287,8 @@
         const myYaw = Number.isFinite(localPlayer.yaw) ? Number(localPlayer.yaw.toFixed(3)) : 0;
         const myPitch = Number.isFinite(localPlayer.pitch) ? Number(localPlayer.pitch.toFixed(3)) : 0;
 
-        const shouldSendPing = (now - lastPingSendTime > 1000);
+        const pingInterval = (localPlayer.ping === 0) ? 350 : 1000;
+        const shouldSendPing = (now - lastPingSendTime > pingInterval);
         if (shouldSendPing) lastPingSendTime = now;
 
         const statePayload = {
@@ -10409,7 +10419,15 @@
       if (fpsAccumTime >= 0.4) {
         const currentFps = Math.round(frameCount / fpsAccumTime);
         document.getElementById('hud-fps').textContent = currentFps;
-        document.getElementById('hud-ping').textContent = (isHost ? '0' : localPlayer.ping) + ' ms';
+        const hudPingEl = document.getElementById('hud-ping');
+        if (hudPingEl) {
+          if (isHost) {
+            const firstClient = Object.values(remotePlayers)[0];
+            hudPingEl.textContent = firstClient ? (firstClient.ping > 0 ? `${firstClient.ping} ms` : '接続中') : 'HOST (0 ms)';
+          } else {
+            hudPingEl.textContent = (connected && localPlayer.ping > 0) ? `${localPlayer.ping} ms` : (connected ? '計測中...' : '未接続');
+          }
+        }
         frameCount = 0;
         fpsAccumTime = 0;
       }
